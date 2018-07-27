@@ -4,11 +4,29 @@
     android:minHeight="25px"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RadioGroup
+        android:id="@+id/newExpenseTypeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/newExpenseRadioButtonExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Expense"
+            android:checked="true" />
+        <RadioButton
+            android:id="@+id/newExpenseRadioButtonIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Income" />
+    </RadioGroup>
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newExpenseTypeRadioGroup">
         <EditText
             android:id="@+id/newExpenseCategoryEditText"
             android:layout_height="wrap_content"

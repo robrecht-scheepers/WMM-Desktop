@@ -33,6 +33,7 @@ namespace WheresMyMoneyApp
                 AddExpense(categoryEditText.Text, double.Parse(amountEditText.Text), datePicker.DateTime);
                 categoryEditText.Text = "";
                 amountEditText.Text = "";
+                categoryEditText.RequestFocus();
             };
 
             addBackButton.Click += delegate
@@ -45,6 +46,11 @@ namespace WheresMyMoneyApp
 
         private void AddExpense(string category, double amount, DateTime date)
         {
+            var typeRadioGroup = FindViewById<RadioGroup>(Resource.Id.newExpenseTypeRadioGroup);
+            var selectedType = typeRadioGroup.CheckedRadioButtonId;
+            if (selectedType == Resource.Id.newExpenseRadioButtonIncome)
+                amount *= -1.0;
+
             MainActivity.Repository.AddExpense(new Expense(category, amount, date));
         }
     }
