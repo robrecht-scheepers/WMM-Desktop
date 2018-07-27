@@ -28,6 +28,9 @@ namespace WheresMyMoneyApp
             var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
             listView.Adapter = adapter;
 
+            var addButton = FindViewById<Button>(Resource.Id.addNewExpenseButton);
+            addButton.Click += delegate { StartActivity(typeof(AddExpenseActivity)); };
+
         }
     }
 }

@@ -31,7 +31,7 @@ namespace WheresMyMoneyApp.Data
             {
                 var expense = new Expense
                 {
-                    Amount = 50.12,
+                    Amount = 50.75,
                     Category = "Edeka",
                     Date = DateTime.Today
                 };
