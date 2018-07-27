@@ -4,7 +4,7 @@ using SQLite;
 namespace WheresMyMoneyApp.Data
 {
     [Table("Expenses")]
-    public class Expense
+    public class Expense : Java.Lang.Object
     {
         public Expense() { }
 

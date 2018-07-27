@@ -58,6 +58,7 @@
     <Compile Include="AddExpenseActivity.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\Expense.cs" />
+    <Compile Include="ExpenseListAdapter.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +102,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\add_expense_layout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\expense_list_item_layout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

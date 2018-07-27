@@ -33,7 +33,7 @@ namespace WheresMyMoneyApp
             base.OnResume();
 
             var expenses = Repository.GetExpenses();
-            var adapter = new ArrayAdapter<Expense>(this, Android.Resource.Layout.SimpleListItem1, expenses);
+            var adapter = new ExpenseListAdapter(this, expenses);
             var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
             listView.Adapter = adapter;
         }
