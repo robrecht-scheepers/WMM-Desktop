@@ -51,5 +51,10 @@ namespace WheresMyMoneyApp.Data
         {
             return _db.Table<Expense>().ToList();
         }
+
+        public void AddExpense(Expense expense)
+        {
+            _db.Insert(expense);
+        }
     }
 }

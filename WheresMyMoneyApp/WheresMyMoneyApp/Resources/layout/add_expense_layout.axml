@@ -33,4 +33,23 @@
         android:calendarViewShown="false"
         android:minWidth="25px"
         android:minHeight="25px" />
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newExpenseDatePicker">
+        <Button
+            android:id="@+id/newExpenseAddContinueButton"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="Add and continue" />
+        <Button
+            android:id="@+id/newExpenseAddBackButton"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="Add and back" />
+    </LinearLayout>
 </RelativeLayout>
