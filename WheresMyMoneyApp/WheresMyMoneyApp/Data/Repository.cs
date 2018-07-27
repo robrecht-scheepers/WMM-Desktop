@@ -56,5 +56,10 @@ namespace WheresMyMoneyApp.Data
         {
             _db.Insert(expense);
         }
+
+        public void DeleteExpense(Expense expense)
+        {
+            _db.Delete(expense);
+        }
     }
 }

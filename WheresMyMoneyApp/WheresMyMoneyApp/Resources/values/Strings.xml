@@ -2,4 +2,8 @@
     <string name="app_name">WheresMyMoneyApp</string>
     <string name="action_settings">Settings</string>
     <string name="category">Category</string>
+  <string-array name="listItemContextMenu">
+    <item>Edit</item>
+    <item>Delete</item>
+  </string-array>
 </resources>

@@ -3,6 +3,7 @@ using Android.App;
 using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Views;
 using SQLite;
 using WheresMyMoneyApp.Data;
 
@@ -26,16 +27,55 @@ namespace WheresMyMoneyApp
             var addButton = FindViewById<Button>(Resource.Id.addNewExpenseButton);
             addButton.Click += delegate { StartActivity(typeof(AddExpenseActivity)); };
 
+            var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
+            RegisterForContextMenu(listView);
+        }
+
+        private void RefreshList()
+        {
+            var expenses = Repository.GetExpenses();
+            var adapter = new ExpenseListAdapter(this, expenses);
+            var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
+            listView.Adapter = adapter;
         }
 
         protected override void OnResume()
         {
             base.OnResume();
+            RefreshList();
+        }
 
-            var expenses = Repository.GetExpenses();
-            var adapter = new ExpenseListAdapter(this, expenses);
+        public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
+        {
+            if (v.Id == Resource.Id.listViewExpenses)
+            {
+                var info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                //menu.SetHeaderTitle(_countries[info.Position]);
+                var menuItems = Resources.GetStringArray(Resource.Array.listItemContextMenu);
+                for (var i = 0; i < menuItems.Length; i++)
+                    menu.Add(Menu.None, i, i, menuItems[i]);
+            }
+        }
+
+        public override bool OnContextItemSelected(IMenuItem item)
+        {
+            var info = (AdapterView.AdapterContextMenuInfo)item.MenuInfo;
             var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
-            listView.Adapter = adapter;
+            var expense = (Expense)listView.Adapter.GetItem(info.Position);
+
+            var menuItemIndex = item.ItemId;
+            if (menuItemIndex == 0) // edit
+            {
+                return true;
+            }
+
+            if (menuItemIndex == 1) // delete
+            {
+                Repository.DeleteExpense(expense);
+                RefreshList();
+            }
+
+            return true;
         }
     }
 }
