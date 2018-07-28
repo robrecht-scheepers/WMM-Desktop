@@ -5,6 +5,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -54,10 +55,14 @@ namespace WheresMyMoneyApp
                 view.Tag = holder;
             }
 
-            holder.Amount.Text = _expenseList[position].Amount.ToString("#.00");
-            holder.Category.Text = _expenseList[position].Category;
-            holder.Date.Text = _expenseList[position].Date.ToString("dd.MM.yy");
-            
+            var expense = _expenseList[position]; 
+
+            holder.Amount.Text = expense.Amount.ToString("#.00");
+            holder.Category.Text = expense.Category;
+            holder.Date.Text = expense.Date.ToString("dd.MM.yy");
+
+            view.SetBackgroundColor(expense.Amount > 0 ? new Color(200, 215, 200) : new Color(215, 215, 215));
+
             return view;
         }
 
