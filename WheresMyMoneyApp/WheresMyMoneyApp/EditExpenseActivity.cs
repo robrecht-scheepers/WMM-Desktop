@@ -50,8 +50,8 @@ namespace WheresMyMoneyApp
                 var saveButon = FindViewById<Button>(Resource.Id.editExpenseSaveButton);
 
                 typeRadioGroup.Check(_expense.Amount < 0
-                    ? Resource.Id.editExpenseRadioButtonIncome
-                    : Resource.Id.editExpenseRadioButtonExpense);
+                    ? Resource.Id.editExpenseRadioButtonExpense
+                    : Resource.Id.editExpenseRadioButtonIncome);
                 categoryEditText.Text = _expense.Category;
                 amountEditText.Text = Math.Abs(_expense.Amount).ToString("0.00");
                 datePicker.DateTime = _expense.Date;
@@ -62,7 +62,7 @@ namespace WheresMyMoneyApp
                     _expense.Date = datePicker.DateTime;
 
                     var amount = double.Parse(amountEditText.Text);
-                    if (typeRadioGroup.CheckedRadioButtonId == Resource.Id.editExpenseRadioButtonIncome)
+                    if (typeRadioGroup.CheckedRadioButtonId == Resource.Id.editExpenseRadioButtonExpense)
                         amount *= -1.0;
                     _expense.Amount = amount;
 

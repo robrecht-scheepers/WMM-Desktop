@@ -48,7 +48,7 @@ namespace WheresMyMoneyApp
         {
             var typeRadioGroup = FindViewById<RadioGroup>(Resource.Id.newExpenseTypeRadioGroup);
             var selectedType = typeRadioGroup.CheckedRadioButtonId;
-            if (selectedType == Resource.Id.newExpenseRadioButtonIncome)
+            if (selectedType == Resource.Id.newExpenseRadioButtonExpense)
                 amount *= -1.0;
 
             MainActivity.Repository.SaveExpense(new Expense(category, amount, date));
