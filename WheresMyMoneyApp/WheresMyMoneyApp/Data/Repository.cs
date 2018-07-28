@@ -26,7 +26,7 @@ namespace WheresMyMoneyApp.Data
             _db = new SQLiteConnection(path);
             _db.CreateTable<Expense>();
         
-            // add test data if empty
+            // TEMP: add test data if empty
             if (!_db.Table<Expense>().Any())
             {
                 var expense = new Expense
@@ -52,9 +52,22 @@ namespace WheresMyMoneyApp.Data
             return _db.Table<Expense>().ToList();
         }
 
-        public void AddExpense(Expense expense)
+        public Expense GetExpense(int id)
         {
-            _db.Insert(expense);
+            return _db.Find<Expense>(id);
+        }
+
+        public void SaveExpense(Expense expense)
+        {
+            if (_db.Table<Expense>().Any(e => e.Id == expense.Id))
+            {
+                _db.Update(expense);
+            }
+            else
+            {
+                _db.Insert(expense);
+            }
+            
         }
 
         public void DeleteExpense(Expense expense)

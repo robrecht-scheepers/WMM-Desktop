@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Android.App;
+using Android.Content;
 using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
@@ -12,6 +13,8 @@ namespace WheresMyMoneyApp
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private const int EditRequestCode = 100;
+
         public static Repository Repository;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -66,6 +69,10 @@ namespace WheresMyMoneyApp
             var menuItemIndex = item.ItemId;
             if (menuItemIndex == 0) // edit
             {
+                var intent = new Intent(this, typeof(EditExpenseActivity));
+                intent.PutExtra("ExpenseId", expense.Id);
+
+                StartActivityForResult(intent, EditRequestCode);
                 return true;
             }
 
@@ -76,6 +83,14 @@ namespace WheresMyMoneyApp
             }
 
             return true;
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if (requestCode == EditRequestCode && resultCode == Result.Ok)
+            {
+                RefreshList();
+            }
         }
     }
 }

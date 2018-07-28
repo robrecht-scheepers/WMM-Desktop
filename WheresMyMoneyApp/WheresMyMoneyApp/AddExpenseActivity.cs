@@ -51,7 +51,7 @@ namespace WheresMyMoneyApp
             if (selectedType == Resource.Id.newExpenseRadioButtonIncome)
                 amount *= -1.0;
 
-            MainActivity.Repository.AddExpense(new Expense(category, amount, date));
+            MainActivity.Repository.SaveExpense(new Expense(category, amount, date));
         }
     }
 }
