@@ -55,11 +55,12 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\DateGroupedExpenseListAdapter.cs" />
     <Compile Include="AddExpenseActivity.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\Expense.cs" />
     <Compile Include="EditExpenseActivity.cs" />
-    <Compile Include="ExpenseListAdapter.cs" />
+    <Compile Include="Adapters\ExpenseListAdapter.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,6 +114,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\edit_expense_layout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\date_group_item_layout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

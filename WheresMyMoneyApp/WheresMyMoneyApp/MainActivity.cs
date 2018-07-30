@@ -6,6 +6,7 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
 using SQLite;
+using WheresMyMoneyApp.Adapters;
 using WheresMyMoneyApp.Data;
 
 namespace WheresMyMoneyApp
@@ -37,9 +38,9 @@ namespace WheresMyMoneyApp
         private void RefreshList()
         {
             var expenses = Repository.GetExpenses();
-            var adapter = new ExpenseListAdapter(this, expenses);
-            var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
-            listView.Adapter = adapter;
+            var adapter = new DateGroupedExpenseListAdapter(this, expenses, DateGroupType.Week);
+            var listView = FindViewById<ExpandableListView>(Resource.Id.listViewExpenses);
+            listView.SetAdapter(adapter);
         }
 
         protected override void OnResume()
