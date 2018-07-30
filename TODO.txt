@@ -1,5 +1,5 @@
-Remeber and restore scroll position when refreshing the list
+Grouping with sum (Date, Category)
+Move Add to mmain Activity
 Send
 Filter (Date, type)
-Grouping with sum (Date, Category)
 Category management and selection instead of free text
