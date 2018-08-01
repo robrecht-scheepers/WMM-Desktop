@@ -1,5 +1,5 @@
-Grouping with sum (Date, Category)
-Move Add to mmain Activity
+Move Add to main Activity
 Send
 Filter (Date, type)
 Category management and selection instead of free text
+Category grouping
