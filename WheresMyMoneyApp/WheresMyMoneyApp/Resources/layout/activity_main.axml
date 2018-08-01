@@ -19,4 +19,75 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add" />
+    <RelativeLayout
+        android:id="@+id/addExpenseArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioGroup
+            android:id="@+id/newExpenseTypeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/newExpenseRadioButtonExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/expense"
+                android:checked="true" />
+            <RadioButton
+                android:id="@+id/newExpenseRadioButtonIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/income" />
+        </RadioGroup>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newExpenseTypeRadioGroup">
+            <EditText
+                android:id="@+id/newExpenseCategoryEditText"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:hint="@string/category" />
+            <EditText
+                android:id="@+id/newExpenseAmountEditText"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:hint="@string/amount" />
+        </LinearLayout>
+        <DatePicker
+            android:id="@+id/newExpenseDatePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linearLayout1"
+            android:layout_centerHorizontal="true"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:minWidth="25px"
+            android:minHeight="25px" />
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newExpenseDatePicker">
+            <Button
+                android:id="@+id/newExpenseAddContinueButton"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Add and continue" />
+            <Button
+                android:id="@+id/newExpenseAddBackButton"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Add and back" />
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

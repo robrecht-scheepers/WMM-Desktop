@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Android.App;
 using Android.Content;
 using Android.Widget;
@@ -29,14 +30,54 @@ namespace WheresMyMoneyApp
             // Create dtaabse if not exists
             if(Repository == null)
                 Repository = new Repository();
-            
+
+            var addArea = FindViewById<RelativeLayout>(Resource.Id.addExpenseArea);
+            addArea.Visibility = ViewStates.Gone;
             var addButton = FindViewById<Button>(Resource.Id.addNewExpenseButton);
-            addButton.Click += delegate { StartActivity(typeof(AddExpenseActivity)); };
+            addButton.Click += delegate
+            {
+                switch (addArea.Visibility)
+                {
+                    case ViewStates.Gone:
+                    case ViewStates.Invisible:
+                        addArea.Visibility = ViewStates.Visible;
+                        break;
+                    case ViewStates.Visible:
+                        addArea.Visibility = ViewStates.Gone;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            };
+
+            var categoryEditText = FindViewById<EditText>(Resource.Id.newExpenseCategoryEditText);
+            var amountEditText = FindViewById<EditText>(Resource.Id.newExpenseAmountEditText);
+            var datePicker = FindViewById<DatePicker>(Resource.Id.newExpenseDatePicker);
+            var addContinueButon = FindViewById<Button>(Resource.Id.newExpenseAddContinueButton);
+            
+            addContinueButon.Click += delegate
+            {
+                AddExpense(categoryEditText.Text, double.Parse(amountEditText.Text), datePicker.DateTime);
+                categoryEditText.Text = "";
+                amountEditText.Text = "";
+                categoryEditText.RequestFocus();
+                RefreshList();
+            };
 
             var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
             RegisterForContextMenu(listView);
 
             _dateGroupType = DateGroupType.Day;
+        }
+
+        private void AddExpense(string category, double amount, DateTime date)
+        {
+            var typeRadioGroup = FindViewById<RadioGroup>(Resource.Id.newExpenseTypeRadioGroup);
+            var selectedType = typeRadioGroup.CheckedRadioButtonId;
+            if (selectedType == Resource.Id.newExpenseRadioButtonExpense)
+                amount *= -1.0;
+
+            Repository.SaveExpense(new Expense(category, amount, date));
         }
 
         private void RefreshList()
@@ -52,6 +93,8 @@ namespace WheresMyMoneyApp
             base.OnResume();
             RefreshList();
         }
+
+        #region context menu
 
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
@@ -98,6 +141,10 @@ namespace WheresMyMoneyApp
             }
         }
 
+        #endregion
+
+        #region Menu
+
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.menu_grouping, menu);
@@ -130,6 +177,8 @@ namespace WheresMyMoneyApp
 
             return true;
         }
+
+        #endregion
     }
 }
 
