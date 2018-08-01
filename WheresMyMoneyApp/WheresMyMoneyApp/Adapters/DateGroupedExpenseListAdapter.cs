@@ -170,8 +170,6 @@ namespace WheresMyMoneyApp.Adapters
             holder.ExpenseView.Text = group.TotalExpense.ToString("0.##");
             holder.BalanceView.Text = group.Balance.ToString("0.##");
 
-            view.SetBackgroundColor(group.Balance > 0 ? new Color(250, 255, 250) : new Color(255, 255, 255));
-
             return view;
         }
 
