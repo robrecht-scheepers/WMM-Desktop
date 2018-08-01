@@ -16,6 +16,8 @@ namespace WheresMyMoneyApp
     {
         private const int EditRequestCode = 100;
 
+        private DateGroupType _dateGroupType;
+
         public static Repository Repository;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -33,12 +35,14 @@ namespace WheresMyMoneyApp
 
             var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
             RegisterForContextMenu(listView);
+
+            _dateGroupType = DateGroupType.Day;
         }
 
         private void RefreshList()
         {
             var expenses = Repository.GetExpenses();
-            var adapter = new DateGroupedExpenseListAdapter(this, expenses, DateGroupType.Week);
+            var adapter = new DateGroupedExpenseListAdapter(this, expenses, _dateGroupType);
             var listView = FindViewById<ExpandableListView>(Resource.Id.listViewExpenses);
             listView.SetAdapter(adapter);
         }
@@ -93,6 +97,41 @@ namespace WheresMyMoneyApp
                 RefreshList();
             }
         }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.menu_grouping, menu);
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            DateGroupType newGroupType;
+            switch (item.ItemId)
+            {
+                case Resource.Id.group_menu_day:
+                    newGroupType = DateGroupType.Day;
+                    break;
+                case Resource.Id.group_menu_week:
+                    newGroupType = DateGroupType.Week;
+                    break;
+                case Resource.Id.group_menu_month:
+                    newGroupType = DateGroupType.Month;
+                    break;
+                default:
+                    return base.OnOptionsItemSelected(item);
+            }
+
+            if (newGroupType != _dateGroupType)
+            {
+                _dateGroupType = newGroupType;
+                RefreshList();
+            }
+
+            return true;
+        }
     }
 }
+
+
 
