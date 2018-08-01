@@ -68,26 +68,17 @@
             android:layout_centerHorizontal="true"
             android:datePickerMode="spinner"
             android:calendarViewShown="false"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:layout_marginTop="-20dp"
+            android:layout_marginBottom="-20dp"
             android:minWidth="25px"
             android:minHeight="25px" />
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:orientation="horizontal"
+        <Button
+            android:id="@+id/newExpenseAddContinueButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/newExpenseDatePicker">
-            <Button
-                android:id="@+id/newExpenseAddContinueButton"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Add and continue" />
-            <Button
-                android:id="@+id/newExpenseAddBackButton"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Add and back" />
-        </LinearLayout>
+            android:layout_below="@id/newExpenseDatePicker"
+            android:text="Add expense" />
     </RelativeLayout>
 </LinearLayout>
