@@ -6,7 +6,7 @@
     <item>Edit</item>
     <item>Delete</item>
   </string-array>
-  <string name="group_menu_day">Day</string>
-  <string name="group_menu_week">Week</string>
-  <string name="group_menu_month">Month</string>
+  <string name="group_menu_day">Group by day</string>
+  <string name="group_menu_week">Group by week</string>
+  <string name="group_menu_month">Group by month</string>
 </resources>

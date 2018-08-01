@@ -12,14 +12,22 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="right"
-            android:id="@+id/dateGroupHeaderStart" />
+            android:id="@+id/dateGroupHeaderDate" />
         <TextView
             android:text="Text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
-            android:id="@+id/dateGroupHeaderEnd" />
+            android:id="@+id/dateGroupHeaderIncome" />
+        <TextView
+            android:text="Text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:id="@+id/dateGroupHeaderExpense" />
         <TextView
             android:text="Text"
             android:layout_width="0dp"

@@ -139,20 +139,38 @@ namespace WheresMyMoneyApp.Adapters
                 holder = new DateGroupedExpenseListAdapterGroupViewHolder();
                 var inflater = _context.GetSystemService(Context.LayoutInflaterService).JavaCast<LayoutInflater>();
                 view = inflater.Inflate(Resource.Layout.date_group_item_layout, parent, false);
-                holder.Start = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderStart);
-                holder.End = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderEnd);
-                holder.Balance = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderBalance);
+                holder.DateView = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderDate);
+                holder.IncomeView = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderIncome);
+                holder.ExpenseView = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderExpense);
+                holder.BalanceView = view.FindViewById<TextView>(Resource.Id.dateGroupHeaderBalance);
 
                 view.Tag = holder;
             }
 
             var group = (ExpenseDateGroup)GetGroup(groupPosition);
 
-            holder.Start.Text = group.StartDate.ToString("dd.MM.yy");
-            holder.End.Text = group.EndDate.ToString("dd.MM.yy");
-            holder.Balance.Text = group.Balance.ToString("0.##");
+            string dateText;
+            switch (_groupType)
+            {
+                case DateGroupType.Day:
+                    dateText = group.StartDate.ToString("ddd dd.MM.yy");
+                    break;
+                case DateGroupType.Week:
+                    dateText = $"{@group.StartDate:dd.MM.yy} - {@group.EndDate:dd.MM.yy}";
+                    break;
+                case DateGroupType.Month:
+                    dateText = group.StartDate.ToString("MMM yyyy");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-            view.SetBackgroundColor(group.Balance > 0 ? new Color(240, 255, 240) : new Color(255, 255, 255));
+            holder.DateView.Text = dateText;
+            holder.IncomeView.Text = group.TotalIncome.ToString("0.##");
+            holder.ExpenseView.Text = group.TotalExpense.ToString("0.##");
+            holder.BalanceView.Text = group.Balance.ToString("0.##");
+
+            view.SetBackgroundColor(group.Balance > 0 ? new Color(250, 255, 250) : new Color(255, 255, 255));
 
             return view;
         }
@@ -176,9 +194,10 @@ namespace WheresMyMoneyApp.Adapters
 
     class DateGroupedExpenseListAdapterGroupViewHolder : Java.Lang.Object
     {
-        public TextView Start { get; set; }
-        public TextView End { get; set; }
-        public TextView Balance { get; set; }
+        public TextView DateView { get; set; }
+        public TextView IncomeView { get; set; }
+        public TextView ExpenseView { get; set; }
+        public TextView BalanceView { get; set; }
     }
 
     public enum DateGroupType { Day, Week, Month}
@@ -193,7 +212,9 @@ namespace WheresMyMoneyApp.Adapters
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public double Balance => Expenses.Select(x => x.Amount).Sum();
+        public double Balance => Expenses.Sum(x => x.Amount);
+        public double TotalExpense => Expenses.Where(x => x.Amount > 0).Sum(x => x.Amount);
+        public double TotalIncome => Expenses.Where(x => x.Amount < 0).Sum(x => x.Amount);
         public List<Expense> Expenses { get; set; }
     }
 }

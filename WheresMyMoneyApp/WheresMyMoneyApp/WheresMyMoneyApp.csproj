@@ -122,9 +122,8 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\layers.png" />
+    <AndroidResource Include="Resources\drawable\ic_grouping.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\menu\menu_grouping.xml" />

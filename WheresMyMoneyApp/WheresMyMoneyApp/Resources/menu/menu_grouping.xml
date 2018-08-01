@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
   <item android:id="@+id/group_action"
-        android:icon="@drawable/layers"
+        android:icon="@drawable/ic_grouping"
         android:title="Grouping"
         app:showAsAction="ifRoom"
         >
