@@ -77,7 +77,7 @@ namespace WheresMyMoneyApp.Data
             _db.Delete(expense);
         }
 
-        public async Task Upload()
+        public async Task UploadAsync(string userName)
         {
             //string apiKey = "mswskukexoj5fq5";
             //var authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(apiKey);
@@ -90,7 +90,7 @@ namespace WheresMyMoneyApp.Data
                 using (var mem = new MemoryStream(content))
                 {
                     var updated = await dbx.Files.UploadAsync(
-                        $"/WheresMyMoney/{Path.GetFileName(Path.GetFileName(_db.DatabasePath))}", // TODO: get user name from settings and rename db file to avoid overwriting other databases
+                        $"/{userName}.db3", 
                         WriteMode.Overwrite.Instance,
                         body: mem);
                 }

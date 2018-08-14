@@ -5,6 +5,7 @@ using Android.App;
 using Android.Content;
 using Android.Widget;
 using Android.OS;
+using Android.Preferences;
 using Android.Support.V7.App;
 using Android.Views;
 using SQLite;
@@ -167,9 +168,9 @@ namespace WheresMyMoneyApp
                 case Resource.Id.user_action:
                     StartActivity(typeof(UserSettingsActivity));
                     return true;
-                //case Resource.Id.upload_action:
-                //    //await UploadDB();
-                //    break;
+                case Resource.Id.upload_action:
+                    UploadDb();
+                    return true;
                 default:
                     return base.OnOptionsItemSelected(item);
             }
@@ -183,6 +184,17 @@ namespace WheresMyMoneyApp
             _dateGroupType = groupType;
             RefreshList();
         }
+
+        private async Task UploadDb()
+        {
+            //TODO: status updates (floating stats thingy like in GMail)
+            var userName = PreferenceManager.GetDefaultSharedPreferences(this).GetString("pref_user_name", "");
+            if(string.IsNullOrEmpty(userName))
+                return;
+
+            await Repository.UploadAsync(userName);
+        }
+
     }
 }
 
