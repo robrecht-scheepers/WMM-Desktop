@@ -14,5 +14,14 @@
       <item android:id="@+id/group_menu_month"
             android:title="@string/group_menu_month"/>
     </menu>
-  </item></menu>
+  </item>
+  <item android:id="@+id/upload_action"
+        android:icon="@drawable/ic_upload"
+        android:title="Upload"
+        app:showAsAction="ifRoom"/>
+  <item android:id="@+id/user_action"
+        android:icon="@drawable/ic_user"
+        android:title="User"
+        app:showAsAction="ifRoom"/>
+</menu>
 

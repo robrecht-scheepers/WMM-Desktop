@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Widget;
@@ -27,12 +28,12 @@ namespace WheresMyMoneyApp
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
-            // Create dtaabse if not exists
             if(Repository == null)
                 Repository = new Repository();
 
             var addArea = FindViewById<RelativeLayout>(Resource.Id.addExpenseArea);
             addArea.Visibility = ViewStates.Gone;
+
             var addButton = FindViewById<Button>(Resource.Id.addNewExpenseButton);
             addButton.Click += delegate
             {
@@ -142,43 +143,46 @@ namespace WheresMyMoneyApp
         }
 
         #endregion
-
+        
         #region Menu
-
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            MenuInflater.Inflate(Resource.Menu.menu_grouping, menu);
+            MenuInflater.Inflate(Resource.Menu.menu, menu);
             return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            DateGroupType newGroupType;
             switch (item.ItemId)
             {
                 case Resource.Id.group_menu_day:
-                    newGroupType = DateGroupType.Day;
-                    break;
+                    UpdateGrouping(DateGroupType.Day);
+                    return true;
                 case Resource.Id.group_menu_week:
-                    newGroupType = DateGroupType.Week;
-                    break;
+                    UpdateGrouping(DateGroupType.Week);
+                    return true;
                 case Resource.Id.group_menu_month:
-                    newGroupType = DateGroupType.Month;
-                    break;
+                    UpdateGrouping(DateGroupType.Month);
+                    return true;
+                case Resource.Id.user_action:
+                    StartActivity(typeof(UserSettingsActivity));
+                    return true;
+                //case Resource.Id.upload_action:
+                //    //await UploadDB();
+                //    break;
                 default:
                     return base.OnOptionsItemSelected(item);
             }
-
-            if (newGroupType != _dateGroupType)
-            {
-                _dateGroupType = newGroupType;
-                RefreshList();
-            }
-
-            return true;
         }
-
         #endregion
+
+        private void UpdateGrouping(DateGroupType groupType)
+        {
+            if (groupType == _dateGroupType) return;
+
+            _dateGroupType = groupType;
+            RefreshList();
+        }
     }
 }
 
