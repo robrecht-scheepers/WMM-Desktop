@@ -102,7 +102,7 @@ namespace WheresMyMoneyApp
         {
             if (v.Id == Resource.Id.listViewExpenses)
             {
-                var info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                //var info = (AdapterView.AdapterContextMenuInfo)menuInfo;
                 //menu.SetHeaderTitle(_countries[info.Position]);
                 var menuItems = Resources.GetStringArray(Resource.Array.listItemContextMenu);
                 for (var i = 0; i < menuItems.Length; i++)
@@ -112,9 +112,11 @@ namespace WheresMyMoneyApp
 
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            var info = (AdapterView.AdapterContextMenuInfo)item.MenuInfo;
-            var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
-            var expense = (Expense)listView.Adapter.GetItem(info.Position);
+            var info = (ExpandableListView.ExpandableListContextMenuInfo)item.MenuInfo;
+            var listView = FindViewById<ExpandableListView>(Resource.Id.listViewExpenses);
+            var adapter = listView.ExpandableListAdapter;
+            var expense = (Expense) adapter.GetChild(ExpandableListView.GetPackedPositionGroup(info.PackedPosition),
+                ExpandableListView.GetPackedPositionChild(info.PackedPosition));
 
             var menuItemIndex = item.ItemId;
             if (menuItemIndex == 0) // edit
