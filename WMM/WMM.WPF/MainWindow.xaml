@@ -21,6 +21,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Name="ControlBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <ToggleButton Name="ShowAddView" IsChecked="False" HorizontalAlignment="Right">Add transactions</ToggleButton>
         </Grid>
 
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
@@ -68,7 +69,31 @@
             </ListView>
         </Grid>
 
-        <Grid Name="Details" Grid.Row="1" Grid.Column="1">
+        <Grid Name="Add" Grid.Row="1" Grid.Column="1" 
+              Visibility="{Binding ElementName=ShowAddView, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}"
+              DataContext="{Binding AddTransactionsViewModel}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBlock Text="Datum"/>
+                <DatePicker SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
+                <TextBlock Text="Kategorie"/>
+                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
+                <TextBlock Text="Betrag"/>
+                <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+                <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" />
+                <Button Command="{Binding AddTransactionCommand}">Add</Button>
+            </StackPanel>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding AddedTransactions}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
+                    <DataGridTextColumn Binding="{Binding Category}"/>
+                    <DataGridTextColumn Binding="{Binding Amount, StringFormat=C}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
 
         <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">

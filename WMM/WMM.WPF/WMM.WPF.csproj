@@ -55,14 +55,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TransactionEventArgs.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AddTransactionsViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">

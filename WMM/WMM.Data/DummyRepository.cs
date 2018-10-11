@@ -136,5 +136,18 @@ namespace WMM.Data
                 transactions.Where(x => x.Amount > 0).Select(x => x.Amount).Sum(),
                 transactions.Where(x => x.Amount < 0).Select(x => x.Amount).Sum());
         }
+
+        public Task<IEnumerable<string>> GetCategories()
+        {
+            return Task.FromResult(Categories.SelectMany(x => x.Value));
+        }
+
+        public Task<string> GetArea(string category)
+        {
+            var result = Categories.Values.Any(x => x.Contains(category))
+                ? Categories.First(x => x.Value.Contains(category)).Key
+                : null;
+            return Task.FromResult(result);
+        }
     }
 }

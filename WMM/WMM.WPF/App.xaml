@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WMM.WPF"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:WMM.WPF.Converters"
              Startup="App_OnStartup"
              Exit="App_OnExit">
     <Application.Resources>
@@ -12,9 +13,20 @@
              <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
             <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
          </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+        </Style>
         <Style TargetType="DataGridCell">
             <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
             <Setter Property="Padding" Value="{StaticResource CommonMargin}"/>
         </Style>
+
+        <converters:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
+        <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
     </Application.Resources>
 </Application>
