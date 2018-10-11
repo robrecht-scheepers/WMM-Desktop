@@ -6,7 +6,7 @@ namespace WMM.Data
     {
         public Guid Id { get; }
 
-        public string Description { get; }
+        public string Category { get; }
 
         public DateTime Date { get; }
 
@@ -24,9 +24,9 @@ namespace WMM.Data
 
         public bool Deleted { get; }
 
-        internal Transaction(Guid id, string description, DateTime date, double amount, string comments, DateTime createdTime, string createdAccount, DateTime lastUpdateTime, string lastUpdateAccount, bool deleted)
+        internal Transaction(Guid id, string category, DateTime date, double amount, string comments, DateTime createdTime, string createdAccount, DateTime lastUpdateTime, string lastUpdateAccount, bool deleted)
         {
-            Description = description;
+            Category = category;
             Date = date;
             Amount = amount;
             Comments = comments;

@@ -38,19 +38,19 @@ namespace WMM.Data
             {"Einnahmen", new List<string>{"Gehalt", "Kindergeld", "Elterngeld"}},
         };
 
-        public Task<Transaction> AddTransaction(DateTime date, string description, double amount, string comments)
+        public Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments)
         {
             var now = DateTime.Now;
-            var transaction = new Transaction(Guid.NewGuid(), description, date, amount, comments, now, Account, now, Account, false);
+            var transaction = new Transaction(Guid.NewGuid(), category, date, amount, comments, now, Account, now, Account, false);
             DummyTransactions.Add(transaction);
             return Task.FromResult(transaction);
         }
 
-        public Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newDescription, double newAmount,
+        public Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,
             string newComments)
         {
             var now = DateTime.Now;
-            var updatedTransaction = new Transaction(transaction.Id, newDescription, newDate, newAmount, newComments, transaction.CreatedTime, transaction.CreatedAccount, now, Account, false);
+            var updatedTransaction = new Transaction(transaction.Id, newCategory, newDate, newAmount, newComments, transaction.CreatedTime, transaction.CreatedAccount, now, Account, false);
             DummyTransactions.Remove(transaction);
             DummyTransactions.Add(updatedTransaction);
             return Task.FromResult(updatedTransaction);
@@ -67,15 +67,15 @@ namespace WMM.Data
             return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo));
         }
 
-        public Task<IEnumerable<Transaction>> GetTransactionsForDescription(DateTime dateFrom, DateTime dateTo, string description)
+        public Task<IEnumerable<Transaction>> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string Category)
         {
-            return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.Description == description));
+            return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.Category == Category));
         }
 
-        public Task<IEnumerable<Transaction>> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string category)
+        public Task<IEnumerable<Transaction>> GetTransactionsForArea(DateTime dateFrom, DateTime dateTo, string area)
         {
-            return Categories.ContainsKey(category)
-                ? Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo && Categories[category].Contains(x.Description)))
+            return Categories.ContainsKey(area)
+                ? Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo && Categories[area].Contains(x.Category)))
                 : Task.FromResult((IEnumerable<Transaction>) new List<Transaction>());
         }
 
@@ -84,28 +84,28 @@ namespace WMM.Data
             return Task.FromResult(CalculateBalance(GetTransactions(dateFrom, dateTo).Result.ToList()));
         }
 
-        public Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo)
+        public Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
         {
-            var categoryBalances = new Dictionary<string,Balance>();
+            var balances = new Dictionary<string,Balance>();
             var transactions = GetTransactions(dateFrom, dateTo).Result.ToList();
-            foreach (var category in Categories.Keys)
+            foreach (var area in Categories.Keys)
             {
-                if(!transactions.Any(x => Categories[category].Contains(x.Description))) continue;
+                if(!transactions.Any(x => Categories[area].Contains(x.Category))) continue;
 
-                categoryBalances[category] = GetBalanceForCategory(dateFrom, dateTo, category).Result;
+                balances[area] = GetBalanceForArea(dateFrom, dateTo, area).Result;
             }
 
-            return Task.FromResult(categoryBalances);
+            return Task.FromResult(balances);
+        }
+
+        public Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area)
+        {
+            return Task.FromResult(CalculateBalance(GetTransactionsForArea(dateFrom, dateTo, area).Result.ToList()));
         }
 
         public Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
         {
             return Task.FromResult(CalculateBalance(GetTransactionsForCategory(dateFrom, dateTo, category).Result.ToList()));
-        }
-
-        public Task<Balance> GetBalanceForDescription(DateTime dateFrom, DateTime dateTo, string description)
-        {
-            return Task.FromResult(CalculateBalance(GetTransactionsForDescription(dateFrom, dateTo, description).Result.ToList()));
         }
 
         public Task Initialize()
