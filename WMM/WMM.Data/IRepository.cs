@@ -23,6 +23,8 @@ namespace WMM.Data
 
         Task<Dictionary<string,Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo);
 
+        Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area);
+
         Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area);
 
         Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);

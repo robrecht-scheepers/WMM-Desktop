@@ -12,5 +12,9 @@
              <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
             <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
          </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            <Setter Property="Padding" Value="{StaticResource CommonMargin}"/>
+        </Style>
     </Application.Resources>
 </Application>
