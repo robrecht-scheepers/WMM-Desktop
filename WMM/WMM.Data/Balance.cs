@@ -10,7 +10,7 @@ namespace WMM.Data
 
         public double Expense { get; }
 
-        public double Total => Income - Expense;
+        public double Total => Income + Expense;
 
         internal Balance(double income, double expense)
         {
