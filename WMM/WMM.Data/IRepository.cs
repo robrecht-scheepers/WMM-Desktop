@@ -24,5 +24,7 @@ namespace WMM.Data
         Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
 
         Task<Balance> GetBalanceForDescription(DateTime dateFrom, DateTime dateTo, string description);
+
+        Task Initialize();
     }
 }

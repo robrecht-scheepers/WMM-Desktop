@@ -83,6 +83,11 @@ namespace WMM.Data
             return Task.FromResult(CalculateBalance(GetTransactionsForDescription(dateFrom, dateTo, description).Result.ToList()));
         }
 
+        public Task Initialize()
+        {
+            return Task.CompletedTask;
+        }
+
         private Balance CalculateBalance(List<Transaction> transactions)
         {
             return new Balance(
