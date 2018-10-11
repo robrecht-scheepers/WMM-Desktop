@@ -10,11 +10,16 @@ namespace WMM.WPF
 {
     public class MainViewModel : ObservableObject
     {
-        private IRepository _reposistory;
+        private IRepository _repository;
 
         public MainViewModel(IRepository repository)
         {
             _repository = repository;
+        }
+
+        public async Task Initialize()
+        {
+
         }
     }
 }
