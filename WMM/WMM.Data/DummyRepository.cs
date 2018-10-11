@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -71,6 +72,20 @@ namespace WMM.Data
         public Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
             return Task.FromResult(CalculateBalance(GetTransactions(dateFrom, dateTo).Result.ToList()));
+        }
+
+        public Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo)
+        {
+            var categoryBalances = new Dictionary<string,Balance>();
+            var transactions = GetTransactions(dateFrom, dateTo).Result.ToList();
+            foreach (var category in Categories.Keys)
+            {
+                if(!transactions.Any(x => Categories[category].Contains(x.Description))) continue;
+
+                categoryBalances[category] = GetBalanceForCategory(dateFrom, dateTo, category).Result;
+            }
+
+            return Task.FromResult(categoryBalances);
         }
 
         public Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
