@@ -28,16 +28,28 @@
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="local:MonthBalanceViewModel">
                         <Grid HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding TotalBalance.Income}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding TotalBalance.Expense}"/>
-                            <TextBlock Grid.Column="3" Text="{Binding TotalBalance.Total}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TotalBalance.Income}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding TotalBalance.Expense}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding TotalBalance.Total}"/>
+                            <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" 
+                                      ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Category}"/>
+                                    <DataGridTextColumn Binding="{Binding Balance.Total}"/>
+                                </DataGrid.Columns>
+                                
+                            </DataGrid>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
