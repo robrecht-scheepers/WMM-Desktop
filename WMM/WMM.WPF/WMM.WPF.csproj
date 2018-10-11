@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\DateTimeExtensions.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -78,6 +79,7 @@
     <Compile Include="MVVM\ObservableObject.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
+    <Compile Include="MonthBalanceViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

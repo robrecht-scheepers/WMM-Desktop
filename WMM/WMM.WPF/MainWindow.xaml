@@ -5,8 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Where's my money?" 
+        WindowState="Maximized"
+        d:DataContext="{d:DesignInstance local:MainViewModel}">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Name="ControlBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        </Grid>
+
+        <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
+            <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="local:MonthBalanceViewModel">
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding TotalBalance.Income}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding TotalBalance.Expense}"/>
+                            <TextBlock Grid.Column="3" Text="{Binding TotalBalance.Total}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <Grid Name="Details" Grid.Row="1" Grid.Column="1">
+        </Grid>
+
+        <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+        </Grid>
+
     </Grid>
 </Window>
