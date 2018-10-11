@@ -18,6 +18,16 @@ namespace WMM.Data
             new Transaction(Guid.NewGuid(), "Tanken", new DateTime(2018,10,1), -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
             new Transaction(Guid.NewGuid(), "Schuhen kinder", new DateTime(2018,10,4), -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false),
             new Transaction(Guid.NewGuid(), "Elterngeld", new DateTime(2018,10,15), 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Aldi", new DateTime(2018,9,1), -35.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Edeka", new DateTime(2018,9,1), -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Tanken", new DateTime(2018,9,1), -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Schuhen kinder", new DateTime(2018,9,4), -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Elterngeld", new DateTime(2018,9,15), 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Aldi", new DateTime(2018,8,1), -25.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Edeka", new DateTime(2018,8,1), -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Tanken", new DateTime(2018,8,1), -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Schuhen kinder", new DateTime(2018,8,4), -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false),
+            new Transaction(Guid.NewGuid(), "Elterngeld", new DateTime(2018,8,15), 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false),
         };
 
         private static readonly Dictionary<string,List<string>> Categories = new Dictionary<string, List<string>>
