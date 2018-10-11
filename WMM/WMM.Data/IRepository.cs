@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WMM.Data
 {
     public interface IRepository
     {
-        Transaction AddTransaction(DateTime date, string description, double amount, string comments);
+        Task<Transaction> AddTransaction(DateTime date, string description, double amount, string comments);
 
-        Transaction UpdateTransaction(Transaction transaction, DateTime newDate, string newDescription, double newAmount, string newComments);
+        Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newDescription, double newAmount, string newComments);
 
-        void DeleteTransaction(Transaction transaction);
+        Task DeleteTransaction(Transaction transaction);
 
-        IEnumerable<Transaction> GetTransactions(DateTime dateFrom, DateTime dateTo);
+        Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo);
 
-        IEnumerable<Transaction> GetTransactionsForDescription(DateTime dateFrom, DateTime dateTo, string description);
+        Task<IEnumerable<Transaction>> GetTransactionsForDescription(DateTime dateFrom, DateTime dateTo, string description);
 
-        IEnumerable<Transaction> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string category);
+        Task<IEnumerable<Transaction>> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string category);
 
-        Balance GetBalance(DateTime dateFrom, DateTime dateTo);
+        Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo);
 
-        Balance GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
+        Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
 
-        Balance GetBalanceForDescription(DateTime dateFrom, DateTime dateTo, string description);
+        Task<Balance> GetBalanceForDescription(DateTime dateFrom, DateTime dateTo, string description);
     }
 }
