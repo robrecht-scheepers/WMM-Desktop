@@ -42,7 +42,7 @@ namespace WMM.WPF
         {
             TotalBalance = await _repository.GetBalance(_month.FirstDayOfMonth(), _month.LastDayOfMonth());
             var balanceDictionary =
-                await _repository.GetCategoryBalances(_month.FirstDayOfMonth(), _month.LastDayOfMonth());
+                await _repository.GetAreaBalances(_month.FirstDayOfMonth(), _month.LastDayOfMonth());
             foreach (var item in balanceDictionary)
             {
                 CategoryBalances.Add(new CategoryBalance(item.Key, item.Value));
