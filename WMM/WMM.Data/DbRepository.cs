@@ -19,7 +19,7 @@ namespace WMM.Data
 
         private readonly string _account;
         private readonly string _dbPath;
-        private SQLiteConnection _dbConnection;
+        private readonly SQLiteConnection _dbConnection;
 
         public DbRepository(string dbFolder)
         {
@@ -63,13 +63,43 @@ namespace WMM.Data
             {
                 dbConnection.Close();
             }
+
+            SeedDummyCategories(dbConnection);
             
             return dbConnection;
         }
 
+        private static void SeedDummyCategories(SQLiteConnection dbConnection)
+        {
+            var areaId = Guid.NewGuid();
+            var category1Id = Guid.NewGuid();
+            var category2Id = Guid.NewGuid();
+
+            var commandText = "INSERT INTO Areas(Id,Name) VALUES(@areaId,@areaName); "+
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@areaId); "+
+                "Insert INTO Categories(Id, Name, Area) VALUES(@category2Id, @category2Name, @areaId);";
+            var command = new SQLiteCommand(dbConnection){CommandText = commandText};
+            command.Parameters.AddWithValue("@areaId", areaId);
+            command.Parameters.AddWithValue("@areaName", "Area 51");
+            command.Parameters.AddWithValue("@category1Id", category1Id);
+            command.Parameters.AddWithValue("@category1Name", "Category 1");
+            command.Parameters.AddWithValue("@category2Id", category2Id);
+            command.Parameters.AddWithValue("@category2Name", "Category 2");
+
+            try
+            {
+                dbConnection.Open();
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                dbConnection.Close();
+            }
+        }
+
         public Task Initialize()
         {
-            // will later contain synchronization and stuff, shoul dbe async as we want to show progress information
+            // will later contain synchronization and stuff, should be async as we want to show progress information
             return Task.CompletedTask;
         }
         
@@ -79,16 +109,16 @@ namespace WMM.Data
             var now = DateTime.Now;
             var commandText =
                 "INSERT INTO Transactions(Id,[Date],Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted) " +
-                "VALUES (@id,@date,@category,@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted)";
+                "VALUES (@id,@date,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted)";
             var command = new SQLiteCommand(_dbConnection) {CommandText = commandText};
             command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@date", date.ToString("YYYY-MM-dd"));
-            command.Parameters.AddWithValue("@category", GetCategoryId(category));
+            command.Parameters.AddWithValue("@date", date);
+            command.Parameters.AddWithValue("@category", category);
             command.Parameters.AddWithValue("@amount", amount);
             command.Parameters.AddWithValue("@comments", comments);
-            command.Parameters.AddWithValue("@createdTime", now.ToString("YYYY-MM-dd HH:mm:ss.fff"));
+            command.Parameters.AddWithValue("@createdTime", now);
             command.Parameters.AddWithValue("@createdAccount", _account);
-            command.Parameters.AddWithValue("@lastUpdateTime", now.ToString("YYYY-MM-dd HH:mm:ss.fff"));
+            command.Parameters.AddWithValue("@lastUpdateTime", now);
             command.Parameters.AddWithValue("@lastUpdateAccount", _account);
             command.Parameters.AddWithValue("@deleted", 0);
 
@@ -106,11 +136,6 @@ namespace WMM.Data
             return lines == 0
                 ? null
                 : await GetTransaction(id);
-        }
-
-        private Guid GetCategoryId(string category)
-        {
-            throw new NotImplementedException();
         }
 
         private async Task<Transaction> GetTransaction(Guid id)
@@ -135,6 +160,9 @@ namespace WMM.Data
         private List<Transaction> ReadTransactions(DbDataReader reader)
         {
             var transactions = new List<Transaction>();
+            if (!reader.HasRows)
+                return transactions;
+
             while (reader.Read())
             {
                 transactions.Add(new Transaction(
@@ -142,7 +170,7 @@ namespace WMM.Data
                     reader.GetString(1),
                     reader.GetDateTime(2),
                     reader.GetDouble(3),
-                    reader.GetString(4),
+                    reader.GetStringNullSafe(4),
                     reader.GetDateTime(5),
                     reader.GetString(6),
                     reader.GetDateTime(7),
@@ -166,39 +194,68 @@ namespace WMM.Data
 
         public Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(Balance));
         }
 
         public Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new Dictionary<string, Balance>());
         }
 
         public Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new Dictionary<string, Balance>());
         }
 
         public Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(Balance));
         }
 
         public Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(Balance));
         }
 
-        
-
-        public Task<IEnumerable<string>> GetCategories()
+        public async Task<IEnumerable<string>> GetCategories()
         {
-            throw new NotImplementedException();
+            var categories = new List<string>();
+            var commandText = "SELECT Name FROM Categories ORDER BY Name ASC";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    categories.Add(reader.GetString(0));
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return categories;
         }
 
-        public Task<string> GetAreaForCategory(string category)
+        public async Task<string> GetAreaForCategory(string category)
         {
-            throw new NotImplementedException();
+            var commandText = "SELECT a.Name FROM Categories c JOIN Areas a ON c.Area = a.Id WHERE c.Name = @category";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@category", category);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                return reader.Read()
+                    ? reader.GetString(0)
+                    : null;
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
         }
     }
 }

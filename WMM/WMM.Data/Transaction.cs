@@ -2,7 +2,7 @@
 
 namespace WMM.Data
 {
-    public struct Transaction
+    public class Transaction
     {
         public Guid Id { get; }
 
