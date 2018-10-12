@@ -314,14 +314,68 @@ namespace WMM.Data
             return balances;
         }
 
-        public Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area)
+        public async Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area)
         {
-            return Task.FromResult(default(Balance));
+            var amounts = new List<double>();
+
+            var commandText =
+                "SELECT t.Amount " +
+                "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
+                "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND a.Name = @area";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            command.Parameters.AddWithValue("@area", area);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                    return default(Balance);
+
+                while (reader.Read())
+                {
+                    amounts.Add(reader.GetDouble(0));
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
         }
 
-        public Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
+        public async Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
         {
-            return Task.FromResult(default(Balance));
+            var amounts = new List<double>();
+
+            var commandText =
+                "SELECT t.Amount " +
+                "FROM Transactions t JOIN categories c ON t.Category = c.Id " +
+                "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND c.Name = @category";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            command.Parameters.AddWithValue("@category", category);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                    return default(Balance);
+
+                while (reader.Read())
+                {
+                    amounts.Add(reader.GetDouble(0));
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
         }
 
         public async Task<IEnumerable<string>> GetCategories()
