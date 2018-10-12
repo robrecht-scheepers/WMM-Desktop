@@ -1,14 +1,14 @@
-﻿BEGIN TRANSACTION;
+BEGIN TRANSACTION;
 DROP TABLE IF EXISTS `Transactions`;
 CREATE TABLE IF NOT EXISTS `Transactions` (
 	`Id`	BLOB NOT NULL,
-	`[Date]`	REAL NOT NULL,
+	`[Date]`	TEXT NOT NULL,
 	`Category`	BLOB NOT NULL,
 	`Amount`	NUMERIC NOT NULL,
 	`Comments`	TEXT,
-	`CreatedTime`	REAL NOT NULL,
+	`CreatedTime`	TEXT NOT NULL,
 	`CreatedAccount`	TEXT NOT NULL,
-	`LastUpdateTime`	REAL NOT NULL,
+	`LastUpdateTime`	TEXT NOT NULL,
 	`LastUpdateAccount`	TEXT NOT NULL,
 	`Deleted`	INTEGER NOT NULL,
 	FOREIGN KEY(`Category`) REFERENCES `Categories`(`Id`)
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS `Categories` (
 	`Id`	BLOB NOT NULL,
 	`Area`	BLOB NOT NULL,
 	`Name`	TEXT,
-	PRIMARY KEY(`Id`),
-	FOREIGN KEY(`Area`) REFERENCES `Areas`(`Id`)
+	FOREIGN KEY(`Area`) REFERENCES `Areas`(`Id`),
+	PRIMARY KEY(`Id`)
 );
 DROP TABLE IF EXISTS `Areas`;
 CREATE TABLE IF NOT EXISTS `Areas` (

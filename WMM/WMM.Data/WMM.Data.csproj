@@ -12,11 +12,11 @@
 </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="CreateDBS.sql" />
+    <None Remove="CreateDB.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="CreateDBS.sql" />
+    <EmbeddedResource Include="CreateDB.sql" />
   </ItemGroup>
 
   <ItemGroup>
