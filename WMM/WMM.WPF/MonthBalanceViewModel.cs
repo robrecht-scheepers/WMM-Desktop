@@ -109,7 +109,7 @@ namespace WMM.WPF
             // recalculate total balance for this month
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
 
-            var area = await _repository.GetArea(transaction.Category);
+            var area = await _repository.GetAreaForCategory(transaction.Category);
             var areaBalance = await _repository.GetBalanceForArea(Month.FirstDayOfMonth(), Month.LastDayOfMonth(), area);
             var categoryBalance = await _repository.GetBalanceForCategory(Month.FirstDayOfMonth(),
                 Month.LastDayOfMonth(), transaction.Category);

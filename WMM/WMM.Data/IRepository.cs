@@ -12,13 +12,7 @@ namespace WMM.Data
         Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount, string newComments);
 
         Task DeleteTransaction(Transaction transaction);
-
-        Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo);
-
-        Task<IEnumerable<Transaction>> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string category);
-
-        Task<IEnumerable<Transaction>> GetTransactionsForArea(DateTime dateFrom, DateTime dateTo, string area);
-
+        
         Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo);
 
         Task<Dictionary<string,Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo);
@@ -33,6 +27,6 @@ namespace WMM.Data
 
         Task<IEnumerable<string>> GetCategories();
 
-        Task<string> GetArea(string category);
+        Task<string> GetAreaForCategory(string category);
     }
 }

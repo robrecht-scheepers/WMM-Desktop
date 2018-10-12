@@ -66,24 +66,6 @@ namespace WMM.Data
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
-        {
-            return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo));
-        }
-
-        public Task<IEnumerable<Transaction>> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string Category)
-        {
-            return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.Category == Category));
-        }
-
-        public Task<IEnumerable<Transaction>> GetTransactionsForArea(DateTime dateFrom, DateTime dateTo, string area)
-        {
-            return Categories.ContainsKey(area)
-                ? Task.FromResult(DummyTransactions.Where(
-                    x => x.Date >= dateFrom && x.Date <= dateTo && Categories[area].Contains(x.Category)))
-                : Task.FromResult((IEnumerable<Transaction>) new List<Transaction>());
-        }
-
         public Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
             return Task.FromResult(CalculateBalance(GetTransactions(dateFrom, dateTo).Result.ToList()));
@@ -130,6 +112,19 @@ namespace WMM.Data
             return Task.CompletedTask;
         }
 
+        public Task<IEnumerable<string>> GetCategories()
+        {
+            return Task.FromResult(Categories.SelectMany(x => x.Value));
+        }
+
+        public Task<string> GetAreaForCategory(string category)
+        {
+            var result = Categories.Values.Any(x => x.Contains(category))
+                ? Categories.First(x => x.Value.Contains(category)).Key
+                : null;
+            return Task.FromResult(result);
+        }
+
         private Balance CalculateBalance(List<Transaction> transactions)
         {
             return new Balance(
@@ -137,17 +132,25 @@ namespace WMM.Data
                 transactions.Where(x => x.Amount < 0).Select(x => x.Amount).Sum());
         }
 
-        public Task<IEnumerable<string>> GetCategories()
+        private Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
         {
-            return Task.FromResult(Categories.SelectMany(x => x.Value));
+            return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo));
         }
 
-        public Task<string> GetArea(string category)
+        private Task<IEnumerable<Transaction>> GetTransactionsForCategory(DateTime dateFrom, DateTime dateTo, string Category)
         {
-            var result = Categories.Values.Any(x => x.Contains(category))
-                ? Categories.First(x => x.Value.Contains(category)).Key
-                : null;
-            return Task.FromResult(result);
+            return Task.FromResult(DummyTransactions.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.Category == Category));
         }
+
+        private Task<IEnumerable<Transaction>> GetTransactionsForArea(DateTime dateFrom, DateTime dateTo, string area)
+        {
+            return Categories.ContainsKey(area)
+                ? Task.FromResult(DummyTransactions.Where(
+                    x => x.Date >= dateFrom && x.Date <= dateTo && Categories[area].Contains(x.Category)))
+                : Task.FromResult((IEnumerable<Transaction>)new List<Transaction>());
+        }
+
+
+        
     }
 }
