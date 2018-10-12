@@ -271,9 +271,47 @@ namespace WMM.Data
             return balances;
         }
 
-        public Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
+        public async Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
         {
-            return Task.FromResult(new Dictionary<string, Balance>());
+            var balances = new Dictionary<string, Balance>();
+
+            var commandText =
+                "SELECT c.Name, t.Amount " +
+                "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
+                "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND a.Name = @area";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            command.Parameters.AddWithValue("@area", area);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                    return balances;
+
+                while (reader.Read())
+                {
+                    var category = reader.GetString(0);
+                    var amount = reader.GetDouble(1);
+                    var addIncome = amount > 0 ? amount : 0;
+                    var addExpense = amount < 0 ? amount : 0;
+                    if (balances.ContainsKey(category))
+                    {
+                        balances[category] = new Balance(balances[category].Income + addIncome, balances[category].Expense + addExpense);
+                    }
+                    else
+                    {
+                        balances[category] = new Balance(addIncome, addExpense);
+                    }
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return balances;
         }
 
         public Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area)
