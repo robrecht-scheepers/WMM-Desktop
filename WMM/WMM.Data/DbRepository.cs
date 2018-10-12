@@ -149,7 +149,7 @@ namespace WMM.Data
             {
                 _dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
-                return ReadTransactions(reader).SingleOrDefault();
+                return (await ReadTransactions(reader)).SingleOrDefault();
             }
             finally
             {
@@ -157,13 +157,13 @@ namespace WMM.Data
             }
         }
 
-        private List<Transaction> ReadTransactions(DbDataReader reader)
+        private async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
         {
             var transactions = new List<Transaction>();
             if (!reader.HasRows)
                 return transactions;
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 transactions.Add(new Transaction(
                     reader.GetGuid(0),
@@ -192,9 +192,32 @@ namespace WMM.Data
             throw new NotImplementedException();
         }
 
-        public Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
+        public async Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
-            return Task.FromResult(default(Balance));
+            var amounts = new List<double>();
+
+            var commandText = "SELECT Amount FROM Transactions WHERE Deleted = 0 AND Date >= @dateFrom AND Date <= @dateTo";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                    return default(Balance);
+
+                while(reader.Read())
+                {
+                    amounts.Add(reader.GetDouble(0));
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
         }
 
         public Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
