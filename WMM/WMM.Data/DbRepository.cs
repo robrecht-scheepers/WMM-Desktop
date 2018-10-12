@@ -71,20 +71,29 @@ namespace WMM.Data
 
         private static void SeedDummyCategories(SQLiteConnection dbConnection)
         {
-            var areaId = Guid.NewGuid();
+            var area1Id = Guid.NewGuid();
+            var area2Id = Guid.NewGuid();
             var category1Id = Guid.NewGuid();
             var category2Id = Guid.NewGuid();
+            var category3Id = Guid.NewGuid();
 
-            var commandText = "INSERT INTO Areas(Id,Name) VALUES(@areaId,@areaName); "+
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@areaId); "+
-                "Insert INTO Categories(Id, Name, Area) VALUES(@category2Id, @category2Name, @areaId);";
+            var commandText = 
+                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,@area1Name); "+
+                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
+                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);";
             var command = new SQLiteCommand(dbConnection){CommandText = commandText};
-            command.Parameters.AddWithValue("@areaId", areaId);
-            command.Parameters.AddWithValue("@areaName", "Area 51");
+            command.Parameters.AddWithValue("@area1Id", area1Id);
+            command.Parameters.AddWithValue("@area1Name", "Area 1");
+            command.Parameters.AddWithValue("@area2Id", area2Id);
+            command.Parameters.AddWithValue("@area2Name", "Area 2");
             command.Parameters.AddWithValue("@category1Id", category1Id);
             command.Parameters.AddWithValue("@category1Name", "Category 1");
             command.Parameters.AddWithValue("@category2Id", category2Id);
             command.Parameters.AddWithValue("@category2Name", "Category 2");
+            command.Parameters.AddWithValue("@category3Id", category3Id);
+            command.Parameters.AddWithValue("@category3Name", "Category 3");
 
             try
             {
@@ -220,9 +229,46 @@ namespace WMM.Data
             return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
         }
 
-        public Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
+        public async Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
         {
-            return Task.FromResult(new Dictionary<string, Balance>());
+            var balances = new Dictionary<string, Balance>();
+
+            var commandText =
+                "SELECT a.Name, t.Amount " +
+                "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
+                "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo ";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                if (!reader.HasRows)
+                    return balances;
+
+                while (reader.Read())
+                {
+                    var area = reader.GetString(0);
+                    var amount = reader.GetDouble(1);
+                    var addIncome = amount > 0 ? amount : 0;
+                    var addExpense = amount < 0 ? amount : 0;
+                    if (balances.ContainsKey(area))
+                    {
+                        balances[area] = new Balance(balances[area].Income + addIncome, balances[area].Expense + addExpense);
+                    }
+                    else
+                    {
+                        balances[area] = new Balance(addIncome, addExpense);
+                    }
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return balances;
         }
 
         public Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
