@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlTypes;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace WMM.Data
 {
@@ -68,47 +65,11 @@ namespace WMM.Data
             
             return dbConnection;
         }
-
-        private static void SeedDummyCategories(SQLiteConnection dbConnection)
-        {
-            var area1Id = Guid.NewGuid();
-            var area2Id = Guid.NewGuid();
-            var category1Id = Guid.NewGuid();
-            var category2Id = Guid.NewGuid();
-            var category3Id = Guid.NewGuid();
-
-            const string commandText = 
-                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,@area1Name); "+
-                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
-                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);";
-            var command = new SQLiteCommand(dbConnection){CommandText = commandText};
-            command.Parameters.AddWithValue("@area1Id", area1Id);
-            command.Parameters.AddWithValue("@area1Name", "Area 1");
-            command.Parameters.AddWithValue("@area2Id", area2Id);
-            command.Parameters.AddWithValue("@area2Name", "Area 2");
-            command.Parameters.AddWithValue("@category1Id", category1Id);
-            command.Parameters.AddWithValue("@category1Name", "Category 1");
-            command.Parameters.AddWithValue("@category2Id", category2Id);
-            command.Parameters.AddWithValue("@category2Name", "Category 2");
-            command.Parameters.AddWithValue("@category3Id", category3Id);
-            command.Parameters.AddWithValue("@category3Name", "Category 3");
-
-            try
-            {
-                dbConnection.Open();
-                command.ExecuteNonQuery();
-            }
-            finally
-            {
-                dbConnection.Close();
-            }
-        }
+        
 
         public Task Initialize()
         {
-            // will later contain synchronization and stuff, should be async as we want to show progress information
+            // will later contain synchronization, should be async as we want to show progress information
             return Task.CompletedTask;
         }
         
@@ -148,6 +109,64 @@ namespace WMM.Data
                 : await GetTransaction(id);
         }
 
+        public async Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,
+            string newComments)
+        {
+            const string commandText =
+                "UPDATE Transactions " +
+                "SET [Date] = @date, Category = (SELECT Id FROM Categories WHERE Name = @category), AMount = @amount, Comments = @comments " +
+                "WHERE Id = @id";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@id", transaction.Id);
+            try
+            {
+                _dbConnection.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+            return await GetTransaction(transaction.Id);
+        }
+
+        public async Task DeleteTransaction(Transaction transaction)
+        {
+            const string commandText =
+                "DELETE FROM Transactions WHERE Id = @id";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@id", transaction.Id);
+            try
+            {
+                _dbConnection.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+        }
+
+        private async Task<Transaction> GetTransaction(Guid id)
+        {
+            const string commandText =
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
+                "WHERE t.Id = @id";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@id", id);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                return (await ReadTransactions(reader)).SingleOrDefault();
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+        }
+
         public async Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments)
         {
             var id = Guid.NewGuid();
@@ -166,7 +185,6 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@lastUpdateAccount", _account);
             command.Parameters.AddWithValue("@deleted", 0);
             command.Parameters.AddWithValue("@recurring", 1);
-
             try
             {
                 _dbConnection.Open();
@@ -179,53 +197,6 @@ namespace WMM.Data
             }
 
             return await GetTransaction(id);
-        }
-
-        
-
-        private async Task<Transaction> GetTransaction(Guid id)
-        {
-            const string commandText =
-                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
-                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id "+
-                "WHERE t.Id = @id";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            command.Parameters.AddWithValue("@id", id);
-            try
-            {
-                _dbConnection.Open();
-                var reader = await command.ExecuteReaderAsync();
-                return (await ReadTransactions(reader)).SingleOrDefault();
-            }
-            finally
-            {
-                _dbConnection.Close();
-            }
-        }
-
-        private static async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
-        {
-            var transactions = new List<Transaction>();
-            if (!reader.HasRows)
-                return transactions;
-
-            while (await reader.ReadAsync())
-            {
-                transactions.Add(new Transaction(
-                    reader.GetGuid(0),
-                    reader.GetDateTimeNullSafe(1),
-                    reader.GetString(2),
-                    reader.GetDouble(3),
-                    reader.GetStringNullSafe(4),
-                    reader.GetDateTime(5),
-                    reader.GetString(6),
-                    reader.GetDateTime(7),
-                    reader.GetString(8),
-                    reader.GetBoolean(9),
-                    reader.GetBoolean(10)));
-            }
-
-            return transactions;
         }
 
         public async Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates()
@@ -275,17 +246,6 @@ namespace WMM.Data
             {
                 await AddTransaction(date.Date, template.Category, template.Amount, template.Comments, true);
             }
-        }
-
-        public Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,
-            string newComments)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteTransaction(Transaction transaction)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
@@ -457,6 +417,66 @@ namespace WMM.Data
             return balances;
         }
 
-        
+        private static async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
+        {
+            var transactions = new List<Transaction>();
+            if (!reader.HasRows)
+                return transactions;
+            while (await reader.ReadAsync())
+            {
+                transactions.Add(new Transaction(
+                    reader.GetGuid(0),
+                    reader.GetDateTimeNullSafe(1),
+                    reader.GetString(2),
+                    reader.GetDouble(3),
+                    reader.GetStringNullSafe(4),
+                    reader.GetDateTime(5),
+                    reader.GetString(6),
+                    reader.GetDateTime(7),
+                    reader.GetString(8),
+                    reader.GetBoolean(9),
+                    reader.GetBoolean(10)));
+            }
+            return transactions;
+        }
+
+        private static void SeedDummyCategories(SQLiteConnection dbConnection)
+        {
+            var area1Id = Guid.NewGuid();
+            var area2Id = Guid.NewGuid();
+            var category1Id = Guid.NewGuid();
+            var category2Id = Guid.NewGuid();
+            var category3Id = Guid.NewGuid();
+
+            const string commandText =
+                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,@area1Name); " +
+                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
+                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);";
+            var command = new SQLiteCommand(dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@area1Id", area1Id);
+            command.Parameters.AddWithValue("@area1Name", "Area 1");
+            command.Parameters.AddWithValue("@area2Id", area2Id);
+            command.Parameters.AddWithValue("@area2Name", "Area 2");
+            command.Parameters.AddWithValue("@category1Id", category1Id);
+            command.Parameters.AddWithValue("@category1Name", "Category 1");
+            command.Parameters.AddWithValue("@category2Id", category2Id);
+            command.Parameters.AddWithValue("@category2Name", "Category 2");
+            command.Parameters.AddWithValue("@category3Id", category3Id);
+            command.Parameters.AddWithValue("@category3Name", "Category 3");
+
+            try
+            {
+                dbConnection.Open();
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                dbConnection.Close();
+            }
+        }
+
+
     }
 }

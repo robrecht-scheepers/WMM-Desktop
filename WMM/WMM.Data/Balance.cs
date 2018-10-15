@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WMM.Data
+﻿namespace WMM.Data
 {
     public struct Balance
     {
