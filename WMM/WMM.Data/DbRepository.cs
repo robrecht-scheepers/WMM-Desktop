@@ -130,7 +130,7 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@lastUpdateTime", now);
             command.Parameters.AddWithValue("@lastUpdateAccount", _account);
             command.Parameters.AddWithValue("@deleted", 0);
-            command.Parameters.AddWithValue("@deleted", recurring);
+            command.Parameters.AddWithValue("@recurring", recurring);
 
             int lines;
             try
