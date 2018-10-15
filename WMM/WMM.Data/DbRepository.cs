@@ -112,13 +112,13 @@ namespace WMM.Data
             return Task.CompletedTask;
         }
         
-        public async Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments)
+        public async Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring)
         {
             var id = Guid.NewGuid();
             var now = DateTime.Now;
             const string commandText = 
-                "INSERT INTO Transactions(Id,[Date],Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted) " +
-                "VALUES (@id,@date,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted)";
+                "INSERT INTO Transactions(Id,[Date],Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted,Recurring) " +
+                "VALUES (@id,@date,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted,@recurring)";
             var command = new SQLiteCommand(_dbConnection) {CommandText = commandText};
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@date", date);
@@ -130,6 +130,7 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@lastUpdateTime", now);
             command.Parameters.AddWithValue("@lastUpdateAccount", _account);
             command.Parameters.AddWithValue("@deleted", 0);
+            command.Parameters.AddWithValue("@deleted", recurring);
 
             int lines;
             try
@@ -147,10 +148,15 @@ namespace WMM.Data
                 : await GetTransaction(id);
         }
 
+        public async Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments)
+        {
+            return await AddTransaction(DateTime.MinValue, category, amount, comments, true);
+        }
+
         private async Task<Transaction> GetTransaction(Guid id)
         {
-            const string commandText = 
-                "SELECT t.Id,c.Name,t.[Date],t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted  "+
+            const string commandText =
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id "+
                 "WHERE t.Id = @id";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
@@ -177,18 +183,38 @@ namespace WMM.Data
             {
                 transactions.Add(new Transaction(
                     reader.GetGuid(0),
-                    reader.GetString(1),
-                    reader.GetDateTime(2),
+                    reader.GetDateTimeNullSafe(1),
+                    reader.GetString(2),
                     reader.GetDouble(3),
                     reader.GetStringNullSafe(4),
                     reader.GetDateTime(5),
                     reader.GetString(6),
                     reader.GetDateTime(7),
                     reader.GetString(8),
-                    reader.GetBoolean(9)));
+                    reader.GetBoolean(9),
+                    reader.GetBoolean(10)));
             }
 
             return transactions;
+        }
+
+        public async Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates()
+        {
+            const string commandText =
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
+                "WHERE t.Recurring = 1 AND t.Date IS NULL";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                return await ReadTransactions(reader);
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
         }
 
         public Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,

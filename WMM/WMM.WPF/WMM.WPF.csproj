@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\IWindowService.cs" />
+    <Compile Include="Helpers\WindowService.cs" />
+    <Compile Include="ManageRecurringTransactionsViewModel.cs" />
     <Compile Include="TransactionEventArgs.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

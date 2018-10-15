@@ -13,21 +13,20 @@ namespace WMM.Data
 
         private static readonly List<Transaction> DummyTransactions = new List<Transaction>
         {
-            new Transaction(Guid.NewGuid(), "Supermarkt", new DateTime(2018,10,1), -25.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Supermarkt", new DateTime(2018,10,1), -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Tanken", new DateTime(2018,10,1), -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Kinderkleidung", new DateTime(2018,10,4), -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Elterngeld", new DateTime(2018,10,15), 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Supermarkt", new DateTime(2018,9,1), -35.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Supermarkt", new DateTime(2018,9,1), -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Tanken", new DateTime(2018,9,1), -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Kinderkleidung", new DateTime(2018,9,4), -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Elterngeld", new DateTime(2018,9,15), 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Supermarkt", new DateTime(2018,8,1), -25.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Supermarkt", new DateTime(2018,8,1), -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Tanken", new DateTime(2018,8,1), -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Kinderkleidung", new DateTime(2018,8,4), -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false),
-            new Transaction(Guid.NewGuid(), "Elterngeld", new DateTime(2018,8,15), 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,10,1), "Supermarkt", -25.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,10,1), "Tanken", -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,10,4), "Kinderkleidung", -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,10,15), "Elterngeld", 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false, true),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,9,1), "Supermarkt", -35.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,9,1), "Supermarkt", -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,9,1), "Tanken", -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,9,4), "Kinderkleidung", -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,9,15), "Elterngeld", 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false, true),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,8,1), "Supermarkt", -25.08, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,8,1), "Supermarkt", -129.46, "Für Besuch", new DateTime(2018,10,2,13,15,06), Account, new DateTime(2018,10,2,13,32,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,8,1), "Tanken", -25.0, "", new DateTime(2018,10,1,20,5,12), Account, new DateTime(2018,10,1,20,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,8,4), "Kinderkleidung", -69.99, "Winterschuhen", new DateTime(2018,10,4,15,5,12), Account, new DateTime(2018,10,4,15,5,12), Account, false, false),
+            new Transaction(Guid.NewGuid(), new DateTime(2018,8,15), "Elterngeld", 350.00, "", new DateTime(2018,10,15,12,6,12), Account, new DateTime(2018,10,15,12,6,12), Account, false, true),
         };
 
         private static readonly Dictionary<string,List<string>> Categories = new Dictionary<string, List<string>>
@@ -42,19 +41,24 @@ namespace WMM.Data
             {"Versicherung", new List<string>{"Renteversicherung", "Berufsunfähgkeitsversicherung", "Lebensversicherung"}},
         };
 
-        public Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments)
+        public Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring = false)
         {
             var now = DateTime.Now;
-            var transaction = new Transaction(Guid.NewGuid(), category, date, amount, comments, now, Account, now, Account, false);
+            var transaction = new Transaction(Guid.NewGuid(), date, category, amount, comments, now, Account, now, Account, false, recurring);
             DummyTransactions.Add(transaction);
             return Task.FromResult(transaction);
+        }
+
+        public Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments)
+        {
+            return AddTransaction(DateTime.MinValue, category, amount, comments, true);
         }
 
         public Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,
             string newComments)
         {
             var now = DateTime.Now;
-            var updatedTransaction = new Transaction(transaction.Id, newCategory, newDate, newAmount, newComments, transaction.CreatedTime, transaction.CreatedAccount, now, Account, false);
+            var updatedTransaction = new Transaction(transaction.Id, newDate, newCategory, newAmount, newComments, transaction.CreatedTime, transaction.CreatedAccount, now, Account, transaction.Deleted, transaction.Recurring);
             DummyTransactions.Remove(transaction);
             DummyTransactions.Add(updatedTransaction);
             return Task.FromResult(updatedTransaction);
@@ -64,6 +68,11 @@ namespace WMM.Data
         {
             DummyTransactions.Remove(transaction);
             return Task.CompletedTask;
+        }
+
+        public Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates()
+        {
+            return Task.FromResult(DummyTransactions.Where(x => x.Recurring));
         }
 
         public Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)

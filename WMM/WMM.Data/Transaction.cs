@@ -24,10 +24,13 @@ namespace WMM.Data
 
         public bool Deleted { get; }
 
-        internal Transaction(Guid id, string category, DateTime date, double amount, string comments, DateTime createdTime, string createdAccount, DateTime lastUpdateTime, string lastUpdateAccount, bool deleted)
+        public bool Recurring { get; }
+
+        internal Transaction(Guid id, DateTime date, string category, double amount, string comments, DateTime createdTime, string createdAccount, DateTime lastUpdateTime, string lastUpdateAccount, bool deleted, bool recurring)
         {
-            Category = category;
+            Id = id; 
             Date = date;
+            Category = category;
             Amount = amount;
             Comments = comments;
             CreatedTime = createdTime;
@@ -35,7 +38,7 @@ namespace WMM.Data
             LastUpdateTime = lastUpdateTime;
             LastUpdateAccount = lastUpdateAccount;
             Deleted = deleted;
-            Id = id;
+            Recurring = recurring;
         }
     }
 }
