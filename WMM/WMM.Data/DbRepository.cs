@@ -150,7 +150,35 @@ namespace WMM.Data
 
         public async Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments)
         {
-            return await AddTransaction(DateTime.MinValue, category, amount, comments, true);
+            var id = Guid.NewGuid();
+            var now = DateTime.Now;
+            const string commandText =
+                "INSERT INTO Transactions(Id,Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted,Recurring) " +
+                "VALUES (@id,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted,@recurring)";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@category", category);
+            command.Parameters.AddWithValue("@amount", amount);
+            command.Parameters.AddWithValue("@comments", comments);
+            command.Parameters.AddWithValue("@createdTime", now);
+            command.Parameters.AddWithValue("@createdAccount", _account);
+            command.Parameters.AddWithValue("@lastUpdateTime", now);
+            command.Parameters.AddWithValue("@lastUpdateAccount", _account);
+            command.Parameters.AddWithValue("@deleted", 0);
+            command.Parameters.AddWithValue("@recurring", 1);
+
+            try
+            {
+                _dbConnection.Open();
+                if (await command.ExecuteNonQueryAsync() == 0) // ==0 mean no row was added
+                    return default(Transaction);
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return await GetTransaction(id);
         }
 
         private async Task<Transaction> GetTransaction(Guid id)
