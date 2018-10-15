@@ -40,6 +40,13 @@ namespace WMM.WPF
             await AddTransactionsViewModel.Initialize();
             await RecurringTransactionsViewModel.Initialize();
 
+            // apply recurring costs or the current month, if not done already
+            if (! await _repository.PeriodHasRecurringTransactions(DateTime.Now.FirstDayOfMonth(),
+                DateTime.Now.LastDayOfMonth()))
+            {
+                await _repository.ApplyRecurringTransactions(DateTime.Now.FirstDayOfMonth());
+            }
+
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth().PreviousMonth(), _repository));

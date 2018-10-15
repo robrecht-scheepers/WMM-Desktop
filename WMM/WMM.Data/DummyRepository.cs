@@ -75,6 +75,16 @@ namespace WMM.Data
             return Task.FromResult(DummyTransactions.Where(x => x.Recurring));
         }
 
+        public Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ApplyRecurringTransactions(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
             return Task.FromResult(CalculateBalance(GetTransactions(dateFrom, dateTo).Result.ToList()));

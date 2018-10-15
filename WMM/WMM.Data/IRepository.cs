@@ -17,6 +17,10 @@ namespace WMM.Data
 
         Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates();
 
+        Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo);
+
+        Task ApplyRecurringTransactions(DateTime date);
+
         Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo);
 
         Task<Dictionary<string,Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo);

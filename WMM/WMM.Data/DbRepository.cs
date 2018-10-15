@@ -181,6 +181,8 @@ namespace WMM.Data
             return await GetTransaction(id);
         }
 
+        
+
         private async Task<Transaction> GetTransaction(Guid id)
         {
             const string commandText =
@@ -242,6 +244,36 @@ namespace WMM.Data
             finally
             {
                 _dbConnection.Close();
+            }
+        }
+
+        public async Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo)
+        {
+            const string commandText =
+                "SELECT COUNT(Id) " +
+                "FROM Transactions " +
+                "WHERE Date >= @dateFrom AND Date <= @dateTo AND Recurring = 1";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            try
+            {
+                _dbConnection.Open();
+                var count = Convert.ToInt32(await command.ExecuteScalarAsync());
+                return count > 0;
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+        }
+
+        public async Task ApplyRecurringTransactions(DateTime date)
+        {
+            var templates = await GetRecurringTransactionTemplates();
+            foreach (var template in templates)
+            {
+                await AddTransaction(date.Date, template.Category, template.Amount, template.Comments, true);
             }
         }
 
@@ -323,6 +355,51 @@ namespace WMM.Data
             return await CalculateBalanceFromQuery(command);
         }
 
+        public async Task<IEnumerable<string>> GetCategories()
+        {
+            var categories = new List<string>();
+            const string commandText =
+                "SELECT Name FROM Categories ORDER BY Name ASC";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    categories.Add(reader.GetString(0));
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return categories;
+        }
+
+        public async Task<string> GetAreaForCategory(string category)
+        {
+            const string commandText =
+                "SELECT a.Name " +
+                "FROM Categories c JOIN Areas a ON c.Area = a.Id " +
+                "WHERE c.Name = @category";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@category", category);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                return reader.Read()
+                    ? reader.GetString(0)
+                    : null;
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+        }
+
         private static async Task<Balance> CalculateBalanceFromQuery(SQLiteCommand command)
         {
             var amounts = new List<double>();
@@ -380,49 +457,6 @@ namespace WMM.Data
             return balances;
         }
 
-        public async Task<IEnumerable<string>> GetCategories()
-        {
-            var categories = new List<string>();
-            const string commandText = 
-                "SELECT Name FROM Categories ORDER BY Name ASC";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            try
-            {
-                _dbConnection.Open();
-                var reader = await command.ExecuteReaderAsync();
-                while (reader.Read())
-                {
-                    categories.Add(reader.GetString(0));
-                }
-            }
-            finally
-            {
-                _dbConnection.Close();
-            }
-
-            return categories;
-        }
-
-        public async Task<string> GetAreaForCategory(string category)
-        {
-            const string commandText = 
-                "SELECT a.Name " +
-                "FROM Categories c JOIN Areas a ON c.Area = a.Id " +
-                "WHERE c.Name = @category";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            command.Parameters.AddWithValue("@category", category);
-            try
-            {
-                _dbConnection.Open();
-                var reader = await command.ExecuteReaderAsync();
-                return reader.Read()
-                    ? reader.GetString(0)
-                    : null;
-            }
-            finally
-            {
-                _dbConnection.Close();
-            }
-        }
+        
     }
 }
