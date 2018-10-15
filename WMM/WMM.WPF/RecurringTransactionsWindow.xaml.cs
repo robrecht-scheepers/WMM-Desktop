@@ -5,9 +5,9 @@ namespace WMM.WPF
     /// <summary>
     /// Interaction logic for RecurringTransactionsWindow.xaml
     /// </summary>
-    public partial class RecurringTemplatesWindow : Window
+    public partial class RecurringTransactionsWindow : Window
     {
-        public RecurringTemplatesWindow()
+        public RecurringTransactionsWindow()
         {
             InitializeComponent();
         }

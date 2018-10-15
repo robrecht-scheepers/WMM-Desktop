@@ -1,4 +1,4 @@
-﻿<Window x:Class="WMM.WPF.RecurringTemplatesWindow"
+﻿<Window x:Class="WMM.WPF.RecurringTransactionsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WMM.WPF"
         mc:Ignorable="d"
         Title="RecurringTransactionsWindow" Height="450" Width="800"
-        d:DataContext="{d:DesignInstance local:RecurringTemplatesViewModel}">
+        d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,13 +16,13 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
             <TextBlock Text="Kategorie"/>
-            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
+            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory, Mode=TwoWay}"/>
             <TextBlock Text="Betrag"/>
             <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-            <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" />
-            <Button Command="{Binding AddTemplateCommand}">Add</Button>
+            <TextBox Text="{Binding Path=NewAmount, StringFormat=C, Mode=TwoWay}" />
+            <Button Command="{Binding AddCommand}">Add</Button>
         </StackPanel>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding RecurringTransactionTemplates}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Category}"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat=C}"/>

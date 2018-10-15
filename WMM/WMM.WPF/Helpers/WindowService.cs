@@ -6,9 +6,9 @@ namespace WMM.WPF.Helpers
     {
         public void OpenDialogWindow(ObservableObject dataContext)
         {
-            if (dataContext is RecurringTemplatesViewModel)
+            if (dataContext is RecurringTransactionsViewModel)
             {
-                var window = new RecurringTemplatesWindow() {DataContext = dataContext};
+                var window = new RecurringTransactionsWindow() {DataContext = dataContext};
                 window.ShowDialog();
             }
         }

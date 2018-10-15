@@ -8,7 +8,7 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF
 {
-    public class CategoryBalance : ObservableObject
+    public class CategoryBalanceViewModel : ObservableObject
     {
         private Balance _balance;
         public string Name { get; }
@@ -19,7 +19,7 @@ namespace WMM.WPF
             set => SetValue(ref _balance, value);
         }
 
-        public CategoryBalance(string name, Balance balance)
+        public CategoryBalanceViewModel(string name, Balance balance)
         {
             Name = name;
             Balance = balance;
@@ -37,19 +37,21 @@ namespace WMM.WPF
             set => SetValue(ref _balance, value);
         }
 
-        public ObservableCollection<CategoryBalance> CategoryBalances { get; }
+        public ObservableCollection<CategoryBalanceViewModel> CategoryBalances { get; }
         public AreaBalanceViewModel(string area, Balance balance)
         {
             Area = area;
             Balance = balance;
-            CategoryBalances = new ObservableCollection<CategoryBalance>();
+            CategoryBalances = new ObservableCollection<CategoryBalanceViewModel>();
         }
     }
 
     public class MonthBalanceViewModel: ObservableObject
     {
         private readonly IRepository _repository;
+        private readonly IWindowService _windowService;
         private Balance _totalBalance;
+        private RelayCommand _showRecurringTransactionsCommand;
 
         public DateTime Month { get; }
 
@@ -63,18 +65,24 @@ namespace WMM.WPF
 
         public ObservableCollection<AreaBalanceViewModel> AreaBalances { get; }
 
-        public MonthBalanceViewModel(DateTime date, IRepository repository)
+        public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
+
+        public MonthBalanceViewModel(DateTime date, IRepository repository, IWindowService windowService)
         {
-            Month = date.FirstDayOfMonth();
             _repository = repository;
+            _windowService = windowService;
+            Month = date.FirstDayOfMonth();
             AreaBalances = new ObservableCollection<AreaBalanceViewModel>();
+            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, Month);
         }
 
         public async Task Initialize()
         {
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
             await LoadAreaBalances();
+            await RecurringTransactionsViewModel.Initialize();
         }
+
         private async Task LoadAreaBalances()
         {
             var balanceDictionary =
@@ -96,11 +104,11 @@ namespace WMM.WPF
 
             foreach (var item in balanceDictionary)
             {
-                areaBalanceViewModel.CategoryBalances.Add(new CategoryBalance(item.Key, item.Value));
+                areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(item.Key, item.Value));
             }
         }
 
-        public async Task RecalculateForTransaction(Transaction transaction)
+        public async Task RecalculateBalancesForTransaction(Transaction transaction)
         {
             if(transaction.Date < Month.FirstDayOfMonth() || transaction.Date > Month.LastDayOfMonth()) return;
 
@@ -126,13 +134,21 @@ namespace WMM.WPF
                     areaBalanceViewModel.CategoryBalances.FirstOrDefault(x => x.Name == transaction.Category);
                 if (categoryBalanceViewModel == null)
                 {
-                    areaBalanceViewModel.CategoryBalances.Add(new CategoryBalance(transaction.Category, categoryBalance));
+                    areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(transaction.Category, categoryBalance));
                 }
                 else
                 {
                     categoryBalanceViewModel.Balance = categoryBalance;
                 }
             }
+        }
+
+        public RelayCommand ShowRecurringTransactionsCommand =>
+            _showRecurringTransactionsCommand ??
+            (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
+        private void ShowRecurringTransactions()
+        {
+            _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
         }
     }
 }

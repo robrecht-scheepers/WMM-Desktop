@@ -42,7 +42,8 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">R</Button>
+                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" 
+                                    Command="{Binding ShowRecurringTransactionsCommand}">R</Button>
                             <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding TotalBalance.Income}"/>
                             <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding TotalBalance.Expense}"/>
                             <TextBlock Grid.Row="0" Grid.Column="4" Text="{Binding TotalBalance.Total}"/>
