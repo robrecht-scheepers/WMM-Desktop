@@ -19,6 +19,7 @@ namespace WMM.WPF
         private AsyncRelayCommand _addCommand;
         private ObservableCollection<string> _categories;
         private string _selectedSign;
+        private AsyncRelayCommand _applyTemplatesCommand;
 
         public RecurringTransactionsViewModel(IRepository repository, DateTime month)
         {
@@ -56,6 +57,8 @@ namespace WMM.WPF
             }
         }
 
+        public ObservableCollection<Transaction> Transactions { get; }
+
         public string NewCategory
         {
             get => _newCategory;
@@ -84,6 +87,7 @@ namespace WMM.WPF
 
         private async Task GetRecurringTemplates()
         {
+            Transactions.Clear();
             foreach (var template in await _repository.GetRecurringTemplates())
             {
                 Transactions.Add(template);
@@ -92,6 +96,7 @@ namespace WMM.WPF
 
         private async Task GetRecurringTransactions()
         {
+            Transactions.Clear();
             foreach (var template in await _repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth()))
             {
                 Transactions.Add(template);
@@ -107,8 +112,34 @@ namespace WMM.WPF
                 ? await _repository.AddRecurringTemplate(NewCategory, amount, "")
                 : await _repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, "", true);
             Transactions.Add(transaction);
+            RaiseTransactionModified(transaction);
         }
 
-        public ObservableCollection<Transaction> Transactions { get; }
+        public AsyncRelayCommand ApplyTemplatesCommand =>
+            _applyTemplatesCommand ?? (_applyTemplatesCommand = new AsyncRelayCommand(ApplyTemplates, CanExecuteApplyTemplates));
+
+        private bool CanExecuteApplyTemplates()
+        {
+            return !_manageTemplates && !Transactions.Any();
+        }
+
+        private async Task ApplyTemplates()
+        {
+            await _repository.ApplyRecurringTemplates(_month);
+            await GetRecurringTransactions();
+            RaiseMultipleTransactionsModified();
+        }
+
+        public event TransactionEventHandler TransactionModified;
+        private void RaiseTransactionModified(Transaction transaction)
+        {
+            TransactionModified?.Invoke(this, new TransactionEventArgs(transaction));
+        }
+
+        public event TransactionEventHandler MultipleTransactionsModified;
+        private void RaiseMultipleTransactionsModified()
+        {
+            MultipleTransactionsModified?.Invoke(this, new TransactionEventArgs(null));
+        }
     }
 }

@@ -52,7 +52,7 @@ namespace WMM.WPF
         private readonly IWindowService _windowService;
         private Balance _totalBalance;
         private RelayCommand _showRecurringTransactionsCommand;
-
+        
         public DateTime Month { get; }
 
         public Balance TotalBalance
@@ -78,13 +78,24 @@ namespace WMM.WPF
 
         public async Task Initialize()
         {
+            await LoadAllBalances();
+
+            await RecurringTransactionsViewModel.Initialize();
+            RecurringTransactionsViewModel.TransactionModified += 
+                async (sender, args) => await RecalculateBalancesForTransaction(args.Transaction);
+            RecurringTransactionsViewModel.MultipleTransactionsModified += 
+                async (sender, args) => await LoadAllBalances();
+        }
+
+        private async Task LoadAllBalances()
+        {
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
             await LoadAreaBalances();
-            await RecurringTransactionsViewModel.Initialize();
         }
 
         private async Task LoadAreaBalances()
         {
+            AreaBalances.Clear();
             var balanceDictionary =
                 await _repository.GetAreaBalances(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
             foreach (var item in balanceDictionary)
@@ -144,8 +155,7 @@ namespace WMM.WPF
         }
 
         public RelayCommand ShowRecurringTransactionsCommand =>
-            _showRecurringTransactionsCommand ??
-            (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
+            _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
         private void ShowRecurringTransactions()
         {
             _windowService.OpenDialogWindow(RecurringTransactionsViewModel);

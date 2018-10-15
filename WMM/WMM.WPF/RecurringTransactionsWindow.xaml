@@ -21,6 +21,7 @@
             <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
             <TextBox Text="{Binding Path=NewAmount, StringFormat=C, Mode=TwoWay}" />
             <Button Command="{Binding AddCommand}">Add</Button>
+            <Button Command="{Binding ApplyTemplatesCommand}">Apply templates</Button>
         </StackPanel>
         <DataGrid Grid.Row="1" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
