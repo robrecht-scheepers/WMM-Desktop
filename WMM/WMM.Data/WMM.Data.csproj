@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="CreateDB.sql" />
+    <EmbeddedResource Include="Sql\CreateDB.sql" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using WMM.Data.Helpers;
 
 namespace WMM.Data
 {
@@ -35,7 +36,7 @@ namespace WMM.Data
         {
             // no need to make this method async as it is executed in the constructor before the window is visible
             string createDbSql;
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WMM.Data.CreateDB.sql"))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WMM.Data.Sql.CreateDB.sql"))
             {
                 if (stream == null)
                     throw new Exception("Embedded resource for create DB script not found");
@@ -45,7 +46,7 @@ namespace WMM.Data
                 }
             }
             if(string.IsNullOrEmpty(createDbSql))
-                throw new Exception("Created DB script found");
+                throw new Exception("Created DB script is empty");
 
             SQLiteConnection.CreateFile(dbPath);
             var dbConnection = new SQLiteConnection(string.Format(ConnectionString, dbPath));

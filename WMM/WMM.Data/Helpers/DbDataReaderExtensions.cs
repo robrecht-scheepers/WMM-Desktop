@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace WMM.Data
+namespace WMM.Data.Helpers
 {
     public static class DbDataReaderExtensions
     {
