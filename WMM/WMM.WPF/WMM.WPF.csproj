@@ -57,9 +57,9 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
-    <Compile Include="RecurringTransactionsViewModel.cs" />
-    <Compile Include="RecurringTransactionsWindow.xaml.cs">
-      <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
+    <Compile Include="RecurringTemplatesViewModel.cs" />
+    <Compile Include="RecurringTemplatesWindow.xaml.cs">
+      <DependentUpon>RecurringTemplatesWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TransactionEventArgs.cs" />
     <Page Include="MainWindow.xaml">
@@ -78,7 +78,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RecurringTransactionsWindow.xaml">
+    <Page Include="RecurringTemplatesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

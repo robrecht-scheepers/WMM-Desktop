@@ -6,19 +6,21 @@ namespace WMM.Data
 {
     public interface IRepository
     {
-        Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring = false);
+        Task Initialize();
 
-        Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments);
+        Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring = false);
 
         Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount, string newComments);
 
         Task DeleteTransaction(Transaction transaction);
 
-        Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates();
+        Task<Transaction> AddRecurringTemplate(string category, double amount, string comments);
+        
+        Task<IEnumerable<Transaction>> GetRecurringTemplates();
 
-        Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo);
-
-        Task ApplyRecurringTransactions(DateTime date);
+        Task<IEnumerable<Transaction>> GetRecurringTransactions(DateTime dateFrom, DateTime dateTo);
+        
+        Task ApplyRecurringTemplates(DateTime date);
 
         Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo);
 
@@ -30,8 +32,7 @@ namespace WMM.Data
 
         Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
 
-        Task Initialize();
-
+        
         Task<IEnumerable<string>> GetCategories();
 
         Task<string> GetAreaForCategory(string category);

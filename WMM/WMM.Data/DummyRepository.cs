@@ -47,7 +47,7 @@ namespace WMM.Data
             return Task.FromResult(transaction);
         }
 
-        public Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments)
+        public Task<Transaction> AddRecurringTemplate(string category, double amount, string comments)
         {
             return AddTransaction(DateTime.MinValue, category, amount, comments, true);
         }
@@ -68,9 +68,14 @@ namespace WMM.Data
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates()
+        public Task<IEnumerable<Transaction>> GetRecurringTemplates()
         {
             return Task.FromResult(DummyTransactions.Where(x => x.Recurring));
+        }
+
+        public Task<IEnumerable<Transaction>> GetRecurringTransactions(DateTime dateFrom, DateTime dateTo)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo)
@@ -78,7 +83,7 @@ namespace WMM.Data
             throw new NotImplementedException();
         }
 
-        public Task ApplyRecurringTransactions(DateTime date)
+        public Task ApplyRecurringTemplates(DateTime date)
         {
             throw new NotImplementedException();
         }

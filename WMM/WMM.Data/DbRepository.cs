@@ -14,7 +14,6 @@ namespace WMM.Data
     {
         private const string DbFileName = "wmm.db3";
         private const string ConnectionString = "Data Source={0}; Version=3";
-
         private readonly string _account;
         private readonly string _dbPath;
         private readonly SQLiteConnection _dbConnection;
@@ -63,14 +62,11 @@ namespace WMM.Data
             }
 
             SeedDummyCategories(dbConnection);
-            
             return dbConnection;
         }
-        
 
         public Task Initialize()
         {
-            // will later contain synchronization, should be async as we want to show progress information
             return Task.CompletedTask;
         }
         
@@ -168,7 +164,7 @@ namespace WMM.Data
             }
         }
 
-        public async Task<Transaction> AddRecurringTransactionTemplate(string category, double amount, string comments)
+        public async Task<Transaction> AddRecurringTemplate(string category, double amount, string comments)
         {
             var id = Guid.NewGuid();
             var now = DateTime.Now;
@@ -200,7 +196,7 @@ namespace WMM.Data
             return await GetTransaction(id);
         }
 
-        public async Task<IEnumerable<Transaction>> GetRecurringTransactionTemplates()
+        public async Task<IEnumerable<Transaction>> GetRecurringTemplates()
         {
             const string commandText =
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
@@ -219,20 +215,20 @@ namespace WMM.Data
             }
         }
 
-        public async Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<Transaction>> GetRecurringTransactions(DateTime dateFrom, DateTime dateTo)
         {
             const string commandText =
-                "SELECT COUNT(Id) " +
-                "FROM Transactions " +
-                "WHERE Date >= @dateFrom AND Date <= @dateTo AND Recurring = 1";
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
+                "WHERE t.Date >= @dateFrom AND t.Date <= @dateTo AND Recurring = 1";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
             try
             {
                 _dbConnection.Open();
-                var count = Convert.ToInt32(await command.ExecuteScalarAsync());
-                return count > 0;
+                var reader = await command.ExecuteReaderAsync();
+                return await ReadTransactions(reader);
             }
             finally
             {
@@ -240,12 +236,33 @@ namespace WMM.Data
             }
         }
 
-        public async Task ApplyRecurringTransactions(DateTime date)
+        //public async Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo)
+        //{
+        //    const string commandText =
+        //        "SELECT COUNT(Id) " +
+        //        "FROM Transactions " +
+        //        "WHERE Date >= @dateFrom AND Date <= @dateTo AND Recurring = 1";
+        //    var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+        //    command.Parameters.AddWithValue("@dateFrom", dateFrom);
+        //    command.Parameters.AddWithValue("@dateTo", dateTo);
+        //    try
+        //    {
+        //        _dbConnection.Open();
+        //        var count = Convert.ToInt32(await command.ExecuteScalarAsync());
+        //        return count > 0;
+        //    }
+        //    finally
+        //    {
+        //        _dbConnection.Close();
+        //    }
+        //}
+
+        public async Task ApplyRecurringTemplates(DateTime date)
         {
-            var templates = await GetRecurringTransactionTemplates();
+            var templates = await GetRecurringTemplates();
             foreach (var template in templates)
             {
-                await AddTransaction(date.Date, template.Category, template.Amount, template.Comments, true);
+                await AddTransaction(date, template.Category, template.Amount, template.Comments, true);
             }
         }
 

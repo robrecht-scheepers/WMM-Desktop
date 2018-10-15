@@ -29,21 +29,14 @@ namespace WMM.WPF
                 // calling without await, because we are in a synchronous event handler
                 monthViewModel?.RecalculateForTransaction(newTransaction); 
             };
-            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository);
+            RecurringTemplatesViewModel = new RecurringTemplatesViewModel(_repository);
         }
 
         public async Task Initialize()
         {
             await _repository.Initialize();
             await AddTransactionsViewModel.Initialize();
-            await RecurringTransactionsViewModel.Initialize();
-
-            // apply recurring costs or the current month, if not done already
-            if (! await _repository.PeriodHasRecurringTransactions(DateTime.Now.FirstDayOfMonth(),
-                DateTime.Now.LastDayOfMonth()))
-            {
-                await _repository.ApplyRecurringTransactions(DateTime.Now.FirstDayOfMonth());
-            }
+            await RecurringTemplatesViewModel.Initialize();
 
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository));
@@ -58,14 +51,14 @@ namespace WMM.WPF
 
         public AddTransactionsViewModel AddTransactionsViewModel { get; }
 
-        public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
+        public RecurringTemplatesViewModel RecurringTemplatesViewModel { get; }
 
         public RelayCommand ShowRecurringTransactionsCommand => 
             _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
 
         private void ShowRecurringTransactions()
         {
-            _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
+            _windowService.OpenDialogWindow(RecurringTemplatesViewModel);
         }
     }
 }

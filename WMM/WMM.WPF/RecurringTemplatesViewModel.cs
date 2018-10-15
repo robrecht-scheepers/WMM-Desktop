@@ -7,7 +7,7 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF
 {
-    public class RecurringTransactionsViewModel : ObservableObject
+    public class RecurringTemplatesViewModel : ObservableObject
     {
         private readonly IRepository _repository;
         private string _newTransactionCategory;
@@ -16,7 +16,7 @@ namespace WMM.WPF
         private ObservableCollection<string> _categories;
         private string _selectedSign;
 
-        public RecurringTransactionsViewModel(IRepository repository)
+        public RecurringTemplatesViewModel(IRepository repository)
         {
             _repository = repository;
             Categories = new ObservableCollection<string>();
@@ -61,7 +61,7 @@ namespace WMM.WPF
 
         private async Task GetRecurringTransactionTemplates()
         {
-            foreach (var template in await _repository.GetRecurringTransactionTemplates())
+            foreach (var template in await _repository.GetRecurringTemplates())
             {
                 RecurringTransactionTemplates.Add(template);
             }
@@ -72,7 +72,7 @@ namespace WMM.WPF
         {
             var amount = SelectedSign == "-" ? NewTransactionAmount * -1.0 : NewTransactionAmount;
 
-            var template = await _repository.AddRecurringTransactionTemplate(NewTransactionCategory, amount, null);
+            var template = await _repository.AddRecurringTemplate(NewTransactionCategory, amount, null);
             RecurringTransactionTemplates.Add(template);
         }
 
