@@ -55,13 +55,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Balances\AreaBalanceViewModel.cs" />
+    <Compile Include="Balances\CategoryBalanceViewModel.cs" />
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
-    <Compile Include="RecurringTransactionsViewModel.cs" />
-    <Compile Include="RecurringTransactionsWindow.xaml.cs">
+    <Compile Include="Recurring\RecurringTransactionsViewModel.cs" />
+    <Compile Include="Recurring\RecurringTransactionsWindow.xaml.cs">
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TransactionEventArgs.cs" />
+    <Page Include="Balances\MonthBalanceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -78,7 +84,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RecurringTransactionsWindow.xaml">
+    <Page Include="Recurring\RecurringTransactionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -92,7 +98,7 @@
     <Compile Include="MVVM\ObservableObject.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
-    <Compile Include="MonthBalanceViewModel.cs" />
+    <Compile Include="Balances\MonthBalanceViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -124,5 +130,6 @@
       <Name>WMM.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

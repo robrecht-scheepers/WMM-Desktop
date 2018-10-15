@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WMM.WPF.Balances">
+    <DataTemplate x:Key="MonthBalanceView" DataType="local:MonthBalanceViewModel">
+        <Grid HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}"/>
+            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" 
+                                    Command="{Binding ShowRecurringTransactionsCommand}">R</Button>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding TotalBalance.Income}"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding TotalBalance.Expense}"/>
+            <TextBlock Grid.Row="0" Grid.Column="4" Text="{Binding TotalBalance.Total}"/>
+            <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" IsReadOnly="True" 
+                                      ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False"
+                                      RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Single"
+                                      SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Area}"/>
+                    <DataGridTextColumn Binding="{Binding Balance.Total}"/>
+                </DataGrid.Columns>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate DataType="local:AreaBalanceViewModel">
+                        <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name}"/>
+                                <DataGridTextColumn Binding="{Binding Balance.Total}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+
+            </DataGrid>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

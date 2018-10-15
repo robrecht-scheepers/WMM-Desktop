@@ -1,4 +1,5 @@
 ﻿using WMM.WPF.MVVM;
+using WMM.WPF.Recurring;
 
 namespace WMM.WPF.Helpers
 {
@@ -8,7 +9,7 @@ namespace WMM.WPF.Helpers
         {
             if (dataContext is RecurringTransactionsViewModel)
             {
-                var window = new RecurringTransactionsWindow() {DataContext = dataContext};
+                var window = new Recurring.RecurringTransactionsWindow() {DataContext = dataContext};
                 window.ShowDialog();
             }
         }

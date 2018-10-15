@@ -5,47 +5,10 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Recurring;
 
-namespace WMM.WPF
+namespace WMM.WPF.Balances
 {
-    public class CategoryBalanceViewModel : ObservableObject
-    {
-        private Balance _balance;
-        public string Name { get; }
-
-        public Balance Balance
-        {
-            get => _balance;
-            set => SetValue(ref _balance, value);
-        }
-
-        public CategoryBalanceViewModel(string name, Balance balance)
-        {
-            Name = name;
-            Balance = balance;
-        }
-    }
-
-    public class AreaBalanceViewModel : ObservableObject
-    {
-        private Balance _balance;
-        public string Area { get; }
-
-        public Balance Balance
-        {
-            get => _balance;
-            set => SetValue(ref _balance, value);
-        }
-
-        public ObservableCollection<CategoryBalanceViewModel> CategoryBalances { get; }
-        public AreaBalanceViewModel(string area, Balance balance)
-        {
-            Area = area;
-            Balance = balance;
-            CategoryBalances = new ObservableCollection<CategoryBalanceViewModel>();
-        }
-    }
-
     public class MonthBalanceViewModel: ObservableObject
     {
         private readonly IRepository _repository;

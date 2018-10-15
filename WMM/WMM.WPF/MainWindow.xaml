@@ -4,10 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF"
+        xmlns:balances="clr-namespace:WMM.WPF.Balances"
         mc:Ignorable="d"
         Title="Where's my money?" 
         WindowState="Maximized"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Balances/MonthBalanceView.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,51 +34,8 @@
         </Grid>
 
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
-            <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch">
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="local:MonthBalanceViewModel">
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}"/>
-                            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" 
-                                    Command="{Binding ShowRecurringTransactionsCommand}">R</Button>
-                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding TotalBalance.Income}"/>
-                            <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding TotalBalance.Expense}"/>
-                            <TextBlock Grid.Row="0" Grid.Column="4" Text="{Binding TotalBalance.Total}"/>
-                            <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" IsReadOnly="True" 
-                                      ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False"
-                                      RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Single"
-                                      SelectionUnit="FullRow">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Area}"/>
-                                    <DataGridTextColumn Binding="{Binding Balance.Total}"/>
-                                </DataGrid.Columns>
-                                <DataGrid.RowDetailsTemplate>
-                                    <DataTemplate DataType="local:AreaBalanceViewModel">
-                                        <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Binding="{Binding Name}"/>
-                                                <DataGridTextColumn Binding="{Binding Balance.Total}"/>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </DataTemplate>
-                                </DataGrid.RowDetailsTemplate>
-                                
-                            </DataGrid>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch"
+                      ItemTemplate="{StaticResource MonthBalanceView}"/>
         </Grid>
 
         <Grid Name="Add" Grid.Row="1" Grid.Column="1" 

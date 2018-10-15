@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WMM.WPF
+namespace WMM.WPF.Recurring
 {
     /// <summary>
     /// Interaction logic for RecurringTransactionsWindow.xaml

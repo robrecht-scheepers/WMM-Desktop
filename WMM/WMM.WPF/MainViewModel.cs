@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Balances;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Recurring;
 
 namespace WMM.WPF
 {
