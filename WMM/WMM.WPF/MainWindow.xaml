@@ -21,6 +21,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Name="ControlBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Button HorizontalAlignment="Left" Command="{Binding ShowRecurringTransactionsCommand}">Recurring</Button>
             <ToggleButton Name="ShowAddView" IsChecked="False" HorizontalAlignment="Right">Add transactions</ToggleButton>
         </Grid>
 

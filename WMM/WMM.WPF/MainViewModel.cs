@@ -13,10 +13,14 @@ namespace WMM.WPF
     public class MainViewModel : ObservableObject
     {
         private readonly IRepository _repository;
+        private readonly IWindowService _windowService;
+        private RelayCommand _showRecurringTransactionsCommand;
 
-        public MainViewModel(IRepository repository)
+        public MainViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
+            _windowService = windowService;
+            _windowService = windowService;
             MonthBalanceViewModels = new ObservableCollection<MonthBalanceViewModel>();
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository);
             AddTransactionsViewModel.TransactionAdded += (s, a) =>
@@ -27,11 +31,14 @@ namespace WMM.WPF
                 // calling without await, because we are in a synchronous event handler
                 monthViewModel?.RecalculateForTransaction(newTransaction); 
             };
+            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository);
         }
 
         public async Task Initialize()
         {
             await _repository.Initialize();
+            await AddTransactionsViewModel.Initialize();
+            await RecurringTransactionsViewModel.Initialize();
 
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository));
@@ -40,14 +47,20 @@ namespace WMM.WPF
             {
                 await monthBalanceViewModel.Initialize();
             }
-
-            await AddTransactionsViewModel.Initialize();
         }
 
         public ObservableCollection<MonthBalanceViewModel> MonthBalanceViewModels { get; }
 
         public AddTransactionsViewModel AddTransactionsViewModel { get; }
 
+        public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
+        public RelayCommand ShowRecurringTransactionsCommand => 
+            _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
+
+        private void ShowRecurringTransactions()
+        {
+            _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
+        }
     }
 }

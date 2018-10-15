@@ -9,20 +9,20 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF
 {
-    public class ManageRecurringTransactionsViewModel : ObservableObject
+    public class RecurringTransactionsViewModel : ObservableObject
     {
         private readonly IRepository _repository;
         private string _newTransactionCategory;
         private double _newTransactionAmount;
-        private AsyncRelayCommand _addTransactionCommand;
+        private AsyncRelayCommand _addTemplateCommand;
         private ObservableCollection<string> _categories;
         private string _selectedSign;
 
-        public ManageRecurringTransactionsViewModel(IRepository repository)
+        public RecurringTransactionsViewModel(IRepository repository)
         {
             _repository = repository;
             Categories = new ObservableCollection<string>();
-            FixedTransactions = new ObservableCollection<Transaction>();
+            RecurringTransactionTemplates = new ObservableCollection<Transaction>();
         }
 
         public async Task Initialize()
@@ -63,18 +63,21 @@ namespace WMM.WPF
 
         private async Task GetRecurringTransactionTemplates()
         {
-
+            foreach (var template in await _repository.GetRecurringTransactionTemplates())
+            {
+                RecurringTransactionTemplates.Add(template);
+            }
         }
 
-        public AsyncRelayCommand AddTransactionCommand => _addTransactionCommand ?? (_addTransactionCommand = new AsyncRelayCommand(AddTransaction));
-        private async Task AddTransaction()
+        public AsyncRelayCommand AddTemplateCommand => _addTemplateCommand ?? (_addTemplateCommand = new AsyncRelayCommand(AddTemplate));
+        private async Task AddTemplate()
         {
             var amount = SelectedSign == "-" ? NewTransactionAmount * -1.0 : NewTransactionAmount;
 
-            var transaction = await _repository.AddTransaction(DateTime.MinValue, NewTransactionCategory, amount, null, true);
-            AddedTransactions.Add(transaction);
+            var template = await _repository.AddRecurringTransactionTemplate(NewTransactionCategory, amount, null);
+            RecurringTransactionTemplates.Add(template);
         }
 
-        public ObservableCollection<Transaction> FixedTransactions { get; }
+        public ObservableCollection<Transaction> RecurringTransactionTemplates { get; }
     }
 }

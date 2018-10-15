@@ -7,7 +7,7 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Helpers
 {
-    interface IWindowService
+    public interface IWindowService
     {
         void OpenDialogWindow(ObservableObject dataContext);
     }

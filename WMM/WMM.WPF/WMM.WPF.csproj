@@ -57,7 +57,10 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
-    <Compile Include="ManageRecurringTransactionsViewModel.cs" />
+    <Compile Include="RecurringTransactionsViewModel.cs" />
+    <Compile Include="RecurringTransactionsWindow.xaml.cs">
+      <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TransactionEventArgs.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -75,6 +78,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RecurringTransactionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
