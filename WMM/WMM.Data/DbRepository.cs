@@ -77,11 +77,12 @@ namespace WMM.Data
             var category2Id = Guid.NewGuid();
             var category3Id = Guid.NewGuid();
 
-            const string commandText = "INSERT INTO Areas(Id,Name) VALUES(@area1Id,@area1Name); "+
-                                       "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
-                                       "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
-                                       "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
-                                       "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);";
+            const string commandText = 
+                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,@area1Name); "+
+                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
+                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);";
             var command = new SQLiteCommand(dbConnection){CommandText = commandText};
             command.Parameters.AddWithValue("@area1Id", area1Id);
             command.Parameters.AddWithValue("@area1Name", "Area 1");
@@ -115,8 +116,9 @@ namespace WMM.Data
         {
             var id = Guid.NewGuid();
             var now = DateTime.Now;
-            const string commandText = "INSERT INTO Transactions(Id,[Date],Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted) " +
-                                       "VALUES (@id,@date,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted)";
+            const string commandText = 
+                "INSERT INTO Transactions(Id,[Date],Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted) " +
+                "VALUES (@id,@date,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted)";
             var command = new SQLiteCommand(_dbConnection) {CommandText = commandText};
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@date", date);
@@ -147,9 +149,10 @@ namespace WMM.Data
 
         private async Task<Transaction> GetTransaction(Guid id)
         {
-            const string commandText = "SELECT t.Id,c.Name,t.[Date],t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted  "
-                                       +"FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id "
-                                       +"WHERE t.Id = @id";
+            const string commandText = 
+                "SELECT t.Id,c.Name,t.[Date],t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted  "+
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id "+
+                "WHERE t.Id = @id";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
             command.Parameters.AddWithValue("@id", id);
             try
@@ -201,7 +204,9 @@ namespace WMM.Data
 
         public async Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
-            var commandText = "SELECT Amount FROM Transactions WHERE Deleted = 0 AND Date >= @dateFrom AND Date <= @dateTo";
+            const string commandText = 
+                "SELECT Amount FROM Transactions " +
+                "WHERE Deleted = 0 AND Date >= @dateFrom AND Date <= @dateTo";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
@@ -211,7 +216,7 @@ namespace WMM.Data
 
         public async Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
         {
-            var commandText =
+            const string commandText = 
                 "SELECT a.Name, t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo ";
@@ -224,7 +229,7 @@ namespace WMM.Data
 
         public async Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
         {
-            var commandText =
+            const string commandText = 
                 "SELECT c.Name, t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND a.Name = @area";
@@ -238,7 +243,7 @@ namespace WMM.Data
 
         public async Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area)
         {
-            var commandText =
+            const string commandText = 
                 "SELECT t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND a.Name = @area";
@@ -252,7 +257,7 @@ namespace WMM.Data
 
         public async Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
         {
-            var commandText =
+            const string commandText = 
                 "SELECT t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND c.Name = @category";
@@ -324,7 +329,8 @@ namespace WMM.Data
         public async Task<IEnumerable<string>> GetCategories()
         {
             var categories = new List<string>();
-            var commandText = "SELECT Name FROM Categories ORDER BY Name ASC";
+            const string commandText = 
+                "SELECT Name FROM Categories ORDER BY Name ASC";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
             try
             {
@@ -345,7 +351,10 @@ namespace WMM.Data
 
         public async Task<string> GetAreaForCategory(string category)
         {
-            var commandText = "SELECT a.Name FROM Categories c JOIN Areas a ON c.Area = a.Id WHERE c.Name = @category";
+            const string commandText = 
+                "SELECT a.Name " +
+                "FROM Categories c JOIN Areas a ON c.Area = a.Id " +
+                "WHERE c.Name = @category";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
             command.Parameters.AddWithValue("@category", category);
             try
