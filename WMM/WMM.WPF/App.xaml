@@ -7,6 +7,25 @@
              Startup="App_OnStartup"
              Exit="App_OnExit">
     <Application.Resources>
+        <!--
+        <SolidColorBrush x:Key="C1" Color="#fbfbf2" />
+        <SolidColorBrush x:Key="C2" Color="#e5e6e4" />
+        <SolidColorBrush x:Key="C3" Color="#cfd2cd" />
+        <SolidColorBrush x:Key="C4" Color="#a6a2a2" />
+        <SolidColorBrush x:Key="C5" Color="#847577" />
+        -->
+
+        <Color x:Key="C1">#ebf4f6</Color>
+        <Color x:Key="C2">#bdeaee</Color>
+        <Color x:Key="C3">#76b4bd</Color>
+        <Color x:Key="C4">#58668b</Color>
+        <Color x:Key="C5">#5e5656</Color>
+        <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
+        <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
+        <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
+        <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
+        <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
+
         <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
         <system:Double x:Key="CommonFontSize">14</system:Double>
         <Style TargetType="TextBlock">
@@ -25,8 +44,33 @@
             <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
             <Setter Property="Padding" Value="{StaticResource CommonMargin}"/>
         </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
+            <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB1}"/>
+        </Style>
+        <Style TargetType="DataGridRow">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource C5}" />
+            </Style.Resources>
+        </Style>
 
         <converters:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
         <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+        <converters:AmountColorConverter x:Key="AmountColorConverter"/>
+
+        <Style TargetType="TextBlock" x:Key="AmountStyleBase">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="AmountStyle" BasedOn="{StaticResource AmountStyleBase}">
+            <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:0.00}}"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="IncomeAmountStyle" BasedOn="{StaticResource AmountStyleBase}">
+            <Setter Property="Text" Value="{Binding Path=., StringFormat='+{0:0.00}'}"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="ColoredAmountStyle" BasedOn="{StaticResource AmountStyle}">
+            <Setter Property="Foreground" Value="{Binding Path=., Converter={StaticResource AmountColorConverter}}"/>
+        </Style>
+        
+
     </Application.Resources>
 </Application>

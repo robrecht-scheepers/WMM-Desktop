@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="Where's my money?" 
         WindowState="Maximized"
+        Background="{StaticResource SCB1}"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
     <Window.Resources>
         <ResourceDictionary>
@@ -35,7 +36,7 @@
 
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
             <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch"
-                      ItemTemplate="{StaticResource MonthBalanceView}"/>
+                      ItemTemplate="{StaticResource MonthBalanceView}" Background="Transparent" BorderBrush="{StaticResource SCB5}"/>
         </Grid>
 
         <Grid Name="Add" Grid.Row="1" Grid.Column="1" 

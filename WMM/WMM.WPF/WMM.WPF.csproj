@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Balances\AreaBalanceViewModel.cs" />
     <Compile Include="Balances\CategoryBalanceViewModel.cs" />
+    <Compile Include="Converters\AmountColorConverter.cs" />
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Recurring\RecurringTransactionsViewModel.cs" />

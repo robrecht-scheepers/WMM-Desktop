@@ -30,7 +30,6 @@ namespace WMM.WPF.Recurring
             Categories = new ObservableCollection<string>();
             Transactions = new ObservableCollection<Transaction>();
         }
-
         public RecurringTransactionsViewModel(IRepository repository)
         {
             _repository = repository;
@@ -56,6 +55,10 @@ namespace WMM.WPF.Recurring
                 await GetRecurringTransactions();
             }
         }
+
+        public string Title => _manageTemplates
+            ? "Vorlagen für monatliche Kosten und Einkunften verwalten"
+            : $"Monatliche Kosten und Einkunften für {_month:Y} verwalten";
 
         public ObservableCollection<Transaction> Transactions { get; }
 
