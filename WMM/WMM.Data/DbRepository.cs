@@ -164,6 +164,27 @@ namespace WMM.Data
             }
         }
 
+        private async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
+        {
+            const string commandText =
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
+                "WHERE t.Date >= @dateFrom AND t.Date <= @dateTo";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            command.Parameters.AddWithValue("@dateFrom", dateFrom);
+            command.Parameters.AddWithValue("@dateTo", dateTo);
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                return await ReadTransactions(reader);
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+        }
+
         public async Task<Transaction> AddRecurringTemplate(string category, double amount, string comments)
         {
             var id = Guid.NewGuid();
@@ -280,15 +301,14 @@ namespace WMM.Data
 
         public async Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
         {
-            const string commandText = 
-                "SELECT a.Name, t.Amount " +
-                "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
-                "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo ";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            command.Parameters.AddWithValue("@dateFrom", dateFrom);
-            command.Parameters.AddWithValue("@dateTo", dateTo);
+            var balances = new Dictionary<string,Balance>();
+            var transactions = await GetTransactions(dateFrom, dateTo);
+            var areas = await GetAreasAndCategories();
 
-            return await CalculateNamedBalancesFromQuery(command);
+            foreach (var area in areas.Keys)
+            {
+                balances[area] = CalculateBalance(transactions.Where(x => areas[area].Contains(x.Category)))
+            }
         }
 
         public async Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
@@ -354,6 +374,34 @@ namespace WMM.Data
             }
 
             return categories;
+        }
+
+        private async Task<Dictionary<string,List<string>>> GetAreasAndCategories()
+        {
+            var dictionary = new Dictionary<string, List<string>>();
+            const string commandText =
+                "SELECTa.Name AS Area, c.Name AS Category FROM Categories c JOIN RAeas a on c.Area = a.Id ORDER BY Area, Category";
+            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            try
+            {
+                _dbConnection.Open();
+                var reader = await command.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    var area = reader.GetString(0);
+                    var category = reader.GetString(1);
+                    if(dictionary.ContainsKey(area))
+                        dictionary[area].Add(category);
+                    else
+                        dictionary[area] = new List<string>{category};
+                }
+            }
+            finally
+            {
+                _dbConnection.Close();
+            }
+
+            return dictionary;
         }
 
         public async Task<string> GetAreaForCategory(string category)
@@ -458,6 +506,13 @@ namespace WMM.Data
             return transactions;
         }
 
+        private Balance CalculateBalance(List<Transaction> transactions)
+        {
+            return new Balance(
+                transactions.Where(x => x.Amount > 0).Select(x => x.Amount).Sum(),
+                transactions.Where(x => x.Amount < 0).Select(x => x.Amount).Sum());
+        }
+
         private static void SeedDummyCategories(SQLiteConnection dbConnection)
         {
             var area1Id = Guid.NewGuid();
@@ -471,7 +526,12 @@ namespace WMM.Data
                 "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
                 "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
                 "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
-                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);";
+                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);" +
+                "INSERT INTO Areas(Id,Name) VALUES(@area3Id,'Area 3'); " +
+                "INSERT INTO Areas(Id,Name) VALUES(@area4Id,'Area 4'); " +
+                "INSERT INTO Areas(Id,Name) VALUES(@area5Id,'Area 5'); " +
+                "INSERT INTO Areas(Id,Name) VALUES(@area6Id,'Area 6'); " +
+                "INSERT INTO Areas(Id,Name) VALUES(@area7Id,'Area 7'); ";
             var command = new SQLiteCommand(dbConnection) { CommandText = commandText };
             command.Parameters.AddWithValue("@area1Id", area1Id);
             command.Parameters.AddWithValue("@area1Name", "Area 1");
@@ -483,6 +543,11 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@category2Name", "Category 2");
             command.Parameters.AddWithValue("@category3Id", category3Id);
             command.Parameters.AddWithValue("@category3Name", "Category 3");
+            command.Parameters.AddWithValue("@area3Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@area4Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@area5Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@area6Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@area7Id", Guid.NewGuid());
 
             try
             {

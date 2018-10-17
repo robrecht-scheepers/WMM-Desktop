@@ -15,11 +15,11 @@
         <SolidColorBrush x:Key="C5" Color="#847577" />
         -->
 
-        <Color x:Key="C1">#ebf4f6</Color>
-        <Color x:Key="C2">#bdeaee</Color>
-        <Color x:Key="C3">#76b4bd</Color>
-        <Color x:Key="C4">#58668b</Color>
-        <Color x:Key="C5">#5e5656</Color>
+        <Color x:Key="C1">#f8f8fa</Color>
+        <Color x:Key="C2">#e5e6eb</Color>
+        <Color x:Key="C3">#d2d4dc</Color>
+        <Color x:Key="C4">#c0c2ce</Color>
+        <Color x:Key="C5">#afafaf</Color>
         <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
         <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
         <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
@@ -47,6 +47,7 @@
         <Style TargetType="DataGrid">
             <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
             <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB1}"/>
+            <Setter Property="HeadersVisibility" Value="None"/>
         </Style>
         <Style TargetType="DataGridRow">
             <Style.Resources>
@@ -58,14 +59,9 @@
         <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
         <converters:AmountColorConverter x:Key="AmountColorConverter"/>
 
-        <Style TargetType="TextBlock" x:Key="AmountStyleBase">
+        <Style TargetType="TextBlock" x:Key="AmountStyle">
             <Setter Property="HorizontalAlignment" Value="Right"/>
-        </Style>
-        <Style TargetType="TextBlock" x:Key="AmountStyle" BasedOn="{StaticResource AmountStyleBase}">
-            <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:0.00}}"/>
-        </Style>
-        <Style TargetType="TextBlock" x:Key="IncomeAmountStyle" BasedOn="{StaticResource AmountStyleBase}">
-            <Setter Property="Text" Value="{Binding Path=., StringFormat='+{0:0.00}'}"/>
+            <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:+###,##0.00;-###,##0.00}}"/>
         </Style>
         <Style TargetType="TextBlock" x:Key="ColoredAmountStyle" BasedOn="{StaticResource AmountStyle}">
             <Setter Property="Foreground" Value="{Binding Path=., Converter={StaticResource AmountColorConverter}}"/>

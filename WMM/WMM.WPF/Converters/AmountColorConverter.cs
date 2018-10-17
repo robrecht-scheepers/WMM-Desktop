@@ -16,7 +16,7 @@ namespace WMM.WPF.Converters
             var amount = System.Convert.ToDouble(value);
 
             return new SolidColorBrush(amount < 0 
-                ? Colors.Red
+                ? Colors.DarkRed
                 : Colors.Green);
         }
 
