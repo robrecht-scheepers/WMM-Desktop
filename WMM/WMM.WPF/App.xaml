@@ -7,19 +7,25 @@
              Startup="App_OnStartup"
              Exit="App_OnExit">
     <Application.Resources>
-        <!--
-        <SolidColorBrush x:Key="C1" Color="#fbfbf2" />
-        <SolidColorBrush x:Key="C2" Color="#e5e6e4" />
-        <SolidColorBrush x:Key="C3" Color="#cfd2cd" />
-        <SolidColorBrush x:Key="C4" Color="#a6a2a2" />
-        <SolidColorBrush x:Key="C5" Color="#847577" />
-        -->
-
+        <!-- Grey 
         <Color x:Key="C1">#f8f8fa</Color>
         <Color x:Key="C2">#e5e6eb</Color>
         <Color x:Key="C3">#d2d4dc</Color>
         <Color x:Key="C4">#c0c2ce</Color>
         <Color x:Key="C5">#afafaf</Color>
+        <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
+        <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
+        <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
+        <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
+        <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
+        -->
+
+        <!-- facebook -->
+        <Color x:Key="C1">#ffffff</Color>
+        <Color x:Key="C2">#f7f7f7</Color>
+        <Color x:Key="C3">#dfe3ee</Color>
+        <Color x:Key="C4">#8b9dc3</Color>
+        <Color x:Key="C5">#3b5998</Color>
         <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
         <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
         <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
@@ -46,12 +52,12 @@
         </Style>
         <Style TargetType="DataGrid">
             <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
-            <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB1}"/>
+            <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB3}"/>
             <Setter Property="HeadersVisibility" Value="None"/>
         </Style>
         <Style TargetType="DataGridRow">
             <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource C5}" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource C4}" />
             </Style.Resources>
         </Style>
 

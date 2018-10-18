@@ -13,10 +13,12 @@ namespace WMM.Data
     public class DbRepository : IRepository
     {
         private const string DbFileName = "wmm.db3";
-        private const string ConnectionString = "Data Source={0}; Version=3";
+        private const string ConnectionString = "Data Source={0}; Version=3;LockingMode=Normal; Synchronous=Off";
         private readonly string _account;
         private readonly string _dbPath;
         private readonly SQLiteConnection _dbConnection;
+
+        private Dictionary<string, List<string>> _categories;
 
         public DbRepository(string dbFolder)
         {
@@ -65,9 +67,9 @@ namespace WMM.Data
             return dbConnection;
         }
 
-        public Task Initialize()
+        public async Task Initialize()
         {
-            return Task.CompletedTask;
+            _categories = await GetAreasAndCategories();
         }
         
         public async Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring)
@@ -257,27 +259,6 @@ namespace WMM.Data
             }
         }
 
-        //public async Task<bool> PeriodHasRecurringTransactions(DateTime dateFrom, DateTime dateTo)
-        //{
-        //    const string commandText =
-        //        "SELECT COUNT(Id) " +
-        //        "FROM Transactions " +
-        //        "WHERE Date >= @dateFrom AND Date <= @dateTo AND Recurring = 1";
-        //    var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-        //    command.Parameters.AddWithValue("@dateFrom", dateFrom);
-        //    command.Parameters.AddWithValue("@dateTo", dateTo);
-        //    try
-        //    {
-        //        _dbConnection.Open();
-        //        var count = Convert.ToInt32(await command.ExecuteScalarAsync());
-        //        return count > 0;
-        //    }
-        //    finally
-        //    {
-        //        _dbConnection.Close();
-        //    }
-        //}
-
         public async Task ApplyRecurringTemplates(DateTime date)
         {
             var templates = await GetRecurringTemplates();
@@ -302,13 +283,15 @@ namespace WMM.Data
         public async Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)
         {
             var balances = new Dictionary<string,Balance>();
-            var transactions = await GetTransactions(dateFrom, dateTo);
-            var areas = await GetAreasAndCategories();
+            var transactions = (await GetTransactions(dateFrom, dateTo)).ToList();
+            var categories = await GetAreasAndCategories();
 
-            foreach (var area in areas.Keys)
+            foreach (var area in categories.Keys)
             {
-                balances[area] = CalculateBalance(transactions.Where(x => areas[area].Contains(x.Category)))
+                balances[area] = CalculateBalance(transactions.Where(x => categories[area].Contains(x.Category)).ToList());
             }
+
+            return balances;
         }
 
         public async Task<Dictionary<string, Balance>> GetCategoryBalances(DateTime dateFrom, DateTime dateTo, string area)
@@ -353,34 +336,16 @@ namespace WMM.Data
             return await CalculateBalanceFromQuery(command);
         }
 
-        public async Task<IEnumerable<string>> GetCategories()
+        public Task<IEnumerable<string>> GetCategories()
         {
-            var categories = new List<string>();
-            const string commandText =
-                "SELECT Name FROM Categories ORDER BY Name ASC";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            try
-            {
-                _dbConnection.Open();
-                var reader = await command.ExecuteReaderAsync();
-                while (reader.Read())
-                {
-                    categories.Add(reader.GetString(0));
-                }
-            }
-            finally
-            {
-                _dbConnection.Close();
-            }
-
-            return categories;
+            return Task.FromResult(_categories?.SelectMany(x => x.Value).Distinct());
         }
 
         private async Task<Dictionary<string,List<string>>> GetAreasAndCategories()
         {
             var dictionary = new Dictionary<string, List<string>>();
             const string commandText =
-                "SELECTa.Name AS Area, c.Name AS Category FROM Categories c JOIN RAeas a on c.Area = a.Id ORDER BY Area, Category";
+                "SELECT a.Name AS Area, c.Name AS Category FROM Categories c JOIN Areas a on c.Area = a.Id ORDER BY a.Name, c.Name";
             var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
             try
             {
@@ -515,39 +480,65 @@ namespace WMM.Data
 
         private static void SeedDummyCategories(SQLiteConnection dbConnection)
         {
-            var area1Id = Guid.NewGuid();
-            var area2Id = Guid.NewGuid();
-            var category1Id = Guid.NewGuid();
-            var category2Id = Guid.NewGuid();
-            var category3Id = Guid.NewGuid();
-
             const string commandText =
-                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,@area1Name); " +
-                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,@area2Name); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category1Id,@category1Name,@area1Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category2Id,@category2Name,@area1Id); " +
-                "Insert INTO Categories(Id, Name, Area) VALUES(@category3Id, @category3Name, @area2Id);" +
+                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,'Area 1'); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category11Id,'category 1.1',@area1Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category12Id,'category 1.2',@area1Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category13Id,'category 1.3',@area1Id);" +
+                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,'Area 2'); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category21Id,'category 2.1',@area2Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category22Id,'category 2.2',@area2Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category23Id,'category 2.3',@area2Id);" +
                 "INSERT INTO Areas(Id,Name) VALUES(@area3Id,'Area 3'); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category31Id,'category 3.1',@area3Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category32Id,'category 3.2',@area3Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category33Id,'category 3.3',@area3Id);" +
                 "INSERT INTO Areas(Id,Name) VALUES(@area4Id,'Area 4'); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category41Id,'category 4.1',@area4Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category42Id,'category 4.2',@area4Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category43Id,'category 4.3',@area4Id);" +
                 "INSERT INTO Areas(Id,Name) VALUES(@area5Id,'Area 5'); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category51Id,'category 5.1',@area5Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category52Id,'category 5.2',@area5Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category53Id,'category 5.3',@area5Id);" +
                 "INSERT INTO Areas(Id,Name) VALUES(@area6Id,'Area 6'); " +
-                "INSERT INTO Areas(Id,Name) VALUES(@area7Id,'Area 7'); ";
-            var command = new SQLiteCommand(dbConnection) { CommandText = commandText };
-            command.Parameters.AddWithValue("@area1Id", area1Id);
-            command.Parameters.AddWithValue("@area1Name", "Area 1");
-            command.Parameters.AddWithValue("@area2Id", area2Id);
-            command.Parameters.AddWithValue("@area2Name", "Area 2");
-            command.Parameters.AddWithValue("@category1Id", category1Id);
-            command.Parameters.AddWithValue("@category1Name", "Category 1");
-            command.Parameters.AddWithValue("@category2Id", category2Id);
-            command.Parameters.AddWithValue("@category2Name", "Category 2");
-            command.Parameters.AddWithValue("@category3Id", category3Id);
-            command.Parameters.AddWithValue("@category3Name", "Category 3");
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category61Id,'category 6.1',@area6Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category62Id,'category 6.2',@area6Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category63Id,'category 6.3',@area6Id);" +
+                "INSERT INTO Areas(Id,Name) VALUES(@area7Id,'Area 7'); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category71Id,'category 7.1',@area7Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category72Id,'category 7.2',@area7Id); " +
+                "INSERT INTO Categories(Id,Name,Area) VALUES(@category73Id,'category 7.3',@area7Id);";
+
+            var command = new SQLiteCommand(dbConnection) {CommandText = commandText};
+            command.Parameters.AddWithValue("@area1Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@area2Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area3Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area4Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area5Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area6Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area7Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category11Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category12Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category13Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category21Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category22Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category23Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category31Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category32Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category33Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category41Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category42Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category43Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category51Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category52Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category53Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category61Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category62Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category63Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category71Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category72Id", Guid.NewGuid());
+            command.Parameters.AddWithValue("@category73Id", Guid.NewGuid());
 
             try
             {

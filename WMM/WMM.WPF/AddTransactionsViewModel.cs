@@ -30,7 +30,7 @@ namespace WMM.WPF
             Categories = new ObservableCollection<string>(await _repository.GetCategories());
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
-            NewTransactionAmount = 0.0;
+            NewTransactionAmount = 115.29; // should be 0, now with value for faster testing
             SelectedSign = "-";
         }
 
@@ -72,6 +72,7 @@ namespace WMM.WPF
             var amount = SelectedSign == "-" ? NewTransactionAmount * -1.0 : NewTransactionAmount;
 
             var transaction = await _repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, null);
+
             AddedTransactions.Add(transaction);
             RaiseTransactionAdded(transaction);
         }
