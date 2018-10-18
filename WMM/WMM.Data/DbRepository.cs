@@ -158,8 +158,10 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@id", id);
 
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    return (await ReadTransactions(reader)).SingleOrDefault();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        return (await ReadTransactions(reader)).SingleOrDefault();
+                    }
                 }
             }
             
@@ -178,8 +180,10 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@dateFrom", dateFrom);
                     command.Parameters.AddWithValue("@dateTo", dateTo);
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    return await ReadTransactions(reader);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        return await ReadTransactions(reader);
+                    }
                 }
             }
         }
@@ -229,8 +233,10 @@ namespace WMM.Data
                 using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
                 {
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    return await ReadTransactions(reader);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        return await ReadTransactions(reader);
+                    }
                 }
             }
         }
@@ -248,8 +254,10 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@dateFrom", dateFrom);
                     command.Parameters.AddWithValue("@dateTo", dateTo);
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    return await ReadTransactions(reader);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        return await ReadTransactions(reader);
+                    }
                 }
             }
         }
@@ -279,15 +287,17 @@ namespace WMM.Data
                     Log("CalculateBalanceFromQuery-Open");
                     command.Connection = dbConnection;
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    if (!reader.HasRows)
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        Log("CalculateBalanceFromQuery-Close");
-                        return default(Balance);
-                    }
-                    while (reader.Read())
-                    {
-                        amounts.Add(reader.GetDouble(0));
+                        if (!reader.HasRows)
+                        {
+                            Log("CalculateBalanceFromQuery-Close");
+                            return default(Balance);
+                        }
+                        while (reader.Read())
+                        {
+                            amounts.Add(reader.GetDouble(0));
+                        }
                     }
                     Log("CalculateBalanceFromQuery-Close");
                 }
@@ -328,23 +338,26 @@ namespace WMM.Data
 
                     Log("CalculateNamedBalancesFromQuery-Open");
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    if (!reader.HasRows)
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        Log("CalculateNamedBalancesFromQuery-Close");
-                        return balances;
-                    }
-                    while (reader.Read())
-                    {
-                        var category = reader.GetString(0);
-                        var amount = reader.GetDouble(1);
-                        if (amounts.ContainsKey(category))
+                        if (!reader.HasRows)
                         {
-                            amounts[category].Add(amount);   
+                            Log("CalculateNamedBalancesFromQuery-Close");
+                            return balances;
                         }
-                        else
+
+                        while (reader.Read())
                         {
-                            amounts[category] = new List<double>{amount};
+                            var category = reader.GetString(0);
+                            var amount = reader.GetDouble(1);
+                            if (amounts.ContainsKey(category))
+                            {
+                                amounts[category].Add(amount);
+                            }
+                            else
+                            {
+                                amounts[category] = new List<double> {amount};
+                            }
                         }
                     }
 
@@ -378,16 +391,20 @@ namespace WMM.Data
                     Log("CalculateBalanceFromQuery-Open");
                     command.Connection = dbConnection;
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    if (!reader.HasRows)
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        Log("CalculateBalanceFromQuery-Close");
-                        return default(Balance);
+                        if (!reader.HasRows)
+                        {
+                            Log("CalculateBalanceFromQuery-Close");
+                            return default(Balance);
+                        }
+
+                        while (reader.Read())
+                        {
+                            amounts.Add(reader.GetDouble(0));
+                        }
                     }
-                    while (reader.Read())
-                    {
-                        amounts.Add(reader.GetDouble(0));
-                    }
+
                     Log("CalculateBalanceFromQuery-Close");
                 }
             }
@@ -404,7 +421,7 @@ namespace WMM.Data
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND c.Name = @category";
             using (var dbConnection = GetConnection())
             {
-                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
                 {
                     command.Parameters.AddWithValue("@dateFrom", dateFrom);
                     command.Parameters.AddWithValue("@dateTo", dateTo);
@@ -413,16 +430,19 @@ namespace WMM.Data
                     Log("CalculateBalanceFromQuery-Open");
                     command.Connection = dbConnection;
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    if (!reader.HasRows)
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        Log("CalculateBalanceFromQuery-Close");
-                        return default(Balance);
+                        if (!reader.HasRows)
+                        {
+                            Log("CalculateBalanceFromQuery-Close");
+                            return default(Balance);
+                        }
+                        while (reader.Read())
+                        {
+                            amounts.Add(reader.GetDouble(0));
+                        }
                     }
-                    while (reader.Read())
-                    {
-                        amounts.Add(reader.GetDouble(0));
-                    }
+
                     Log("CalculateBalanceFromQuery-Close");
                 }
             }
@@ -444,15 +464,19 @@ namespace WMM.Data
             {
                 command.Connection = dbConnection;
                 dbConnection.Open();
-                var reader = await command.ExecuteReaderAsync();
-                while (reader.Read())
-                {
-                    var area = reader.GetString(0);
-                    var category = reader.GetString(1);
-                    if(dictionary.ContainsKey(area))
-                        dictionary[area].Add(category);
-                    else
-                        dictionary[area] = new List<string>{category};
+                using (var reader = await command.ExecuteReaderAsync())
+                { 
+                    if (!reader.HasRows)
+                        return dictionary;
+                    while (reader.Read())
+                    {
+                        var area = reader.GetString(0);
+                        var category = reader.GetString(1);
+                        if (dictionary.ContainsKey(area))
+                            dictionary[area].Add(category);
+                        else
+                            dictionary[area] = new List<string> {category};
+                    }
                 }
             }
             return dictionary;
@@ -470,12 +494,13 @@ namespace WMM.Data
                 {
                     command.Parameters.AddWithValue("@category", category);
                     dbConnection.Open();
-                    var reader = await command.ExecuteReaderAsync();
-                    if (!reader.HasRows)
-                        return null;
-
-                    reader.Read();
-                    return reader.GetString(0);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (!reader.HasRows)
+                            return null;
+                        reader.Read();
+                        return reader.GetString(0);
+                    }
                 }
             }
         }
