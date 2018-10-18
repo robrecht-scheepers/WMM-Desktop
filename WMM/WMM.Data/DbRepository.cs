@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
@@ -13,10 +14,10 @@ namespace WMM.Data
     public class DbRepository : IRepository
     {
         private const string DbFileName = "wmm.db3";
-        private const string ConnectionString = "Data Source={0}; Version=3;LockingMode=Normal; Synchronous=Off";
+        private const string ConnectionStringBase = "Data Source={0}; Version=3;LockingMode=Normal; Synchronous=Off";
         private readonly string _account;
         private readonly string _dbPath;
-        private readonly SQLiteConnection _dbConnection;
+        private readonly string _dbConnectionString;
 
         private Dictionary<string, List<string>> _categories;
 
@@ -27,13 +28,15 @@ namespace WMM.Data
             if (!Directory.Exists(dbFolder))
                 Directory.CreateDirectory(dbFolder);
             _dbPath = Path.Combine(dbFolder, DbFileName);
+            _dbConnectionString = string.Format(ConnectionStringBase, _dbPath);
 
-            _dbConnection = File.Exists(_dbPath) 
-                ? new SQLiteConnection(string.Format(ConnectionString, _dbPath))
-                : CreateNewDatabase(_dbPath);
+            if (!File.Exists(_dbPath))
+                CreateNewDatabase(_dbPath);
         }
 
-        private static SQLiteConnection CreateNewDatabase(string dbPath)
+        private SQLiteConnection GetConnection() => new SQLiteConnection(_dbConnectionString);
+
+        private void CreateNewDatabase(string dbPath)
         {
             // no need to make this method async as it is executed in the constructor before the window is visible
             string createDbSql;
@@ -50,21 +53,14 @@ namespace WMM.Data
                 throw new Exception("Created DB script is empty");
 
             SQLiteConnection.CreateFile(dbPath);
-            var dbConnection = new SQLiteConnection(string.Format(ConnectionString, dbPath));
-            var command = new SQLiteCommand(dbConnection) {CommandText = createDbSql};
-            
-            try
+            using (var dbConnection = GetConnection())
             {
+                var command = new SQLiteCommand(dbConnection) { CommandText = createDbSql };
                 dbConnection.Open();
-                command.ExecuteNonQuery();
-            }
-            finally
-            {
-                dbConnection.Close();
+                command.ExecuteNonQuery(CommandBehavior.CloseConnection);
             }
 
-            SeedDummyCategories(dbConnection);
-            return dbConnection;
+            SeedDummyCategories();
         }
 
         public async Task Initialize()
@@ -79,7 +75,7 @@ namespace WMM.Data
             const string commandText = 
                 "INSERT INTO Transactions(Id,[Date],Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted,Recurring) " +
                 "VALUES (@id,@date,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted,@recurring)";
-            var command = new SQLiteCommand(_dbConnection) {CommandText = commandText};
+            var command = new SQLiteCommand {CommandText = commandText};
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@date", date);
             command.Parameters.AddWithValue("@category", category);
@@ -93,14 +89,11 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@recurring", recurring);
 
             int lines;
-            try
+            using(var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 lines = await command.ExecuteNonQueryAsync();
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
 
             return lines == 0
@@ -115,16 +108,13 @@ namespace WMM.Data
                 "UPDATE Transactions " +
                 "SET [Date] = @date, Category = (SELECT Id FROM Categories WHERE Name = @category), AMount = @amount, Comments = @comments " +
                 "WHERE Id = @id";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@id", transaction.Id);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 await command.ExecuteNonQueryAsync();
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
             return await GetTransaction(transaction.Id);
         }
@@ -133,16 +123,13 @@ namespace WMM.Data
         {
             const string commandText =
                 "DELETE FROM Transactions WHERE Id = @id";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@id", transaction.Id);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 await command.ExecuteNonQueryAsync();
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
         }
 
@@ -152,17 +139,14 @@ namespace WMM.Data
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
                 "WHERE t.Id = @id";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@id", id);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 return (await ReadTransactions(reader)).SingleOrDefault();
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
         }
 
@@ -172,18 +156,15 @@ namespace WMM.Data
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
                 "WHERE t.Date >= @dateFrom AND t.Date <= @dateTo";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 return await ReadTransactions(reader);
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
         }
 
@@ -194,7 +175,7 @@ namespace WMM.Data
             const string commandText =
                 "INSERT INTO Transactions(Id,Category,Amount,Comments,CreatedTime,CreatedAccount,LastUpdateTime,LastUpdateAccount,Deleted,Recurring) " +
                 "VALUES (@id,(SELECT Id FROM Categories WHERE Name = @category),@amount,@comments,@createdTime,@createdAccount,@lastUpdateTime,@lastUpdateAccount,@deleted,@recurring)";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@category", category);
             command.Parameters.AddWithValue("@amount", amount);
@@ -205,15 +186,12 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@lastUpdateAccount", _account);
             command.Parameters.AddWithValue("@deleted", 0);
             command.Parameters.AddWithValue("@recurring", 1);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 if (await command.ExecuteNonQueryAsync() == 0) // ==0 mean no row was added
                     return default(Transaction);
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
 
             return await GetTransaction(id);
@@ -225,16 +203,13 @@ namespace WMM.Data
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
                 "WHERE t.Recurring = 1 AND t.Date IS NULL";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            try
+            var command = new SQLiteCommand() { CommandText = commandText };
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 return await ReadTransactions(reader);
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
         }
 
@@ -244,18 +219,15 @@ namespace WMM.Data
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
                 "WHERE t.Date >= @dateFrom AND t.Date <= @dateTo AND Recurring = 1";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 return await ReadTransactions(reader);
-            }
-            finally
-            {
-                _dbConnection.Close();
             }
         }
 
@@ -273,7 +245,7 @@ namespace WMM.Data
             const string commandText = 
                 "SELECT Amount FROM Transactions " +
                 "WHERE Deleted = 0 AND Date >= @dateFrom AND Date <= @dateTo";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
 
@@ -300,7 +272,7 @@ namespace WMM.Data
                 "SELECT c.Name, t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND a.Name = @area";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
             command.Parameters.AddWithValue("@area", area);
@@ -314,7 +286,7 @@ namespace WMM.Data
                 "SELECT t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND a.Name = @area";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
             command.Parameters.AddWithValue("@area", area);
@@ -328,7 +300,7 @@ namespace WMM.Data
                 "SELECT t.Amount " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id " +
                 "WHERE t.Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND c.Name = @category";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@dateFrom", dateFrom);
             command.Parameters.AddWithValue("@dateTo", dateTo);
             command.Parameters.AddWithValue("@category", category);
@@ -346,10 +318,11 @@ namespace WMM.Data
             var dictionary = new Dictionary<string, List<string>>();
             const string commandText =
                 "SELECT a.Name AS Area, c.Name AS Category FROM Categories c JOIN Areas a on c.Area = a.Id ORDER BY a.Name, c.Name";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
-            try
+            var command = new SQLiteCommand() { CommandText = commandText };
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
@@ -361,11 +334,6 @@ namespace WMM.Data
                         dictionary[area] = new List<string>{category};
                 }
             }
-            finally
-            {
-                _dbConnection.Close();
-            }
-
             return dictionary;
         }
 
@@ -375,55 +343,47 @@ namespace WMM.Data
                 "SELECT a.Name " +
                 "FROM Categories c JOIN Areas a ON c.Area = a.Id " +
                 "WHERE c.Name = @category";
-            var command = new SQLiteCommand(_dbConnection) { CommandText = commandText };
+            var command = new SQLiteCommand() { CommandText = commandText };
             command.Parameters.AddWithValue("@category", category);
-            try
+            using (var dbConnection = GetConnection())
             {
-                _dbConnection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 return reader.Read()
                     ? reader.GetString(0)
                     : null;
             }
-            finally
-            {
-                _dbConnection.Close();
-            }
         }
 
-        private static async Task<Balance> CalculateBalanceFromQuery(SQLiteCommand command)
+        private async Task<Balance> CalculateBalanceFromQuery(SQLiteCommand command)
         {
             var amounts = new List<double>();
-            try
+            using (var dbConnection = GetConnection())
             {
-                command.Connection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 if (!reader.HasRows)
                     return default(Balance);
-
                 while (reader.Read())
                 {
                     amounts.Add(reader.GetDouble(0));
                 }
             }
-            finally
-            {
-                command.Connection.Close();
-            }
-
             return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
         }
 
-        private static async Task<Dictionary<string, Balance>> CalculateNamedBalancesFromQuery(SQLiteCommand command)
+        private async Task<Dictionary<string, Balance>> CalculateNamedBalancesFromQuery(SQLiteCommand command)
         {
             var balances = new Dictionary<string, Balance>();
-            try
+            using (var dbConnection = GetConnection())
             {
-                command.Connection.Open();
+                command.Connection = dbConnection;
+                dbConnection.Open();
                 var reader = await command.ExecuteReaderAsync();
                 if (!reader.HasRows)
                     return balances;
-
                 while (reader.Read())
                 {
                     var category = reader.GetString(0);
@@ -440,11 +400,6 @@ namespace WMM.Data
                     }
                 }
             }
-            finally
-            {
-                command.Connection.Close();
-            }
-
             return balances;
         }
 
@@ -478,7 +433,7 @@ namespace WMM.Data
                 transactions.Where(x => x.Amount < 0).Select(x => x.Amount).Sum());
         }
 
-        private static void SeedDummyCategories(SQLiteConnection dbConnection)
+        private void SeedDummyCategories()
         {
             const string commandText =
                 "INSERT INTO Areas(Id,Name) VALUES(@area1Id,'Area 1'); " +
@@ -510,7 +465,7 @@ namespace WMM.Data
                 "INSERT INTO Categories(Id,Name,Area) VALUES(@category72Id,'category 7.2',@area7Id); " +
                 "INSERT INTO Categories(Id,Name,Area) VALUES(@category73Id,'category 7.3',@area7Id);";
 
-            var command = new SQLiteCommand(dbConnection) {CommandText = commandText};
+            var command = new SQLiteCommand() {CommandText = commandText};
             command.Parameters.AddWithValue("@area1Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area2Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@area3Id", Guid.NewGuid());
@@ -540,14 +495,11 @@ namespace WMM.Data
             command.Parameters.AddWithValue("@category72Id", Guid.NewGuid());
             command.Parameters.AddWithValue("@category73Id", Guid.NewGuid());
 
-            try
+            using (var dbConnection = GetConnection())
             {
+                command.Connection = dbConnection;
                 dbConnection.Open();
                 command.ExecuteNonQuery();
-            }
-            finally
-            {
-                dbConnection.Close();
             }
         }
 
