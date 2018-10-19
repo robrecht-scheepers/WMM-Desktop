@@ -10,6 +10,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Controls/ImageButton.xaml"/>
+                <ResourceDictionary Source="Controls/TextButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="C1">#ffffff</Color>

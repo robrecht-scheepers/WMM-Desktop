@@ -17,6 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Balances/MonthBalanceView.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <Thickness x:Key="MiddleColumnMargin" Left="2" Top="0" Right="2" Bottom="2"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -25,14 +26,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-            
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" BorderThickness="2" BorderBrush="{StaticResource SCB5}"/>
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="0,0,0,1" CornerRadius="1" />
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="{StaticResource MiddleColumnMargin}" />
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="0,0,0,1" />
 
 
         <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" >
@@ -47,23 +50,23 @@
                       ItemTemplate="{StaticResource MonthBalanceView}" Background="Transparent" BorderThickness="0"/>
         </Grid>
 
-        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="2,0" />
+
 
         <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource SCB5}" Margin="2,0">
             <TextBlock Text="Details" Style="{StaticResource TitleStyle}" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                
+
             </StackPanel>
         </Grid>
 
         <Grid Name="Details" Grid.Row="1" Grid.Column="1"/>
 
-        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" BorderThickness="2" BorderBrush="{StaticResource SCB5}"/>
+
 
         <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" >
             <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                
+
             </StackPanel>
         </Grid>
         <Grid Name="Add" Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}">
@@ -72,7 +75,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Background="{StaticResource SCB4}" Grid.Row="0" Margin="{StaticResource CommonMargin}">
+            <Grid Background="{StaticResource SCB5}" Grid.Row="0" Margin="{StaticResource CommonMargin}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>

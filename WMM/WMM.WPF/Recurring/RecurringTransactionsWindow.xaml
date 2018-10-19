@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF.Recurring"
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
+        xmlns:controls="clr-namespace:WMM.WPF.Controls"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="800"
+        Title="{Binding Title}" Height="450" Width="600"
         d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}"
-        Name="RecurringWindow">
+        Name="RecurringWindow"
+        WindowStyle="None"
+        Background="{StaticResource SCB5}"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,16 +20,20 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBlock Text="Kategorie"/>
-            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory, Mode=TwoWay}"/>
-            <TextBlock Text="Betrag"/>
-            <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-            <TextBox Text="{Binding Path=NewAmount, StringFormat=C, Mode=TwoWay}" />
-            <Button Command="{Binding AddCommand}">Add</Button>
-            <Button Command="{Binding ApplyTemplatesCommand}">Apply templates</Button>
-        </StackPanel>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory, Mode=TwoWay}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+                <TextBox Text="{Binding Path=NewAmount, StringFormat=C, Mode=TwoWay}" />
+            </StackPanel>
+            <controls:ImageButton Grid.Column="2" Command="{Binding AddCommand}" ImageSource="/Resources/ic_add.png" />
+        </Grid>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Category}"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat=C}"/>
@@ -38,6 +46,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Name="CloseButton" Grid.Row="2" HorizontalAlignment="Right" Click="CloseButton_OnClick" >Close</Button>
+        <controls:TextButton Grid.Row="2" HorizontalAlignment="Left" Command="{Binding ApplyTemplatesCommand}" Text="Vorlagen anwenden" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
+        <controls:TextButton x:Name="CloseButton" Grid.Row="2" HorizontalAlignment="Right" Click="CloseButton_OnClick" Text="Schließen" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
     </Grid>
 </Window>
