@@ -136,7 +136,9 @@
       <Name>WMM.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\ic_add.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ic_recurring.png" />
   </ItemGroup>

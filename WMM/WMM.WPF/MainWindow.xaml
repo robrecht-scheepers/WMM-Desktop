@@ -66,16 +66,19 @@
             </Grid.RowDefinitions>
 
             <Grid Background="{StaticResource SCB4}" Grid.Row="0" Margin="{StaticResource CommonMargin}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <TextBlock Text="Datum"/>
-                    <DatePicker SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
-                    <TextBlock Text="Kategorie"/>
-                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
-                    <TextBlock Text="Betrag"/>
-                    <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-                    <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" />
-                    <Button Command="{Binding AddTransactionCommand}">Add</Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <DatePicker Grid.Column="0" SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <ComboBox  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" />
                 </StackPanel>
+                <controls:ImageButton Grid.Column="3" Command="{Binding AddTransactionCommand}" ImageSource="/Resources/ic_add.png" />
             </Grid>
             <DataGrid Grid.Row="1" ItemsSource="{Binding AddedTransactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
                 <DataGrid.Columns>
