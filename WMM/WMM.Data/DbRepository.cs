@@ -172,7 +172,7 @@ namespace WMM.Data
             const string commandText =
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
-                "WHERE t.Date >= @dateFrom AND t.Date <= @dateTo";
+                "WHERE Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo";
             using (var dbConnection = GetConnection())
             {
                 using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
@@ -227,7 +227,7 @@ namespace WMM.Data
             const string commandText =
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
-                "WHERE t.Recurring = 1 AND t.Date IS NULL";
+                "WHERE t.Deleted = 0 AND t.Recurring = 1 AND t.Date IS NULL";
             using (var dbConnection = GetConnection())
             {
                 using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
@@ -246,7 +246,7 @@ namespace WMM.Data
             const string commandText =
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
-                "WHERE t.Date >= @dateFrom AND t.Date <= @dateTo AND Recurring = 1";
+                "WHERE Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND Recurring = 1";
             using (var dbConnection = GetConnection())
             {
                 using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})

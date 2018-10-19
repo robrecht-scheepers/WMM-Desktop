@@ -75,7 +75,7 @@ namespace WMM.WPF
             var transaction = await _repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, null);
 
             AddedTransactions.Add(transaction);
-            RaiseTransactionAdded(transaction);
+            RaiseTransactionChanged(transaction);
         }
 
         public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
@@ -83,14 +83,14 @@ namespace WMM.WPF
         {
             await _repository.DeleteTransaction(transaction);
             AddedTransactions.Remove(transaction);
-            RaiseTransactionAdded(transaction);
+            RaiseTransactionChanged(transaction);
         }
 
         public ObservableCollection<Transaction> AddedTransactions { get; }
 
         public event TransactionEventHandler TransactionChanged;
 
-        private void RaiseTransactionAdded(Transaction transaction)
+        private void RaiseTransactionChanged(Transaction transaction)
         {
             TransactionChanged?.Invoke(this, new TransactionEventArgs(transaction));
         }

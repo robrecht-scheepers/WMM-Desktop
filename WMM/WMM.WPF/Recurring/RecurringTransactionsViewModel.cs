@@ -20,6 +20,7 @@ namespace WMM.WPF.Recurring
         private ObservableCollection<string> _categories;
         private string _selectedSign;
         private AsyncRelayCommand _applyTemplatesCommand;
+        private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
 
         public RecurringTransactionsViewModel(IRepository repository, DateTime month)
         {
@@ -125,13 +126,21 @@ namespace WMM.WPF.Recurring
         {
             return !_manageTemplates && !Transactions.Any();
         }
-
         private async Task ApplyTemplates()
         {
             await _repository.ApplyRecurringTemplates(_month);
             await GetRecurringTransactions();
             RaiseMultipleTransactionsModified();
         }
+
+        public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
+        private async Task DeleteTransaction(Transaction transaction)
+        {
+            await _repository.DeleteTransaction(transaction);
+            Transactions.Remove(transaction);
+            RaiseTransactionModified(transaction);
+        }
+
 
         public event TransactionEventHandler TransactionModified;
         private void RaiseTransactionModified(Transaction transaction)
