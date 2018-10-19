@@ -19,7 +19,8 @@
                                     Command="{Binding ShowRecurringTransactionsCommand}">R</Button>
             <TextBlock Grid.Row="0" Grid.Column="2" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
             <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
-            <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" HorizontalAlignment="Stretch" TextAlignment="Right"  VerticalAlignment="Top" Background="{StaticResource SCB3}" />
+            <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Right"  VerticalAlignment="Top" Background="{StaticResource SCB3}" />
             <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
                                       ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False"
                                       RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Single"
@@ -30,12 +31,14 @@
                 </DataGrid.Columns>
                 <DataGrid.RowDetailsTemplate>
                     <DataTemplate DataType="local:AreaBalanceViewModel">
-                        <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Name}" />
-                                <DataGridTextColumn Binding="{Binding Balance.Total}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid Background="{StaticResource SCB5}">
+                            <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Name}" />
+                                    <DataGridTextColumn Binding="{Binding Balance.Total}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>
 

@@ -7,75 +7,66 @@
              Startup="App_OnStartup"
              Exit="App_OnExit">
     <Application.Resources>
-        <!-- Grey 
-        <Color x:Key="C1">#f8f8fa</Color>
-        <Color x:Key="C2">#e5e6eb</Color>
-        <Color x:Key="C3">#d2d4dc</Color>
-        <Color x:Key="C4">#c0c2ce</Color>
-        <Color x:Key="C5">#afafaf</Color>
-        <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
-        <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
-        <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
-        <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
-        <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
-        -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Controls/ImageButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <!-- facebook -->
-        <Color x:Key="C1">#ffffff</Color>
-        <Color x:Key="C2">#f7f7f7</Color>
-        <Color x:Key="C3">#dfe3ee</Color>
-        <Color x:Key="C4">#8b9dc3</Color>
-        <Color x:Key="C5">#3b5998</Color>
-        <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
-        <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
-        <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
-        <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
-        <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
+            <!-- facebook colors -->
+            <Color x:Key="C1">#ffffff</Color>
+            <Color x:Key="C2">#f7f7f7</Color>
+            <Color x:Key="C3">#dfe3ee</Color>
+            <Color x:Key="C4">#8b9dc3</Color>
+            <Color x:Key="C5">#3b5998</Color>
+            <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
+            <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
+            <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
+            <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
+            <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
 
-        <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
-        <system:Double x:Key="CommonFontSize">14</system:Double>
-        <Style TargetType="TextBlock">
-             <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
-         </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
-        </Style>
-        <Style TargetType="DataGridCell">
-            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
-            <Setter Property="Padding" Value="{StaticResource CommonMargin}"/>
-        </Style>
-        <Style TargetType="DataGrid">
-            <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
-            <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB3}"/>
-            <Setter Property="HeadersVisibility" Value="None"/>
-        </Style>
-        <Style TargetType="DataGridRow">
-            <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource C4}" />
-            </Style.Resources>
-        </Style>
+            <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
+            <system:Double x:Key="CommonFontSize">14</system:Double>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            </Style>
+            <Style TargetType="DataGridCell">
+                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+                <Setter Property="Padding" Value="{StaticResource CommonMargin}"/>
+            </Style>
+            <Style TargetType="DataGrid">
+                <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
+                <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB3}"/>
+                <Setter Property="HeadersVisibility" Value="None"/>
+            </Style>
+            <Style TargetType="DataGridRow">
+                <Style.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource C4}" />
+                </Style.Resources>
+            </Style>
 
-        <converters:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
-        <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
-        <converters:AmountColorConverter x:Key="AmountColorConverter"/>
+            <converters:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
+            <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+            <converters:AmountColorConverter x:Key="AmountColorConverter"/>
 
-        <Style TargetType="TextBlock" x:Key="AmountStyle">
-            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
-            <Setter Property="Padding" Value="2"/>
-            <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:+###,##0.00;-###,##0.00}}"/>
-        </Style>
-        <Style TargetType="TextBlock" x:Key="ColoredAmountStyle" BasedOn="{StaticResource AmountStyle}">
-            <Setter Property="Foreground" Value="{Binding Path=., Converter={StaticResource AmountColorConverter}}"/>
-        </Style>
-        
-
+            <Style TargetType="TextBlock" x:Key="AmountStyle">
+                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:+###,##0.00;-###,##0.00}}"/>
+            </Style>
+            <Style TargetType="TextBlock" x:Key="ColoredAmountStyle" BasedOn="{StaticResource AmountStyle}">
+                <Setter Property="Foreground" Value="{Binding Path=., Converter={StaticResource AmountColorConverter}}"/>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

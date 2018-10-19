@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Balances\AreaBalanceViewModel.cs" />
     <Compile Include="Balances\CategoryBalanceViewModel.cs" />
+    <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
@@ -68,6 +69,10 @@
     <Page Include="Balances\MonthBalanceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ImageButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

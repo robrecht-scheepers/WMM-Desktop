@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF"
-        xmlns:balances="clr-namespace:WMM.WPF.Balances"
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         mc:Ignorable="d"
         Title="Where's my money?" 
@@ -28,12 +27,15 @@
             
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Name="ControlBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
+            
+            
             <Button HorizontalAlignment="Left" Command="{Binding ShowRecurringTransactionsCommand}">Recurring</Button>
-            <ToggleButton Name="ShowAddView" IsChecked="False" HorizontalAlignment="Right">Add transactions</ToggleButton>
+            
         </Grid>
 
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
@@ -41,9 +43,7 @@
                       ItemTemplate="{StaticResource MonthBalanceView}" Background="Transparent" BorderBrush="{StaticResource SCB5}"/>
         </Grid>
 
-        <Grid Name="Add" Grid.Row="1" Grid.Column="1" 
-              Visibility="{Binding ElementName=ShowAddView, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}"
-              DataContext="{Binding AddTransactionsViewModel}">
+        <Grid Name="Add" Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>

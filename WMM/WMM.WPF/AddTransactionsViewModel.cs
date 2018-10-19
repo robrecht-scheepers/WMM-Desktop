@@ -28,7 +28,7 @@ namespace WMM.WPF
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<string>(await _repository.GetCategories());
+            Categories = new ObservableCollection<string>((await _repository.GetCategories()).OrderBy(x => x));
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
             NewTransactionAmount = 115.29; // should be 0, now with value for faster testing
