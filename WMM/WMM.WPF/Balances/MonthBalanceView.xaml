@@ -8,7 +8,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -19,7 +19,7 @@
                                     Command="{Binding ShowRecurringTransactionsCommand}">R</Button>
             <TextBlock Grid.Row="0" Grid.Column="2" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
             <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
-            <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" />
+            <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" HorizontalAlignment="Stretch" TextAlignment="Right"  VerticalAlignment="Top" Background="{StaticResource SCB3}" />
             <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
                                       ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False"
                                       RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Single"

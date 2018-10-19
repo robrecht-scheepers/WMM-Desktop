@@ -66,6 +66,9 @@
         <converters:AmountColorConverter x:Key="AmountColorConverter"/>
 
         <Style TargetType="TextBlock" x:Key="AmountStyle">
+            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:+###,##0.00;-###,##0.00}}"/>
         </Style>
