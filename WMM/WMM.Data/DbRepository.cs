@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using WMM.Data.Helpers;
 
@@ -19,6 +20,18 @@ namespace WMM.Data
         private readonly string _account;
         private readonly string _dbPath;
         private readonly string _dbConnectionString;
+
+        private static readonly Dictionary<string, List<string>> InitialCategories = new Dictionary<string, List<string>>
+        {
+            {"Haushalt", new List<string>{"Supermarkt", "Drogerie", "Essen unterwegs"}},
+            {"Auto", new List<string>{"Werkstatt", "Tanken", "Parking", "PKW steuer", "PKW versicherung"}},
+            {"Kinder", new List<string>{"Kinderkleidung", "Spielzeug", "Pflege", "Kindergeld", "Kita"}},
+            {"Medisch", new List<string>{"Arzt", "Apotheke", "Barmenia premie", "Barmenia rückzahlung"}},
+            {"Freizeit", new List<string>{"Urlaub", "Restaurant & Cafe", "Party", "Bücher & Media"}},
+            {"Haus", new List<string>{"Abzahlung" ,"Nebenkosten", "Baumarkt", "Ausstattung"}},
+            {"Gehalt", new List<string>{"Gehalt", "Elterngeld"}},
+            {"Versicherung", new List<string>{"Versicherung"}},
+        };
 
         private Dictionary<string, List<string>> _categories;
 
@@ -61,7 +74,7 @@ namespace WMM.Data
                 command.ExecuteNonQuery(CommandBehavior.CloseConnection);
             }
 
-            SeedDummyCategories();
+            SeedCategories(InitialCategories);
         }
 
         public async Task Initialize()
@@ -550,6 +563,37 @@ namespace WMM.Data
         private Balance CalculateBalance(List<double> amounts)
         {
             return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
+        }
+
+        private void SeedCategories(Dictionary<string, List<string>> categories)
+        {
+            const string InsertAreaCommand = "INSERT INTO Areas(Id,Name) VALUES(@area{0}Id,'{1}'); ";
+            const string InsertCategoryCommand = "INSERT INTO Categories(Id,Name,Area) VALUES(@category{0}Id,'{1}',(SELECT Id FROM Areas WHERE Name = '{2}')); ";
+
+            StringBuilder commandText = new StringBuilder();
+            using (var dbConnection = new SQLiteConnection(_dbConnectionString))
+            {
+                using (var command = new SQLiteCommand(dbConnection))
+                {
+                    foreach (var area in categories.Keys)
+                    {
+                        var adaptedArea = area.Replace(' ', '_').Replace("&",""); // adapt name for usage as parameter name
+                        commandText.AppendLine(string.Format(InsertAreaCommand,adaptedArea, area));
+                        command.Parameters.AddWithValue($"@area{adaptedArea}Id", Guid.NewGuid());
+                        foreach (var category in categories[area])
+                        {
+                            var adaptedCategory = category.Replace(' ', '_').Replace("&", ""); // adapt name for usage as parameter name
+                            commandText.AppendLine(string.Format(InsertCategoryCommand,adaptedCategory, category, area));
+                            command.Parameters.AddWithValue($"@category{adaptedCategory}Id", Guid.NewGuid());
+                        }
+                    }
+
+                    command.CommandText = commandText.ToString();
+
+                    dbConnection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         private void SeedDummyCategories()

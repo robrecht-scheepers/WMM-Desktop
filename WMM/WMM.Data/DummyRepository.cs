@@ -30,13 +30,13 @@ namespace WMM.Data
         private static readonly Dictionary<string,List<string>> Categories = new Dictionary<string, List<string>>
         {
             {"Haushalt", new List<string>{"Supermarkt", "Drogerie", "Essen unterwegs"}},
-            {"Auto", new List<string>{"Werkstatt", "Tanken", "Parking", "PKW Steuer", "PKW Versicherung"}},
+            {"Auto", new List<string>{"Werkstatt", "Tanken", "Parking", "PKW steuer", "PKW versicherung"}},
             {"Kinder", new List<string>{"Kinderkleidung", "Spielzeug", "Pflege", "Kindergeld", "Kita"}},
-            {"Medisch", new List<string>{"Arzt", "Apotheke", "Barmenia Premie", "Barmenia Rückzahlung"}},
-            {"Freizeit", new List<string>{"Urlaub", "Reszaurant & Cafe", "Party", "Bücher & Media"}},
-            {"Haus", new List<string>{"Abzahlung und Fixkosten", "Baumarkt", "Ausstattung"}},
+            {"Medisch", new List<string>{"Arzt", "Apotheke", "Barmenia premie", "Barmenia rückzahlung"}},
+            {"Freizeit", new List<string>{"Urlaub", "Restaurant & Cafe", "Party", "Bücher & Media"}},
+            {"Haus", new List<string>{"Abzahlung" ,"Nebenkosten", "Baumarkt", "Ausstattung"}},
             {"Gehalt", new List<string>{"Gehalt", "Elterngeld"}},
-            {"Versicherung", new List<string>{"Renteversicherung", "Berufsunfähgkeitsversicherung", "Lebensversicherung"}},
+            {"Versicherung", new List<string>{"versicherung"}},
         };
 
         public Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring = false)
