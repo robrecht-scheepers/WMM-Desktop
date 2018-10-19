@@ -23,13 +23,12 @@ namespace WMM.WPF
             _windowService = windowService;
             MonthBalanceViewModels = new ObservableCollection<MonthBalanceViewModel>();
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository);
-            AddTransactionsViewModel.TransactionAdded += (s, a) =>
+            AddTransactionsViewModel.TransactionChanged += (s, a) =>
             {
                 var newTransaction = a.Transaction;
                 var month = newTransaction.Date.FirstDayOfMonth();
                 var monthViewModel = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == month);
-                // TODO: calling without await (because we are in a synchronous event handler) causes DB deadlocks
-                monthViewModel?.RecalculateBalancesForTransaction(newTransaction); 
+                monthViewModel?.RecalculateBalances(newTransaction.Date, newTransaction.Category); 
             };
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository);
         }

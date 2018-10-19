@@ -45,7 +45,7 @@ namespace WMM.WPF.Balances
 
             await RecurringTransactionsViewModel.Initialize();
             RecurringTransactionsViewModel.TransactionModified += 
-                async (sender, args) => await RecalculateBalancesForTransaction(args.Transaction);
+                async (sender, args) => await RecalculateBalances(args.Transaction.Date, args.Transaction.Category);
             RecurringTransactionsViewModel.MultipleTransactionsModified += 
                 async (sender, args) => await LoadAllBalances();
         }
@@ -82,17 +82,17 @@ namespace WMM.WPF.Balances
             }
         }
 
-        public async Task RecalculateBalancesForTransaction(Transaction transaction)
+        public async Task RecalculateBalances(DateTime date, string category)
         {
-            if(transaction.Date < Month.FirstDayOfMonth() || transaction.Date > Month.LastDayOfMonth()) return;
+            if(date < Month.FirstDayOfMonth() || date > Month.LastDayOfMonth()) return;
 
             // recalculate total balance for this month
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
 
-            var area = await _repository.GetAreaForCategory(transaction.Category);
+            var area = await _repository.GetAreaForCategory(category);
             var areaBalance = await _repository.GetBalanceForArea(Month.FirstDayOfMonth(), Month.LastDayOfMonth(), area);
             var categoryBalance = await _repository.GetBalanceForCategory(Month.FirstDayOfMonth(),
-                Month.LastDayOfMonth(), transaction.Category);
+                Month.LastDayOfMonth(), category);
 
             var areaBalanceViewModel = AreaBalances.FirstOrDefault(x => x.Area == area);
             if (areaBalanceViewModel == null)
@@ -105,10 +105,10 @@ namespace WMM.WPF.Balances
             {
                 areaBalanceViewModel.Balance = areaBalance;
                 var categoryBalanceViewModel =
-                    areaBalanceViewModel.CategoryBalances.FirstOrDefault(x => x.Name == transaction.Category);
+                    areaBalanceViewModel.CategoryBalances.FirstOrDefault(x => x.Name == category);
                 if (categoryBalanceViewModel == null)
                 {
-                    areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(transaction.Category, categoryBalance));
+                    areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(category, categoryBalance));
                 }
                 else
                 {

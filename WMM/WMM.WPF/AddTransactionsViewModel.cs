@@ -17,6 +17,7 @@ namespace WMM.WPF
         private AsyncRelayCommand _addTransactionCommand;
         private ObservableCollection<string> _categories;
         private string _selectedSign;
+        private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
 
         public AddTransactionsViewModel(IRepository repository)
         {
@@ -77,13 +78,21 @@ namespace WMM.WPF
             RaiseTransactionAdded(transaction);
         }
 
+        public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
+        private async Task DeleteTransaction(Transaction transaction)
+        {
+            await _repository.DeleteTransaction(transaction);
+            AddedTransactions.Remove(transaction);
+            RaiseTransactionAdded(transaction);
+        }
+
         public ObservableCollection<Transaction> AddedTransactions { get; }
 
-        public event TransactionEventHandler TransactionAdded;
+        public event TransactionEventHandler TransactionChanged;
 
         private void RaiseTransactionAdded(Transaction transaction)
         {
-            TransactionAdded?.Invoke(this, new TransactionEventArgs(transaction));
+            TransactionChanged?.Invoke(this, new TransactionEventArgs(transaction));
         }
     }
 }

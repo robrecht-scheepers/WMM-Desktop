@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF"
         xmlns:balances="clr-namespace:WMM.WPF.Balances"
+        xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         mc:Ignorable="d"
         Title="Where's my money?" 
         WindowState="Maximized"
         Background="{StaticResource SCB1}"
-        d:DataContext="{d:DesignInstance local:MainViewModel}">
+        d:DataContext="{d:DesignInstance local:MainViewModel}"
+        Name="WindowRoot">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -62,6 +64,13 @@
                     <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
                     <DataGridTextColumn Binding="{Binding Category}"/>
                     <DataGridTextColumn Binding="{Binding Amount, StringFormat=C}"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type data:Transaction}">
+                                <Button Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
