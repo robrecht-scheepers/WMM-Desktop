@@ -22,14 +22,11 @@ namespace WMM.WPF.Controls
         // Using a DependencyProperty as the backing store for ImageSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource", typeof(string), typeof(ImageButton), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.AffectsRender, ImageSourceChanged));
-
-
+        
         private static void ImageSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             Application.GetResourceStream(new Uri("pack://application:,,," + (string)e.NewValue));
         }
-
-
 
         public SolidColorBrush HoverBackground
         {
@@ -39,9 +36,7 @@ namespace WMM.WPF.Controls
 
         // Using a DependencyProperty as the backing store for HoverBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HoverBackgroundProperty =
-            DependencyProperty.Register("HoverBackground", typeof(SolidColorBrush), typeof(ImageButton), new PropertyMetadata(Application.Current.FindResource("AppBrightColor")));
-
-
-
+            DependencyProperty.Register("HoverBackground", typeof(SolidColorBrush), typeof(ImageButton), new PropertyMetadata(Application.Current.FindResource("SCB1")));
+        
     }
 }

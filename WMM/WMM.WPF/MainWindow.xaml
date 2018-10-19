@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF"
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
+        xmlns:controls="clr-namespace:WMM.WPF.Controls"
         mc:Ignorable="d"
         Title="Where's my money?" 
         WindowState="Maximized"
@@ -31,35 +32,52 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
-            
-            
-            <Button HorizontalAlignment="Left" Command="{Binding ShowRecurringTransactionsCommand}">Recurring</Button>
-            
+        <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" Margin="{StaticResource GridMargin}">
+            <TextBlock Text="Übersicht" Style="{StaticResource TitleStyle}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <controls:ImageButton HorizontalAlignment="Left" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"/>
+            </StackPanel>
         </Grid>
 
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
             <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch"
-                      ItemTemplate="{StaticResource MonthBalanceView}" Background="Transparent" BorderBrush="{StaticResource SCB5}"/>
+                      ItemTemplate="{StaticResource MonthBalanceView}" Background="Transparent" BorderThickness="0"/>
         </Grid>
 
+        <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource SCB5}" Margin="{StaticResource GridMargin}">
+            <TextBlock Text="Details" Style="{StaticResource TitleStyle}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                
+            </StackPanel>
+        </Grid>
+
+        <Grid Name="Details" Grid.Row="1" Grid.Column="1"/>
+
+        <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" Margin="{StaticResource GridMargin}">
+            <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                
+            </StackPanel>
+        </Grid>
         <Grid Name="Add" Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <TextBlock Text="Datum"/>
-                <DatePicker SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
-                <TextBlock Text="Kategorie"/>
-                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
-                <TextBlock Text="Betrag"/>
-                <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-                <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" />
-                <Button Command="{Binding AddTransactionCommand}">Add</Button>
-            </StackPanel>
-            <DataGrid Grid.Row="1" ItemsSource="{Binding AddedTransactions}" AutoGenerateColumns="False" IsReadOnly="True">
+            <Grid Background="{StaticResource SCB4}" Grid.Row="0" Margin="{StaticResource CommonMargin}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Datum"/>
+                    <DatePicker SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
+                    <TextBlock Text="Kategorie"/>
+                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
+                    <TextBlock Text="Betrag"/>
+                    <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" />
+                    <Button Command="{Binding AddTransactionCommand}">Add</Button>
+                </StackPanel>
+            </Grid>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding AddedTransactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
                     <DataGridTextColumn Binding="{Binding Category}"/>

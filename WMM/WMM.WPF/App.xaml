@@ -12,7 +12,6 @@
                 <ResourceDictionary Source="Controls/ImageButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- facebook colors -->
             <Color x:Key="C1">#ffffff</Color>
             <Color x:Key="C2">#f7f7f7</Color>
             <Color x:Key="C3">#dfe3ee</Color>
@@ -25,10 +24,14 @@
             <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
 
             <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
+            <Thickness x:Key="GridMargin" Left="1" Top="1" Right="1" Bottom="1"/>
             <system:Double x:Key="CommonFontSize">14</system:Double>
+            <system:Double x:Key="LargeFontSize">18</system:Double>
+
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
                 <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
             <Style TargetType="TextBox">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
@@ -37,6 +40,16 @@
             <Style TargetType="Button">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
                 <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+            </Style>
+            <Style TargetType="DatePicker">
+                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+            </Style>
+            <Style TargetType="DatePickerTextBox">
+                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
             <Style TargetType="DataGridCell">
                 <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
@@ -57,15 +70,18 @@
             <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
             <converters:AmountColorConverter x:Key="AmountColorConverter"/>
 
-            <Style TargetType="TextBlock" x:Key="AmountStyle">
-                <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+            <Style TargetType="TextBlock" x:Key="AmountStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
                 <Setter Property="Padding" Value="2"/>
-                <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
                 <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:+###,##0.00;-###,##0.00}}"/>
             </Style>
             <Style TargetType="TextBlock" x:Key="ColoredAmountStyle" BasedOn="{StaticResource AmountStyle}">
                 <Setter Property="Foreground" Value="{Binding Path=., Converter={StaticResource AmountColorConverter}}"/>
+            </Style>
+            <Style TargetType="TextBlock" x:Key="TitleStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>
