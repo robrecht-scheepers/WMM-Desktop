@@ -10,7 +10,7 @@
         Title="{Binding Title}" Height="450" Width="600"
         d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}"
         Name="RecurringWindow"
-        WindowStyle="None"
+        WindowStyle="SingleBorderWindow"
         Background="{StaticResource SCB5}"
         ResizeMode="NoResize">
     <Grid>
@@ -36,7 +36,7 @@
         <DataGrid Grid.Row="1" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Category}"/>
-                <DataGridTextColumn Binding="{Binding Amount, StringFormat=C}"/>
+                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}"/>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">

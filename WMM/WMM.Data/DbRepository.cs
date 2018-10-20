@@ -128,13 +128,19 @@ namespace WMM.Data
         {
             const string commandText =
                 "UPDATE Transactions " +
-                "SET [Date] = @date, Category = (SELECT Id FROM Categories WHERE Name = @category), AMount = @amount, Comments = @comments " +
+                "SET [Date] = @date, Category = (SELECT Id FROM Categories WHERE Name = @category), Amount = @amount, Comments = @comments, LastUpdateTime = @now,LastUpdateAccount = @account " +
                 "WHERE Id = @id";
             using (var dbConnection = GetConnection())
             {
                 using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
                 {
                     command.Parameters.AddWithValue("@id", transaction.Id);
+                    command.Parameters.AddWithValue("@date", newDate);
+                    command.Parameters.AddWithValue("@category", newCategory);
+                    command.Parameters.AddWithValue("@amount", newAmount);
+                    command.Parameters.AddWithValue("@comments", newComments);
+                    command.Parameters.AddWithValue("@now", DateTime.Now);
+                    command.Parameters.AddWithValue("@account", _account);
                     dbConnection.Open();
                     await command.ExecuteNonQueryAsync();
                 }
@@ -462,9 +468,9 @@ namespace WMM.Data
             return CalculateBalance(amounts);
         }
 
-        public Task<IEnumerable<string>> GetCategories()
+        public IEnumerable<string> GetCategories()
         {
-            return Task.FromResult(_categories?.SelectMany(x => x.Value).Distinct());
+            return _categories?.SelectMany(x => x.Value).Distinct();
         }
 
         private async Task<Dictionary<string,List<string>>> GetAreasAndCategories()

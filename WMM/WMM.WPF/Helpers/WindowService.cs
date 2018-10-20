@@ -12,6 +12,11 @@ namespace WMM.WPF.Helpers
                 var window = new Recurring.RecurringTransactionsWindow() {DataContext = dataContext};
                 window.ShowDialog();
             }
+            else if(dataContext is EditTransactionViewModel)
+            {
+                var window = new EditTransactionWindow{DataContext = dataContext};
+                window.ShowDialog();
+            }
         }
     }
 }

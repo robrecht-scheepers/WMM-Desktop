@@ -94,11 +94,14 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
                     <DataGridTextColumn Binding="{Binding Category}"/>
-                    <DataGridTextColumn Binding="{Binding Amount, StringFormat=C}"/>
+                    <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type data:Transaction}">
-                                <Button Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
+                                    <Button Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.EditTransactionCommand}" CommandParameter="{Binding}">E</Button>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

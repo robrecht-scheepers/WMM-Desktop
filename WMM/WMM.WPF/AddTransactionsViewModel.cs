@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 
 namespace WMM.WPF
@@ -11,6 +12,7 @@ namespace WMM.WPF
     public class AddTransactionsViewModel : ObservableObject
     {
         private readonly IRepository _repository;
+        private readonly IWindowService _windowService;
         private DateTime _newTransactionDate;
         private string _newTransactionCategory;
         private double _newTransactionAmount;
@@ -18,17 +20,19 @@ namespace WMM.WPF
         private ObservableCollection<string> _categories;
         private string _selectedSign;
         private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
+        private RelayCommand<Transaction> _editTransactionCommand;
 
-        public AddTransactionsViewModel(IRepository repository)
+        public AddTransactionsViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
+            _windowService = windowService;
             Categories = new ObservableCollection<string>();
             AddedTransactions = new ObservableCollection<Transaction>();
         }
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<string>((await _repository.GetCategories()).OrderBy(x => x));
+            Categories = new ObservableCollection<string>( _repository.GetCategories().OrderBy(x => x));
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
             NewTransactionAmount = 115.29; // should be 0, now with value for faster testing
@@ -74,7 +78,7 @@ namespace WMM.WPF
 
             var transaction = await _repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, null);
 
-            AddedTransactions.Add(transaction);
+            AddedTransactions.Insert(0,transaction);
             RaiseTransactionChanged(transaction);
         }
 
@@ -85,6 +89,24 @@ namespace WMM.WPF
             AddedTransactions.Remove(transaction);
             RaiseTransactionChanged(transaction);
         }
+
+        public RelayCommand<Transaction> EditTransactionCommand =>
+            _editTransactionCommand ?? (_editTransactionCommand = new RelayCommand<Transaction>(EditTransaction));
+
+        private void EditTransaction(Transaction transaction)
+        {
+            var editTransactionViewModel = new EditTransactionViewModel(transaction, _repository);
+            editTransactionViewModel.TransactionChanged += (sender, args) =>
+            {
+                var index = AddedTransactions.IndexOf(args.OldTransaction);
+                AddedTransactions.Remove(args.OldTransaction);
+                AddedTransactions.Insert(index, args.NewTransaction);
+                RaiseTransactionChanged(args.OldTransaction);
+                RaiseTransactionChanged(args.NewTransaction);
+            };
+            _windowService.OpenDialogWindow(editTransactionViewModel);
+        }
+
 
         public ObservableCollection<Transaction> AddedTransactions { get; }
 

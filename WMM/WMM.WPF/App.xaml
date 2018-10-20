@@ -28,6 +28,7 @@
             <Thickness x:Key="GridMargin" Left="1" Top="1" Right="1" Bottom="1"/>
             <system:Double x:Key="CommonFontSize">14</system:Double>
             <system:Double x:Key="LargeFontSize">18</system:Double>
+            <system:String x:Key="AmountFormat">{0:+###,##0.00€;-###,##0.00€;0.00€}</system:String>
 
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
@@ -72,9 +73,8 @@
             <converters:AmountColorConverter x:Key="AmountColorConverter"/>
 
             <Style TargetType="TextBlock" x:Key="AmountStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
-                <Setter Property="Padding" Value="2"/>
                 <Setter Property="HorizontalAlignment" Value="Right"/>
-                <Setter Property="Text" Value="{Binding Path=., StringFormat={}{0:+###,##0.00;-###,##0.00}}"/>
+                <Setter Property="Text" Value="{Binding Path=., StringFormat={StaticResource AmountFormat}}"/>
             </Style>
             <Style TargetType="TextBlock" x:Key="ColoredAmountStyle" BasedOn="{StaticResource AmountStyle}">
                 <Setter Property="Foreground" Value="{Binding Path=., Converter={StaticResource AmountColorConverter}}"/>

@@ -27,7 +27,7 @@
                                       SelectionUnit="FullRow" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Area}" />
-                    <DataGridTextColumn Binding="{Binding Balance.Total}" />
+                    <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" ElementStyle="{StaticResource AmountStyle}" />
                 </DataGrid.Columns>
                 <DataGrid.RowDetailsTemplate>
                     <DataTemplate DataType="local:AreaBalanceViewModel">
@@ -35,7 +35,7 @@
                             <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Name}" />
-                                    <DataGridTextColumn Binding="{Binding Balance.Total}" />
+                                    <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" ElementStyle="{StaticResource AmountStyle}" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>

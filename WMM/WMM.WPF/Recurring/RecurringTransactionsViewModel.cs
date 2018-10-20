@@ -42,7 +42,7 @@ namespace WMM.WPF.Recurring
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<string>(await _repository.GetCategories());
+            Categories = new ObservableCollection<string>(_repository.GetCategories());
             NewCategory = Categories.FirstOrDefault();
             NewAmount = 0.0;
             SelectedSign = "-";

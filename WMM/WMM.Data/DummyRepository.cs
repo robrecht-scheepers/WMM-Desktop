@@ -134,9 +134,9 @@ namespace WMM.Data
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<string>> GetCategories()
+        public IEnumerable<string> GetCategories()
         {
-            return Task.FromResult(Categories.SelectMany(x => x.Value));
+            return Categories.SelectMany(x => x.Value);
         }
 
         public Task<string> GetAreaForCategory(string category)

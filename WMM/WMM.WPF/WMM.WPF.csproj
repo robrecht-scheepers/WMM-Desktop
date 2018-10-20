@@ -60,6 +60,10 @@
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
+    <Compile Include="EditTransactionViewModel.cs" />
+    <Compile Include="EditTransactionWindow.xaml.cs">
+      <DependentUpon>EditTransactionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Recurring\RecurringTransactionsViewModel.cs" />
@@ -78,6 +82,10 @@
     <Page Include="Controls\TextButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditTransactionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

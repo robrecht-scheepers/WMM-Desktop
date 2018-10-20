@@ -33,7 +33,7 @@ namespace WMM.Data
         Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
 
         
-        Task<IEnumerable<string>> GetCategories();
+        IEnumerable<string> GetCategories();
 
         Task<string> GetAreaForCategory(string category);
     }
