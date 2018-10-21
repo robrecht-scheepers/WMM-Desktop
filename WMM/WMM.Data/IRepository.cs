@@ -12,6 +12,8 @@ namespace WMM.Data
 
         Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount, string newComments);
 
+        Task<Transaction> UpdateTransaction(Transaction transaction, string newCategory, double newAmount, string newComments);
+
         Task DeleteTransaction(Transaction transaction);
 
         Task<Transaction> AddRecurringTemplate(string category, double amount, string comments);

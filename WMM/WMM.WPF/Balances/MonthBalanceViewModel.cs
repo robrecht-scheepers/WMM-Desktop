@@ -36,7 +36,7 @@ namespace WMM.WPF.Balances
             _windowService = windowService;
             Month = date.FirstDayOfMonth();
             AreaBalances = new ObservableCollection<AreaBalanceViewModel>();
-            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, Month);
+            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService, Month);
         }
 
         public async Task Initialize()

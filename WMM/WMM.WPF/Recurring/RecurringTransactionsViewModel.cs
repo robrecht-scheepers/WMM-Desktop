@@ -12,6 +12,7 @@ namespace WMM.WPF.Recurring
     public class RecurringTransactionsViewModel : ObservableObject
     {
         private readonly IRepository _repository;
+        private readonly IWindowService _windowService;
         private readonly bool _manageTemplates;
         private readonly DateTime _month;
         private string _newCategory;
@@ -21,19 +22,22 @@ namespace WMM.WPF.Recurring
         private string _selectedSign;
         private AsyncRelayCommand _applyTemplatesCommand;
         private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
+        private RelayCommand<Transaction> _editTransactionCommand;
 
-        public RecurringTransactionsViewModel(IRepository repository, DateTime month)
+        public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month)
         {
             _repository = repository;
+            _windowService = windowService;
             _manageTemplates = false;
             _month = month;
             
             Categories = new ObservableCollection<string>();
             Transactions = new ObservableCollection<Transaction>();
         }
-        public RecurringTransactionsViewModel(IRepository repository)
+        public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
+            _windowService = windowService;
             _manageTemplates = true;
 
             Categories = new ObservableCollection<string>();
@@ -139,6 +143,23 @@ namespace WMM.WPF.Recurring
             await _repository.DeleteTransaction(transaction);
             Transactions.Remove(transaction);
             RaiseTransactionModified(transaction);
+        }
+
+        public RelayCommand<Transaction> EditTransactionCommand =>
+            _editTransactionCommand ?? (_editTransactionCommand = new RelayCommand<Transaction>(EditTransaction));
+
+        private void EditTransaction(Transaction transaction)
+        {
+            var editTransactionViewModel = new EditTransactionViewModel(transaction, _repository, false);
+            editTransactionViewModel.TransactionChanged += (sender, args) =>
+            {
+                var index = Transactions.IndexOf(args.OldTransaction);
+                Transactions.Remove(args.OldTransaction);
+                Transactions.Insert(index, args.NewTransaction);
+                RaiseTransactionModified(args.OldTransaction);
+                RaiseTransactionModified(args.NewTransaction);
+            };
+            _windowService.OpenDialogWindow(editTransactionViewModel);
         }
 
 

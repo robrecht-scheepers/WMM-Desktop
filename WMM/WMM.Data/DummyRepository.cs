@@ -52,6 +52,11 @@ namespace WMM.Data
             return AddTransaction(DateTime.MinValue, category, amount, comments, true);
         }
 
+        public Task<Transaction> UpdateRecurringTemplate(Transaction template, string newCategory, double newAmount, string newComments)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,
             string newComments)
         {
@@ -60,6 +65,11 @@ namespace WMM.Data
             DummyTransactions.Remove(transaction);
             DummyTransactions.Add(updatedTransaction);
             return Task.FromResult(updatedTransaction);
+        }
+
+        public Task<Transaction> UpdateTransaction(Transaction transaction, string newCategory, double newAmount, string newComments)
+        {
+            throw new NotImplementedException();
         }
 
         public Task DeleteTransaction(Transaction transaction)

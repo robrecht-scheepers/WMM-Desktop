@@ -17,12 +17,13 @@ namespace WMM.WPF
         private string _category;
         private double _amount;
         private AsyncRelayCommand _saveChangesCommand;
-        private RelayCommand _cancelCommand;
+        private readonly bool _editDate;
 
-        public EditTransactionViewModel(Transaction transaction, IRepository repository)
+        public EditTransactionViewModel(Transaction transaction, IRepository repository, bool editDate = false)
         {
             _transaction = transaction;
             _repository = repository;
+            _editDate = editDate;
 
             Date = transaction.Date;
             Category = transaction.Category;
@@ -31,6 +32,8 @@ namespace WMM.WPF
         }
 
         public ObservableCollection<string> Categories { get; }
+
+        public bool EditDate => _editDate;
 
         public DateTime Date
         {
@@ -51,7 +54,6 @@ namespace WMM.WPF
         }
 
         public AsyncRelayCommand SaveChangesCommand => _saveChangesCommand ?? (_saveChangesCommand = new AsyncRelayCommand(SaveChanges,CanExecuteSaveChanges));
-
         private bool CanExecuteSaveChanges()
         {
             return Category != _transaction.Category ||
@@ -60,7 +62,9 @@ namespace WMM.WPF
         }
         private async Task SaveChanges()
         {
-            var newTransaction = await _repository.UpdateTransaction(_transaction, Date, Category, Amount, "");
+            var newTransaction = _editDate
+                ? await _repository.UpdateTransaction(_transaction, Category, Amount, "")
+                : await _repository.UpdateTransaction(_transaction, Date, Category, Amount, "");
             RaiseTransactionUpdated(_transaction, newTransaction);
         }
 

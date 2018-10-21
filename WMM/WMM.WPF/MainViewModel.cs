@@ -30,7 +30,7 @@ namespace WMM.WPF
                 var monthViewModel = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == month);
                 monthViewModel?.RecalculateBalances(newTransaction.Date, newTransaction.Category); 
             };
-            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository);
+            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService);
         }
 
         public async Task Initialize()

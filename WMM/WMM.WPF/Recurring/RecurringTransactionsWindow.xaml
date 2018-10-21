@@ -40,7 +40,10 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">
-                            <Button Command="{Binding ElementName=RecurringWindow, Path=DataContext.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Command="{Binding ElementName=RecurringWindow, Path=DataContext.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
+                                <Button Command="{Binding ElementName=RecurringWindow, Path=DataContext.EditTransactionCommand}" CommandParameter="{Binding}">E</Button>
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

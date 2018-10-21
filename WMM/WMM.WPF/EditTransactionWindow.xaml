@@ -20,14 +20,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Datum"/>
-        <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding Date, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Datum" Visibility="{Binding EditDate, Converter={StaticResource CollapseWhenFalseConverter}}"/>
+        <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding Date, Mode=TwoWay}" Visibility="{Binding EditDate, Converter={StaticResource CollapseWhenFalseConverter}}"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Kategorie"/>
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding Category, Mode=TwoWay}"  />
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Betrag"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Amount, StringFormat=C, Mode=TwoWay}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Amount, StringFormat=C, Mode=TwoWay}"/>
 
         <controls:TextButton Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Text="Speichern" Command="{Binding SaveChangesCommand}" Click="ButtonBase_OnClick" />
         <controls:TextButton Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="Cancel" Click="Cancel_OnClick" />

@@ -148,6 +148,29 @@ namespace WMM.Data
             return await GetTransaction(transaction.Id);
         }
 
+        public async Task<Transaction> UpdateTransaction(Transaction transaction, string newCategory, double newAmount, string newComments)
+        {
+            const string commandText =
+                "UPDATE Transactions " +
+                "SET Category = (SELECT Id FROM Categories WHERE Name = @category), Amount = @amount, Comments = @comments, LastUpdateTime = @now,LastUpdateAccount = @account " +
+                "WHERE Id = @id";
+            using (var dbConnection = GetConnection())
+            {
+                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    command.Parameters.AddWithValue("@id", transaction.Id);
+                    command.Parameters.AddWithValue("@category", newCategory);
+                    command.Parameters.AddWithValue("@amount", newAmount);
+                    command.Parameters.AddWithValue("@comments", newComments);
+                    command.Parameters.AddWithValue("@now", DateTime.Now);
+                    command.Parameters.AddWithValue("@account", _account);
+                    dbConnection.Open();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            return await GetTransaction(transaction.Id);
+        }
+
         public async Task DeleteTransaction(Transaction transaction)
         {
             const string commandText =
@@ -240,6 +263,8 @@ namespace WMM.Data
                 ? default(Transaction)
                 : await GetTransaction(id);
         }
+
+        
 
         public async Task<IEnumerable<Transaction>> GetRecurringTemplates()
         {
