@@ -37,8 +37,9 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate DataType="local:AreaBalanceViewModel">
-                    <Grid Background="{StaticResource SCB5}">
-                        <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0">
+                    <Grid Background="{StaticResource SCB5}" Margin="-5,0,0,0"
+                          Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" >
+                        <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0" ColumnWidth="*" HorizontalAlignment="Stretch">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" />
                                 <DataGridTemplateColumn Width="{StaticResource SingleButtonColumnWidth}">
