@@ -11,12 +11,13 @@
              Name="TransactionListControlRoot"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
+        <DataGrid ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
+                  HorizontalAlignment="Stretch" ColumnWidth="*">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
                 <DataGridTextColumn Binding="{Binding Category}"/>
-                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}"/>
-                <DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" ElementStyle="{StaticResource AmountStyle}" />
+                <DataGridTemplateColumn Width="64">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">
                             <StackPanel Orientation="Horizontal">

@@ -21,6 +21,7 @@ namespace WMM.Data
         private readonly string _dbPath;
         private readonly string _dbConnectionString;
 
+        #region constructor and initialization
         private static readonly Dictionary<string, List<string>> InitialCategories = new Dictionary<string, List<string>>
         {
             {"Haushalt", new List<string>{"Supermarkt", "Drogerie", "Essen unterwegs"}},
@@ -81,7 +82,9 @@ namespace WMM.Data
         {
             _categories = await GetAreasAndCategories();
         }
-        
+        #endregion
+
+        #region transactions
         public async Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring)
         {
             var id = Guid.NewGuid();
@@ -244,7 +247,31 @@ namespace WMM.Data
                 }
             }
         }
+        private async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
+        {
+            var transactions = new List<Transaction>();
+            if (!reader.HasRows)
+                return transactions;
+            while (await reader.ReadAsync())
+            {
+                transactions.Add(new Transaction(
+                    reader.GetGuid(0),
+                    reader.GetDateTimeNullSafe(1),
+                    reader.GetString(2),
+                    reader.GetDouble(3),
+                    reader.GetStringNullSafe(4),
+                    reader.GetDateTime(5),
+                    reader.GetString(6),
+                    reader.GetDateTime(7),
+                    reader.GetString(8),
+                    reader.GetBoolean(9),
+                    reader.GetBoolean(10)));
+            }
+            return transactions;
+        }
+        #endregion
 
+        #region recurring
         public async Task<Transaction> AddRecurringTemplate(string category, double amount, string comments)
         {
             var id = Guid.NewGuid();
@@ -327,7 +354,9 @@ namespace WMM.Data
                 await AddTransaction(date, template.Category, template.Amount, template.Comments, true);
             }
         }
+        #endregion
 
+        #region balances
         public async Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo)
         {
             var amounts = new List<double>();
@@ -491,6 +520,14 @@ namespace WMM.Data
             return CalculateBalance(amounts);
         }
 
+        private Balance CalculateBalance(List<double> amounts)
+        {
+            return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
+        }
+        #endregion
+
+        #region categories
+
         public IEnumerable<string> GetCategories()
         {
             return _categories?.SelectMany(x => x.Value).Distinct();
@@ -528,35 +565,7 @@ namespace WMM.Data
         {
             return _categories.Keys.FirstOrDefault(x => _categories[x].Contains(category));
         }
-
-        private async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
-        {
-            var transactions = new List<Transaction>();
-            if (!reader.HasRows)
-                return transactions;
-            while (await reader.ReadAsync())
-            {
-                transactions.Add(new Transaction(
-                    reader.GetGuid(0),
-                    reader.GetDateTimeNullSafe(1),
-                    reader.GetString(2),
-                    reader.GetDouble(3),
-                    reader.GetStringNullSafe(4),
-                    reader.GetDateTime(5),
-                    reader.GetString(6),
-                    reader.GetDateTime(7),
-                    reader.GetString(8),
-                    reader.GetBoolean(9),
-                    reader.GetBoolean(10)));
-            }
-            return transactions;
-        }
-
-        private Balance CalculateBalance(List<double> amounts)
-        {
-            return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
-        }
-
+        
         private void SeedCategories(Dictionary<string, List<string>> categories)
         {
             const string insertAreaCommand = "INSERT INTO Areas(Id,Name) VALUES(@area{0}Id,'{1}'); ";
@@ -587,11 +596,12 @@ namespace WMM.Data
                 }
             }
         }
+        #endregion
 
-        private void Log(string message)
-        {
-            Debug.WriteLine($"DBTRACE|{DateTime.Now:hh:mm:ss.fff}|{message}");
-        }
+        //private void Log(string message)
+        //{
+        //    Debug.WriteLine($"DBTRACE|{DateTime.Now:hh:mm:ss.fff}|{message}");
+        //}
 
     }
 }
