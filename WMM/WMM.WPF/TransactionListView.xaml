@@ -16,8 +16,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
                 <DataGridTextColumn Binding="{Binding Category}"/>
-                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" ElementStyle="{StaticResource AmountStyle}" />
-                <DataGridTemplateColumn Width="64">
+                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+                <DataGridTemplateColumn Width="{StaticResource DoubleButtonColumnWidth}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">
                             <StackPanel Orientation="Horizontal">

@@ -26,7 +26,6 @@
             <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
 
             <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
-            <Thickness x:Key="GridMargin" Left="1" Top="1" Right="1" Bottom="1"/>
             <system:Double x:Key="CommonFontSize">14</system:Double>
             <system:Double x:Key="LargeFontSize">18</system:Double>
             <system:String x:Key="AmountFormat">{0:+###,##0.00€;-###,##0.00€;0.00€}</system:String>
@@ -95,12 +94,17 @@
                 <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
             </Style>
 
+            <system:Double x:Key="GridButtonSize">32</system:Double>
             <Style TargetType="controls:ImageButton" x:Key="DataGridButtonStyle" BasedOn="{StaticResource {x:Type controls:ImageButton}}" >
                 <Setter Property="Margin" Value="0"/>
-                <Setter Property="Height" Value="32"/>
-                <Setter Property="Width" Value="32"/>
+                <Setter Property="Height" Value="{StaticResource GridButtonSize}"/>
+                <Setter Property="Width" Value="{StaticResource GridButtonSize}"/>
                 <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
             </Style>
+            <DataGridLength x:Key="SingleButtonColumnWidth">32</DataGridLength>
+            <DataGridLength x:Key="DoubleButtonColumnWidth">64</DataGridLength>
+            <DataGridLength x:Key="AmountColumnWidth">100</DataGridLength>
+
 </ResourceDictionary>
     </Application.Resources>
 </Application>
