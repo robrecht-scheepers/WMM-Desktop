@@ -51,7 +51,10 @@ namespace WMM.WPF
                     await DetailTransactions.LoadTransactions(args.DateFrom, args.DateTo, args.Category);
                 };
             }
+            RaisePropertyChanged("TestMonthBalance");
         }
+
+        public MonthBalanceViewModel TestMonthBalance => MonthBalanceViewModels.FirstOrDefault();
 
         public ObservableCollection<MonthBalanceViewModel> MonthBalanceViewModels { get; }
 

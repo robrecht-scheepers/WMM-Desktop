@@ -41,11 +41,17 @@
             </StackPanel>
         </Grid>
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
-            <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch"
-                      Background="Transparent" BorderThickness="0">
+            <ListView ItemsSource="{Binding MonthBalanceViewModels}" Background="Transparent" BorderThickness="0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="balances:MonthBalanceViewModel">
-                        <balances:MonthBalanceView DataContext="{Binding}"/>
+                        <balances:MonthBalanceView DataContext="{Binding}" Margin="-5,0,0,0"
+                                                   Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsPresenter}}}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
