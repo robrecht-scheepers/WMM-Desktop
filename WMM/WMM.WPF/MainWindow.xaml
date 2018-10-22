@@ -112,8 +112,14 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type data:Transaction}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
-                                    <Button Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.EditTransactionCommand}" CommandParameter="{Binding}">E</Button>
+                                    <controls:ImageButton 
+                                        Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.EditTransactionCommand}" 
+                                        CommandParameter="{Binding}"
+                                        ImageSource="/Resources/ic_edit.png" Style="{StaticResource DataGridButtonStyle}" />
+                                    <controls:ImageButton 
+                                        Command="{Binding ElementName=WindowRoot, Path=DataContext.AddTransactionsViewModel.DeleteTransactionCommand}" 
+                                        CommandParameter="{Binding}"
+                                        ImageSource="/Resources/ic_delete.png" Style="{StaticResource DataGridButtonStyle}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

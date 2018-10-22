@@ -162,5 +162,11 @@
   <ItemGroup>
     <Resource Include="Resources\ic_recurring.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_delete.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

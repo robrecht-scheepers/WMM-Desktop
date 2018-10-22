@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:WMM.WPF"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:WMM.WPF.Converters"
+             xmlns:controls="clr-namespace:WMM.WPF.Controls"
              Startup="App_OnStartup"
              Exit="App_OnExit">
     <Application.Resources>
@@ -56,6 +57,15 @@
             <Style TargetType="DataGridCell">
                 <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
                 <Setter Property="Padding" Value="{StaticResource CommonMargin}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Grid Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
             <Style TargetType="DataGrid">
                 <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
@@ -84,6 +94,13 @@
                 <Setter Property="HorizontalAlignment" Value="Left"/>
                 <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
             </Style>
-        </ResourceDictionary>
+
+            <Style TargetType="controls:ImageButton" x:Key="DataGridButtonStyle" BasedOn="{StaticResource {x:Type controls:ImageButton}}" >
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Height" Value="32"/>
+                <Setter Property="Width" Value="32"/>
+                <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
+            </Style>
+</ResourceDictionary>
     </Application.Resources>
 </Application>
