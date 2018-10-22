@@ -41,20 +41,22 @@
                           Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" >
                         <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0" ColumnWidth="*" HorizontalAlignment="Stretch">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Name}" />
-                                <DataGridTemplateColumn Width="{StaticResource SingleButtonColumnWidth}">
+                                <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="local:CategoryBalanceViewModel">
-                                            <controls:ImageButton 
-                                                Command="{Binding ElementName=ControlRoot, Path=DataContext.ShowDetailTransactionsCommand}" 
-                                                CommandParameter="{Binding Name}"
-                                                ImageSource="/Resources/ic_list.png"
-                                                Style="{StaticResource DataGridButtonStyle}"/>
+                                            <Grid>
+                                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                                                <controls:ImageButton 
+                                                    Command="{Binding ElementName=ControlRoot, Path=DataContext.ShowDetailTransactionsCommand}" 
+                                                    CommandParameter="{Binding Name}"
+                                                    ImageSource="/Resources/ic_list.png"
+                                                    Style="{StaticResource DataGridButtonStyle}" HorizontalAlignment="Right"/>
+                                            </Grid>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" 
-                                                    ElementStyle="{StaticResource AmountStyle}" Width="100" />
+                                                    ElementStyle="{StaticResource AmountStyle}" Width="97" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
