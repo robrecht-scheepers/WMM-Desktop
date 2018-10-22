@@ -69,10 +69,5 @@ namespace WMM.WPF
         {
             MultipleTransactionsModified?.Invoke(this, new TransactionEventArgs(null));
         }
-
-        public void Show(IEnumerable<Transaction> transactions)
-        {
-            Transactions = new ObservableCollection<Transaction>(transactions);
-        }
     }
 }

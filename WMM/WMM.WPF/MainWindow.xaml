@@ -11,8 +11,7 @@
         Title="Where's my money?" 
         WindowState="Maximized"
         Background="{StaticResource SCB1}"
-        d:DataContext="{d:DesignInstance local:MainViewModel}"
-        Name="WindowRoot">
+        d:DataContext="{d:DesignInstance local:MainViewModel}">
     <Window.Resources>
         <ResourceDictionary>
             <Thickness x:Key="MiddleColumnMargin" Left="2" Top="0" Right="2" Bottom="2"/>
@@ -35,14 +34,12 @@
         <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="{StaticResource MiddleColumnMargin}" />
         <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="0,0,0,1" />
 
-
         <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" >
             <TextBlock Text="Übersicht" Style="{StaticResource TitleStyle}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"/>
             </StackPanel>
         </Grid>
-
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
             <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch"
                       Background="Transparent" BorderThickness="0">
@@ -56,23 +53,17 @@
 
         <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource SCB5}" Margin="2,0">
             <TextBlock Text="Details" Style="{StaticResource TitleStyle}" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
-            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
         </Grid>
 
         <local:TransactionListView Grid.Row="1" Grid.Column="1" DataContext="{Binding DetailTransactions}"/>
 
         <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" >
             <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
-            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
         </Grid>
         <local:AddTransactionsView Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}"/>
 
-        <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-        </Grid>
-
+        <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

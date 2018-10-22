@@ -24,10 +24,12 @@ namespace WMM.WPF
             MonthBalanceViewModels = new ObservableCollection<MonthBalanceViewModel>();
 
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
-            AddTransactionsViewModel.TransactionModified+= OnTransactionModified;
+            AddTransactionsViewModel.TransactionModified += 
+                async (s, a) => { await OnTransactionModified(a.Transaction); };
 
-            DetailTransactions = new TransactionListViewModelBase(_repository, _windowService,true);
-            DetailTransactions.TransactionModified += OnTransactionModified;
+            DetailTransactions = new DetailTransactionListViewModel(_repository, _windowService);
+            DetailTransactions.TransactionModified += 
+                async (s, a) => { await OnTransactionModified(a.Transaction); };
 
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService);
         }
@@ -46,7 +48,7 @@ namespace WMM.WPF
                 await monthBalanceViewModel.Initialize();
                 monthBalanceViewModel.DetailTransactionsRequested += async (sender, args) =>
                 {
-                    await LoadDetailTransactions(args.DateFrom, args.DateTo, args.Category);
+                    await DetailTransactions.LoadTransactions(args.DateFrom, args.DateTo, args.Category);
                 };
             }
         }
@@ -57,12 +59,7 @@ namespace WMM.WPF
 
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
-        public TransactionListViewModelBase DetailTransactions { get; }
-
-        private async Task LoadDetailTransactions(DateTime dateFrom, DateTime dateTo, string category)
-        {
-            DetailTransactions.Show(await _repository.GetTransactions(dateFrom, dateTo, category));
-        }
+        public DetailTransactionListViewModel DetailTransactions { get; }
 
         public RelayCommand ShowRecurringTransactionsCommand => 
             _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
@@ -72,12 +69,14 @@ namespace WMM.WPF
             _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
         }
 
-        private void OnTransactionModified(object sender, TransactionEventArgs args)
+        private async Task OnTransactionModified(Transaction transaction)
         {
-            var newTransaction = args.Transaction;
+            var newTransaction = transaction;
             var month = newTransaction.Date.FirstDayOfMonth();
             var monthViewModel = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == month);
-            monthViewModel?.RecalculateBalances(newTransaction.Date, newTransaction.Category);
+            if(monthViewModel != null)
+                await monthViewModel.RecalculateBalances(newTransaction.Date, newTransaction.Category);
+            await DetailTransactions.ReloadTransactions();
         }
 
     }

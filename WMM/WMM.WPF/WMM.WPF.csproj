@@ -66,6 +66,7 @@
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
+    <Compile Include="DetailTransactionListViewModel.cs" />
     <Compile Include="EditTransactionViewModel.cs" />
     <Compile Include="EditTransactionWindow.xaml.cs">
       <DependentUpon>EditTransactionWindow.xaml</DependentUpon>
@@ -82,10 +83,6 @@
     </Compile>
     <Compile Include="TransactionListViewModelBase.cs" />
     <Page Include="AddTransactionsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Balances\MonthBalanceTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
