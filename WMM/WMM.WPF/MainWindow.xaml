@@ -61,16 +61,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Name="Details" Grid.Row="1" Grid.Column="1">
-            <DataGrid ItemsSource="{Binding DetailTransactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
-                    <DataGridTextColumn Binding="{Binding Category}"/>
-                    <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}"/>
-                   
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+        <local:TransactionListView Grid.Row="1" Grid.Column="1" DataContext="{Binding DetailTransactions}"/>
 
         <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" >
             <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />

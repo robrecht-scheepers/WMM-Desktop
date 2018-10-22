@@ -19,7 +19,7 @@ namespace WMM.WPF
         private string _selectedSign;
         
         public AddTransactionsViewModel(IRepository repository, IWindowService windowService)
-            :base(repository,windowService)
+            :base(repository,windowService, true)
         {
             Categories = new ObservableCollection<string>();
         }

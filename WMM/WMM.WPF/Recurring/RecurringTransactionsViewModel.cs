@@ -11,8 +11,6 @@ namespace WMM.WPF.Recurring
 {
     public class RecurringTransactionsViewModel : TransactionListViewModelBase
     {
-        private readonly IRepository _repository;
-        private readonly IWindowService _windowService;
         private readonly bool _manageTemplates;
         private readonly DateTime _month;
         private string _newCategory;
@@ -21,34 +19,24 @@ namespace WMM.WPF.Recurring
         private ObservableCollection<string> _categories;
         private string _selectedSign;
         private AsyncRelayCommand _applyTemplatesCommand;
-        private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
-        private RelayCommand<Transaction> _editTransactionCommand;
-
+        
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month) 
-            : base(repository, windowService)
+            : base(repository, windowService, false)
         {
-            _repository = repository;
-            _windowService = windowService;
             _manageTemplates = false;
             _month = month;
-            
             Categories = new ObservableCollection<string>();
-            Transactions = new ObservableCollection<Transaction>();
         }
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService)
-            : base(repository, windowService)
+            : base(repository, windowService, false)
         {
-            _repository = repository;
-            _windowService = windowService;
             _manageTemplates = true;
-
             Categories = new ObservableCollection<string>();
-            Transactions = new ObservableCollection<Transaction>();
         }
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<string>(_repository.GetCategories());
+            Categories = new ObservableCollection<string>(Repository.GetCategories());
             NewCategory = Categories.FirstOrDefault();
             NewAmount = 0.0;
             SelectedSign = "-";
@@ -67,8 +55,7 @@ namespace WMM.WPF.Recurring
             ? "Vorlagen für monatliche Kosten und Einkunften verwalten"
             : $"Monatliche Kosten und Einkunften für {_month:Y} verwalten";
 
-        public ObservableCollection<Transaction> Transactions { get; }
-
+        
         public string NewCategory
         {
             get => _newCategory;
@@ -98,7 +85,7 @@ namespace WMM.WPF.Recurring
         private async Task GetRecurringTemplates()
         {
             Transactions.Clear();
-            foreach (var template in await _repository.GetRecurringTemplates())
+            foreach (var template in await Repository.GetRecurringTemplates())
             {
                 Transactions.Add(template);
             }
@@ -107,7 +94,7 @@ namespace WMM.WPF.Recurring
         private async Task GetRecurringTransactions()
         {
             Transactions.Clear();
-            foreach (var template in await _repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth()))
+            foreach (var template in await Repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth()))
             {
                 Transactions.Add(template);
             }
@@ -119,8 +106,8 @@ namespace WMM.WPF.Recurring
             var amount = SelectedSign == "-" ? NewAmount * -1.0 : NewAmount;
 
             var transaction = _manageTemplates
-                ? await _repository.AddRecurringTemplate(NewCategory, amount, "")
-                : await _repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, "", true);
+                ? await Repository.AddRecurringTemplate(NewCategory, amount, "")
+                : await Repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, "", true);
             Transactions.Add(transaction);
             RaiseTransactionModified(transaction);
         }
@@ -134,16 +121,9 @@ namespace WMM.WPF.Recurring
         }
         private async Task ApplyTemplates()
         {
-            await _repository.ApplyRecurringTemplates(_month);
+            await Repository.ApplyRecurringTemplates(_month);
             await GetRecurringTransactions();
             RaiseMultipleTransactionsModified();
         }
-
-        protected override EditTransactionViewModel SetupEditViewModel(Transaction transaction)
-        {
-            return new EditTransactionViewModel(transaction, Repository, false);
-        }
-
-        
     }
 }

@@ -17,11 +17,13 @@ namespace WMM.WPF
         private RelayCommand<Transaction> _editTransactionCommand;
         protected readonly IRepository Repository;
         protected readonly IWindowService WindowService;
+        private readonly bool _showDate;
 
-        public TransactionListViewModelBase(IRepository repository, IWindowService windowService)
+        public TransactionListViewModelBase(IRepository repository, IWindowService windowService, bool showDate)
         {
             Repository = repository;
             WindowService = windowService;
+            _showDate = showDate;
             Transactions = new ObservableCollection<Transaction>();
         }
 
@@ -44,7 +46,7 @@ namespace WMM.WPF
 
         private void EditTransaction(Transaction transaction)
         {
-            var editTransactionViewModel = SetupEditViewModel(transaction);
+            var editTransactionViewModel = new EditTransactionViewModel(transaction, Repository, _showDate);
             editTransactionViewModel.TransactionChanged += (sender, args) =>
             {
                 var index = Transactions.IndexOf(args.OldTransaction);
@@ -54,10 +56,6 @@ namespace WMM.WPF
                 RaiseTransactionModified(args.NewTransaction);
             };
             WindowService.OpenDialogWindow(editTransactionViewModel);
-        }
-        protected virtual EditTransactionViewModel SetupEditViewModel(Transaction transaction)
-        {
-            return new EditTransactionViewModel(transaction, Repository);
         }
 
         public event TransactionEventHandler TransactionModified;
@@ -70,6 +68,11 @@ namespace WMM.WPF
         protected void RaiseMultipleTransactionsModified()
         {
             MultipleTransactionsModified?.Invoke(this, new TransactionEventArgs(null));
+        }
+
+        public void Show(IEnumerable<Transaction> transactions)
+        {
+            Transactions = new ObservableCollection<Transaction>(transactions);
         }
     }
 }
