@@ -57,6 +57,9 @@
     </ApplicationDefinition>
     <Compile Include="Balances\AreaBalanceViewModel.cs" />
     <Compile Include="Balances\CategoryBalanceViewModel.cs" />
+    <Compile Include="Balances\MonthBalanceView.xaml.cs">
+      <DependentUpon>MonthBalanceView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
@@ -71,6 +74,10 @@
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TransactionEventArgs.cs" />
+    <Page Include="Balances\MonthBalanceTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Balances\MonthBalanceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

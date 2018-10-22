@@ -209,7 +209,7 @@ namespace WMM.Data
             
         }
 
-        private async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
         {
             const string commandText =
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
@@ -221,6 +221,28 @@ namespace WMM.Data
                 {
                     command.Parameters.AddWithValue("@dateFrom", dateFrom);
                     command.Parameters.AddWithValue("@dateTo", dateTo);
+                    dbConnection.Open();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        return await ReadTransactions(reader);
+                    }
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category)
+        {
+            const string commandText =
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
+                "WHERE Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND c.Name = @category";
+            using (var dbConnection = GetConnection())
+            {
+                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    command.Parameters.AddWithValue("@dateFrom", dateFrom);
+                    command.Parameters.AddWithValue("@dateTo", dateTo);
+                    command.Parameters.AddWithValue("@category", category);
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())
                     {

@@ -15,7 +15,8 @@ namespace WMM.WPF.Balances
         private readonly IWindowService _windowService;
         private Balance _totalBalance;
         private RelayCommand _showRecurringTransactionsCommand;
-        
+        private RelayCommand<string> _showDetailTransactionsCommand;
+
         public DateTime Month { get; }
 
         public Balance TotalBalance
@@ -123,5 +124,20 @@ namespace WMM.WPF.Balances
         {
             _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
         }
+
+        public RelayCommand<string> ShowDetailTransactionsCommand =>
+            _showDetailTransactionsCommand ?? (_showDetailTransactionsCommand = new RelayCommand<string>(ShowDetailTransactions));
+        private void ShowDetailTransactions(string category)
+        {
+            RaiseDetailTransactionsRequested(Month.FirstDayOfMonth(), Month.LastDayOfMonth(), category);
+        }
+
+        public event DetailTransactionsRequestEventHandler DetailTransactionsRequested;
+
+        private void RaiseDetailTransactionsRequested(DateTime dateFrom, DateTime dateTo, string category)
+        {
+            DetailTransactionsRequested?.Invoke(this, new DetailTransactionsRequestEventArgs(dateFrom, dateTo, category));
+        }
+
     }
 }

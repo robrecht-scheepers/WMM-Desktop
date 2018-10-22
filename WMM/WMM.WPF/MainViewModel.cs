@@ -15,6 +15,7 @@ namespace WMM.WPF
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private RelayCommand _showRecurringTransactionsCommand;
+        private ObservableCollection<Transaction> _detailTransactions;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
         {
@@ -45,6 +46,10 @@ namespace WMM.WPF
             foreach (var monthBalanceViewModel in MonthBalanceViewModels)
             {
                 await monthBalanceViewModel.Initialize();
+                monthBalanceViewModel.DetailTransactionsRequested += async (sender, args) =>
+                {
+                    await LoadDetailTransactions(args.DateFrom, args.DateTo, args.Category);
+                };
             }
         }
 
@@ -53,6 +58,17 @@ namespace WMM.WPF
         public AddTransactionsViewModel AddTransactionsViewModel { get; }
 
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
+
+        public ObservableCollection<Transaction> DetailTransactions
+        {
+            get => _detailTransactions;
+            set => SetValue(ref _detailTransactions,value);
+        }
+
+        private async Task LoadDetailTransactions(DateTime dateFrom, DateTime dateTo, string category)
+        {
+            DetailTransactions = new ObservableCollection<Transaction>(await _repository.GetTransactions(dateFrom, dateTo, category));
+        }
 
         public RelayCommand ShowRecurringTransactionsCommand => 
             _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));

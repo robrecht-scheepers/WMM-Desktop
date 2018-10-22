@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WMM.WPF.Balances"
+                    xmlns:controls="clr-namespace:WMM.WPF.Controls">
+    <DataTemplate x:Key="MonthBalanceView" DataType="local:MonthBalanceViewModel">
+        <Grid HorizontalAlignment="Stretch" Background="{StaticResource SCB5}" Name="RootGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Foreground="White"/>
+            <controls:ImageButton Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
+            <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
+            <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
+            <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
+                                      ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False"
+                                      RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Single"
+                                      SelectionUnit="FullRow" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Area}" />
+                    <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" ElementStyle="{StaticResource AmountStyle}" />
+                </DataGrid.Columns>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate DataType="local:AreaBalanceViewModel">
+                        <Grid Background="{StaticResource SCB5}">
+                            <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Name}" />
+                                    <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" ElementStyle="{StaticResource AmountStyle}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+
+            </DataGrid>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

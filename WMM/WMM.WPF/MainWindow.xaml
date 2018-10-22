@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WMM.WPF"
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
+        xmlns:balances="clr-namespace:WMM.WPF.Balances"
         mc:Ignorable="d"
         Title="Where's my money?" 
         WindowState="Maximized"
@@ -14,9 +15,6 @@
         Name="WindowRoot">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Balances/MonthBalanceView.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <Thickness x:Key="MiddleColumnMargin" Left="2" Top="0" Right="2" Bottom="2"/>
         </ResourceDictionary>
     </Window.Resources>
@@ -47,7 +45,13 @@
 
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
             <ListView ItemsSource="{Binding MonthBalanceViewModels}" HorizontalContentAlignment="Stretch"
-                      ItemTemplate="{StaticResource MonthBalanceView}" Background="Transparent" BorderThickness="0"/>
+                      Background="Transparent" BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="balances:MonthBalanceViewModel">
+                        <balances:MonthBalanceView DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
 
 
@@ -59,7 +63,16 @@
             </StackPanel>
         </Grid>
 
-        <Grid Name="Details" Grid.Row="1" Grid.Column="1"/>
+        <Grid Name="Details" Grid.Row="1" Grid.Column="1">
+            <DataGrid ItemsSource="{Binding DetailTransactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
+                    <DataGridTextColumn Binding="{Binding Category}"/>
+                    <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}"/>
+                   
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
 
 
 
