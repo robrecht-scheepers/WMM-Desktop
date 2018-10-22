@@ -81,11 +81,6 @@ namespace WMM.Data
         {
             _categories = await GetAreasAndCategories();
         }
-
-        private void Log(string message)
-        {
-            Debug.WriteLine($"DBTRACE|{DateTime.Now:hh:mm:ss.fff}|{message}");
-        }
         
         public async Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring)
         {
@@ -111,13 +106,11 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@deleted", 0);
                     command.Parameters.AddWithValue("@recurring", recurring);
 
-                    Log("AddTransaction-Open");
                     dbConnection.Open();
                     lines = await command.ExecuteNonQueryAsync();
                 }
             }
-            Log("AddTransaction-Close");
-
+            
             return lines == 0
                 ? null
                 : await GetTransaction(id);
@@ -286,8 +279,6 @@ namespace WMM.Data
                 : await GetTransaction(id);
         }
 
-        
-
         public async Task<IEnumerable<Transaction>> GetRecurringTemplates()
         {
             const string commandText =
@@ -350,14 +341,12 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@dateFrom", dateFrom);
                     command.Parameters.AddWithValue("@dateTo", dateTo);
 
-                    Log("CalculateBalanceFromQuery-Open");
                     command.Connection = dbConnection;
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         if (!reader.HasRows)
                         {
-                            Log("CalculateBalanceFromQuery-Close");
                             return default(Balance);
                         }
                         while (reader.Read())
@@ -365,7 +354,6 @@ namespace WMM.Data
                             amounts.Add(reader.GetDouble(0));
                         }
                     }
-                    Log("CalculateBalanceFromQuery-Close");
                 }
             }
             return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
@@ -402,13 +390,11 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@dateTo", dateTo);
                     command.Parameters.AddWithValue("@area", area);
 
-                    Log("CalculateNamedBalancesFromQuery-Open");
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         if (!reader.HasRows)
                         {
-                            Log("CalculateNamedBalancesFromQuery-Close");
                             return balances;
                         }
 
@@ -426,8 +412,6 @@ namespace WMM.Data
                             }
                         }
                     }
-
-                    Log("CalculateNamedBalancesFromQuery-Close");
                 }
             }
 
@@ -454,14 +438,12 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@dateTo", dateTo);
                     command.Parameters.AddWithValue("@area", area);
 
-                    Log("CalculateBalanceFromQuery-Open");
                     command.Connection = dbConnection;
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         if (!reader.HasRows)
                         {
-                            Log("CalculateBalanceFromQuery-Close");
                             return default(Balance);
                         }
 
@@ -470,8 +452,6 @@ namespace WMM.Data
                             amounts.Add(reader.GetDouble(0));
                         }
                     }
-
-                    Log("CalculateBalanceFromQuery-Close");
                 }
             }
 
@@ -493,14 +473,12 @@ namespace WMM.Data
                     command.Parameters.AddWithValue("@dateTo", dateTo);
                     command.Parameters.AddWithValue("@category", category);
 
-                    Log("CalculateBalanceFromQuery-Open");
                     command.Connection = dbConnection;
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         if (!reader.HasRows)
                         {
-                            Log("CalculateBalanceFromQuery-Close");
                             return default(Balance);
                         }
                         while (reader.Read())
@@ -508,8 +486,6 @@ namespace WMM.Data
                             amounts.Add(reader.GetDouble(0));
                         }
                     }
-
-                    Log("CalculateBalanceFromQuery-Close");
                 }
             }
             return CalculateBalance(amounts);
@@ -548,45 +524,9 @@ namespace WMM.Data
             return dictionary;
         }
 
-        public async Task<string> GetAreaForCategory(string category)
+        public string GetAreaForCategory(string category)
         {
-            const string commandText =
-                "SELECT a.Name " +
-                "FROM Categories c JOIN Areas a ON c.Area = a.Id " +
-                "WHERE c.Name = @category";
-            using (var dbConnection = GetConnection())
-            {
-                using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
-                {
-                    command.Parameters.AddWithValue("@category", category);
-                    dbConnection.Open();
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (!reader.HasRows)
-                            return null;
-                        reader.Read();
-                        return reader.GetString(0);
-                    }
-                }
-            }
-        }
-
-
-        private async Task<int> ExecuteNonQuery(string commandText, SQLiteParameterCollection parameters)
-        {
-            using (var dbConnection = GetConnection())
-            {
-                using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
-                {
-                    for (int i = 0; i < parameters.Count; i++)
-                    {
-                        command.Parameters.Add(parameters[i]);
-                    }
-
-                    dbConnection.Open();
-                    return await command.ExecuteNonQueryAsync();
-                }
-            }
+            return _categories.Keys.FirstOrDefault(x => _categories[x].Contains(category));
         }
 
         private async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
@@ -609,7 +549,6 @@ namespace WMM.Data
                     reader.GetBoolean(9),
                     reader.GetBoolean(10)));
             }
-            Log("ReadTransactions-Done");
             return transactions;
         }
 
@@ -620,8 +559,8 @@ namespace WMM.Data
 
         private void SeedCategories(Dictionary<string, List<string>> categories)
         {
-            const string InsertAreaCommand = "INSERT INTO Areas(Id,Name) VALUES(@area{0}Id,'{1}'); ";
-            const string InsertCategoryCommand = "INSERT INTO Categories(Id,Name,Area) VALUES(@category{0}Id,'{1}',(SELECT Id FROM Areas WHERE Name = '{2}')); ";
+            const string insertAreaCommand = "INSERT INTO Areas(Id,Name) VALUES(@area{0}Id,'{1}'); ";
+            const string insertCategoryCommand = "INSERT INTO Categories(Id,Name,Area) VALUES(@category{0}Id,'{1}',(SELECT Id FROM Areas WHERE Name = '{2}')); ";
 
             StringBuilder commandText = new StringBuilder();
             using (var dbConnection = new SQLiteConnection(_dbConnectionString))
@@ -631,12 +570,12 @@ namespace WMM.Data
                     foreach (var area in categories.Keys)
                     {
                         var adaptedArea = area.Replace(' ', '_').Replace("&",""); // adapt name for usage as parameter name
-                        commandText.AppendLine(string.Format(InsertAreaCommand,adaptedArea, area));
+                        commandText.AppendLine(string.Format(insertAreaCommand,adaptedArea, area));
                         command.Parameters.AddWithValue($"@area{adaptedArea}Id", Guid.NewGuid());
                         foreach (var category in categories[area])
                         {
                             var adaptedCategory = category.Replace(' ', '_').Replace("&", ""); // adapt name for usage as parameter name
-                            commandText.AppendLine(string.Format(InsertCategoryCommand,adaptedCategory, category, area));
+                            commandText.AppendLine(string.Format(insertCategoryCommand,adaptedCategory, category, area));
                             command.Parameters.AddWithValue($"@category{adaptedCategory}Id", Guid.NewGuid());
                         }
                     }
@@ -649,77 +588,10 @@ namespace WMM.Data
             }
         }
 
-        private void SeedDummyCategories()
+        private void Log(string message)
         {
-            const string commandText =
-                "INSERT INTO Areas(Id,Name) VALUES(@area1Id,'Area 1'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category11Id,'category 1.1',@area1Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category12Id,'category 1.2',@area1Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category13Id,'category 1.3',@area1Id);" +
-                "INSERT INTO Areas(Id,Name) VALUES(@area2Id,'Area 2'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category21Id,'category 2.1',@area2Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category22Id,'category 2.2',@area2Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category23Id,'category 2.3',@area2Id);" +
-                "INSERT INTO Areas(Id,Name) VALUES(@area3Id,'Area 3'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category31Id,'category 3.1',@area3Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category32Id,'category 3.2',@area3Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category33Id,'category 3.3',@area3Id);" +
-                "INSERT INTO Areas(Id,Name) VALUES(@area4Id,'Area 4'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category41Id,'category 4.1',@area4Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category42Id,'category 4.2',@area4Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category43Id,'category 4.3',@area4Id);" +
-                "INSERT INTO Areas(Id,Name) VALUES(@area5Id,'Area 5'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category51Id,'category 5.1',@area5Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category52Id,'category 5.2',@area5Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category53Id,'category 5.3',@area5Id);" +
-                "INSERT INTO Areas(Id,Name) VALUES(@area6Id,'Area 6'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category61Id,'category 6.1',@area6Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category62Id,'category 6.2',@area6Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category63Id,'category 6.3',@area6Id);" +
-                "INSERT INTO Areas(Id,Name) VALUES(@area7Id,'Area 7'); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category71Id,'category 7.1',@area7Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category72Id,'category 7.2',@area7Id); " +
-                "INSERT INTO Categories(Id,Name,Area) VALUES(@category73Id,'category 7.3',@area7Id);";
-
-            using (var dbConnection = GetConnection())
-            {
-                using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
-                {
-                    command.Parameters.AddWithValue("@area1Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@area2Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@area3Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@area4Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@area5Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@area6Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@area7Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category11Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category12Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category13Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category21Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category22Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category23Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category31Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category32Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category33Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category41Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category42Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category43Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category51Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category52Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category53Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category61Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category62Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category63Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category71Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category72Id", Guid.NewGuid());
-                    command.Parameters.AddWithValue("@category73Id", Guid.NewGuid());
-
-                    dbConnection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
+            Debug.WriteLine($"DBTRACE|{DateTime.Now:hh:mm:ss.fff}|{message}");
         }
-
 
     }
 }

@@ -45,7 +45,11 @@
                                 <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="local:CategoryBalanceViewModel">
-                                            <Button Command="{Binding ElementName=ControlRoot, Path=DataContext.ShowDetailTransactionsCommand}" CommandParameter="{Binding Name}">V</Button>
+                                            <controls:ImageButton 
+                                                Command="{Binding ElementName=ControlRoot, Path=DataContext.ShowDetailTransactionsCommand}" 
+                                                CommandParameter="{Binding Name}"
+                                                ImageSource="/Resources/ic_list.png"
+                                                Style="{StaticResource DataGridButtonStyle}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

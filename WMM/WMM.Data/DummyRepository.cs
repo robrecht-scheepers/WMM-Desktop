@@ -154,12 +154,12 @@ namespace WMM.Data
             return Categories.SelectMany(x => x.Value);
         }
 
-        public Task<string> GetAreaForCategory(string category)
+        public string GetAreaForCategory(string category)
         {
             var result = Categories.Values.Any(x => x.Contains(category))
                 ? Categories.First(x => x.Value.Contains(category)).Key
                 : null;
-            return Task.FromResult(result);
+            return result;
         }
 
         private Balance CalculateBalance(List<Transaction> transactions)

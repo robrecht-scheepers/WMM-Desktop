@@ -39,6 +39,6 @@ namespace WMM.Data
         
         IEnumerable<string> GetCategories();
 
-        Task<string> GetAreaForCategory(string category);
+        string GetAreaForCategory(string category);
     }
 }
