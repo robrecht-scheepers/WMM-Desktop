@@ -33,7 +33,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Area}" />
                 <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" 
-                                    ElementStyle="{StaticResource AmountStyle}" Width="100" />
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate DataType="local:AreaBalanceViewModel">
@@ -41,7 +41,7 @@
                         <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" />
-                                <DataGridTemplateColumn Width="32">
+                                <DataGridTemplateColumn Width="{StaticResource SingleButtonColumnWidth}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="local:CategoryBalanceViewModel">
                                             <controls:ImageButton 
