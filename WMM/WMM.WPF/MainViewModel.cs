@@ -24,7 +24,7 @@ namespace WMM.WPF
             _windowService = windowService;
             MonthBalanceViewModels = new ObservableCollection<MonthBalanceViewModel>();
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
-            AddTransactionsViewModel.TransactionChanged += (s, a) =>
+            AddTransactionsViewModel.TransactionModified += (s, a) =>
             {
                 var newTransaction = a.Transaction;
                 var month = newTransaction.Date.FirstDayOfMonth();

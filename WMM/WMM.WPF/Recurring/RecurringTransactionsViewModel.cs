@@ -9,7 +9,7 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Recurring
 {
-    public class RecurringTransactionsViewModel : ObservableObject
+    public class RecurringTransactionsViewModel : TransactionListViewModelBase
     {
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
@@ -24,7 +24,8 @@ namespace WMM.WPF.Recurring
         private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
         private RelayCommand<Transaction> _editTransactionCommand;
 
-        public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month)
+        public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month) 
+            : base(repository, windowService)
         {
             _repository = repository;
             _windowService = windowService;
@@ -35,6 +36,7 @@ namespace WMM.WPF.Recurring
             Transactions = new ObservableCollection<Transaction>();
         }
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService)
+            : base(repository, windowService)
         {
             _repository = repository;
             _windowService = windowService;
@@ -137,42 +139,11 @@ namespace WMM.WPF.Recurring
             RaiseMultipleTransactionsModified();
         }
 
-        public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
-        private async Task DeleteTransaction(Transaction transaction)
+        protected override EditTransactionViewModel SetupEditViewModel(Transaction transaction)
         {
-            await _repository.DeleteTransaction(transaction);
-            Transactions.Remove(transaction);
-            RaiseTransactionModified(transaction);
+            return new EditTransactionViewModel(transaction, Repository, false);
         }
 
-        public RelayCommand<Transaction> EditTransactionCommand =>
-            _editTransactionCommand ?? (_editTransactionCommand = new RelayCommand<Transaction>(EditTransaction));
-
-        private void EditTransaction(Transaction transaction)
-        {
-            var editTransactionViewModel = new EditTransactionViewModel(transaction, _repository, false);
-            editTransactionViewModel.TransactionChanged += (sender, args) =>
-            {
-                var index = Transactions.IndexOf(args.OldTransaction);
-                Transactions.Remove(args.OldTransaction);
-                Transactions.Insert(index, args.NewTransaction);
-                RaiseTransactionModified(args.OldTransaction);
-                RaiseTransactionModified(args.NewTransaction);
-            };
-            _windowService.OpenDialogWindow(editTransactionViewModel);
-        }
-
-
-        public event TransactionEventHandler TransactionModified;
-        private void RaiseTransactionModified(Transaction transaction)
-        {
-            TransactionModified?.Invoke(this, new TransactionEventArgs(transaction));
-        }
-
-        public event TransactionEventHandler MultipleTransactionsModified;
-        private void RaiseMultipleTransactionsModified()
-        {
-            MultipleTransactionsModified?.Invoke(this, new TransactionEventArgs(null));
-        }
+        
     }
 }

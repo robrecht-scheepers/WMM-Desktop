@@ -9,34 +9,32 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF
 {
-    public class AddTransactionsViewModel : ObservableObject
+    public class AddTransactionsViewModel : TransactionListViewModelBase
     {
-        private readonly IRepository _repository;
-        private readonly IWindowService _windowService;
         private DateTime _newTransactionDate;
         private string _newTransactionCategory;
         private double _newTransactionAmount;
         private AsyncRelayCommand _addTransactionCommand;
         private ObservableCollection<string> _categories;
         private string _selectedSign;
-        private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
-        private RelayCommand<Transaction> _editTransactionCommand;
-
+        
         public AddTransactionsViewModel(IRepository repository, IWindowService windowService)
+            :base(repository,windowService)
         {
-            _repository = repository;
-            _windowService = windowService;
             Categories = new ObservableCollection<string>();
-            AddedTransactions = new ObservableCollection<Transaction>();
         }
 
-        public async Task Initialize()
+        public Task Initialize()
         {
-            Categories = new ObservableCollection<string>( _repository.GetCategories().OrderBy(x => x));
+            Categories = new ObservableCollection<string>( Repository.GetCategories().OrderBy(x => x));
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
-            NewTransactionAmount = 115.29; // should be 0, now with value for faster testing
+            NewTransactionAmount = 115.29; // should be 0, now dummy value for faster testing
             SelectedSign = "-";
+
+            // currently this method runs synchronously as categories are loaded synchronously,
+            // but I don't want to mix up the async initialize pattern
+            return Task.CompletedTask; 
         }
 
         public DateTime NewTransactionDate
@@ -76,45 +74,10 @@ namespace WMM.WPF
         {
             var amount = SelectedSign == "-" ? NewTransactionAmount * -1.0 : NewTransactionAmount;
 
-            var transaction = await _repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, null);
+            var transaction = await Repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, null);
 
-            AddedTransactions.Insert(0,transaction);
-            RaiseTransactionChanged(transaction);
-        }
-
-        public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
-        private async Task DeleteTransaction(Transaction transaction)
-        {
-            await _repository.DeleteTransaction(transaction);
-            AddedTransactions.Remove(transaction);
-            RaiseTransactionChanged(transaction);
-        }
-
-        public RelayCommand<Transaction> EditTransactionCommand =>
-            _editTransactionCommand ?? (_editTransactionCommand = new RelayCommand<Transaction>(EditTransaction));
-
-        private void EditTransaction(Transaction transaction)
-        {
-            var editTransactionViewModel = new EditTransactionViewModel(transaction, _repository);
-            editTransactionViewModel.TransactionChanged += (sender, args) =>
-            {
-                var index = AddedTransactions.IndexOf(args.OldTransaction);
-                AddedTransactions.Remove(args.OldTransaction);
-                AddedTransactions.Insert(index, args.NewTransaction);
-                RaiseTransactionChanged(args.OldTransaction);
-                RaiseTransactionChanged(args.NewTransaction);
-            };
-            _windowService.OpenDialogWindow(editTransactionViewModel);
-        }
-
-
-        public ObservableCollection<Transaction> AddedTransactions { get; }
-
-        public event TransactionEventHandler TransactionChanged;
-
-        private void RaiseTransactionChanged(Transaction transaction)
-        {
-            TransactionChanged?.Invoke(this, new TransactionEventArgs(transaction));
+            Transactions.Insert(0,transaction);
+            RaiseTransactionModified(transaction);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WMM.WPF
         private AsyncRelayCommand _saveChangesCommand;
         private readonly bool _editDate;
 
-        public EditTransactionViewModel(Transaction transaction, IRepository repository, bool editDate = false)
+        public EditTransactionViewModel(Transaction transaction, IRepository repository, bool editDate = true)
         {
             _transaction = transaction;
             _repository = repository;

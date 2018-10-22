@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddTransactionsView.xaml.cs">
+      <DependentUpon>AddTransactionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Balances\AreaBalanceViewModel.cs" />
     <Compile Include="Balances\CategoryBalanceViewModel.cs" />
     <Compile Include="Balances\MonthBalanceView.xaml.cs">
@@ -74,6 +77,14 @@
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TransactionEventArgs.cs" />
+    <Compile Include="TransactionListView.xaml.cs">
+      <DependentUpon>TransactionListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TransactionListViewModelBase.cs" />
+    <Page Include="AddTransactionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Balances\MonthBalanceTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +122,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Recurring\RecurringTransactionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TransactionListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
