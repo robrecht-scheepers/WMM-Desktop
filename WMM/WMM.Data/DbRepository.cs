@@ -205,6 +205,25 @@ namespace WMM.Data
             
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactions()
+        {
+            const string commandText =
+                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
+                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id" +
+                "WHERE Deleted = 0";
+            using (var dbConnection = GetConnection())
+            {
+                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    dbConnection.Open();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        return await ReadTransactions(reader);
+                    }
+                }
+            }
+        }
+
         public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
         {
             const string commandText =

@@ -16,6 +16,8 @@ namespace WMM.Data
 
         Task DeleteTransaction(Transaction transaction);
 
+        Task<IEnumerable<Transaction>> GetTransactions();
+
         Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category);
 
         Task<Transaction> AddRecurringTemplate(string category, double amount, string comments);

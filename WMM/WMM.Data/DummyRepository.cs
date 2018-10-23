@@ -47,6 +47,11 @@ namespace WMM.Data
             return Task.FromResult(transaction);
         }
 
+        public Task<IEnumerable<Transaction>> GetTransactions()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category)
         {
             throw new NotImplementedException();
