@@ -9,7 +9,8 @@
         Title="EditTransactionWindow"
         SizeToContent="WidthAndHeight"
         d:DataContext="{d:DesignInstance local:EditTransactionViewModel}"
-        WindowStyle="None">
+        WindowStyle="None"
+        ResizeMode="NoResize">
     <Grid Background="{StaticResource SCB5}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
