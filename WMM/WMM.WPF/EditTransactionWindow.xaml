@@ -6,32 +6,30 @@
         xmlns:local="clr-namespace:WMM.WPF"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         mc:Ignorable="d"
-        Title="EditTransactionWindow" Height="450" Width="800"
-        d:DataContext="{d:DesignInstance local:EditTransactionViewModel}">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="EditTransactionWindow"
+        SizeToContent="WidthAndHeight"
+        d:DataContext="{d:DesignInstance local:EditTransactionViewModel}"
+        WindowStyle="None">
+    <Grid Background="{StaticResource SCB5}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Datum" Visibility="{Binding EditDate, Converter={StaticResource CollapseWhenFalseConverter}}"/>
-        <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding Date, Mode=TwoWay}" Visibility="{Binding EditDate, Converter={StaticResource CollapseWhenFalseConverter}}"/>
+        <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="{StaticResource SCB1}"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Kategorie"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding Category, Mode=TwoWay}"  />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Betrag"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Amount, StringFormat=C, Mode=TwoWay}"/>
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="{StaticResource SCB1}">
+            <TextBlock Text="Eingabe ändern" Style="{StaticResource TitleStyle}" />
+        </Border>
 
-        <controls:TextButton Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Text="Speichern" Command="{Binding SaveChangesCommand}" Click="ButtonBase_OnClick" />
-        <controls:TextButton Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="Cancel" Click="Cancel_OnClick" />
-
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <DatePicker SelectedDate="{Binding Date, Mode=TwoWay}" Visibility="{Binding EditDate, Converter={StaticResource CollapseWhenFalseConverter}}"/>
+            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category, Mode=TwoWay}"  />
+            <TextBox Text="{Binding Amount, StringFormat=C, Mode=TwoWay}"/>
+            <controls:ImageButton Command="{Binding SaveChangesCommand}" Click="ButtonBase_OnClick" ImageSource="/Resources/ic_confirm.png" />
+            <controls:ImageButton Click="Cancel_OnClick" ImageSource="/Resources/ic_cancel.png" />
+        </StackPanel>
         
     </Grid>
 </Window>

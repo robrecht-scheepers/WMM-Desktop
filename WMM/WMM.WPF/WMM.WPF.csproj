@@ -183,5 +183,11 @@
   <ItemGroup>
     <Resource Include="Resources\ic_list.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_confirm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_cancel.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
