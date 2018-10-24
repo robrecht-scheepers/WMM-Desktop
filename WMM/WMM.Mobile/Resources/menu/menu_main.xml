@@ -1,9 +1,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+  <item android:id="@+id/group_action"
+        android:icon="@drawable/ic_grouping"
+        android:title="Grouping"
+        app:showAsAction="ifRoom">
+    <menu>
+      <item android:id="@+id/group_menu_day"
+            android:title="@string/group_menu_day"/>
+      <item android:id="@+id/group_menu_week"
+            android:title="@string/group_menu_week"/>
+      <item android:id="@+id/group_menu_month"
+            android:title="@string/group_menu_month"/>
+    </menu>
+  </item>
+  <item android:id="@+id/upload_action"
+        android:icon="@drawable/ic_upload"
+        android:title="Upload"
+        app:showAsAction="ifRoom"/>
+  <item android:id="@+id/user_action"
+        android:icon="@drawable/ic_user"
+        android:title="User"
+        app:showAsAction="ifRoom"/>
 </menu>

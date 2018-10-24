@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
@@ -8,6 +9,7 @@ using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using WMM.Data;
+using WMM.Mobile.Adapters;
 using Environment = System.Environment;
 
 namespace WMM.Mobile
@@ -56,8 +58,10 @@ namespace WMM.Mobile
                 categoryEditText.Text = "";
                 amountEditText.Text = "";
                 categoryEditText.RequestFocus();
-                RefreshList();
+                await RefreshList();
             };
+
+            _dateGroupType = DateGroupType.Day;
 
             var listView = FindViewById<ListView>(Resource.Id.listViewTransactions);
             RegisterForContextMenu(listView);
@@ -81,28 +85,49 @@ namespace WMM.Mobile
 
         private async Task RefreshList()
         {
-            var expenses = await Repository.GetTransactions();
-            var adapter = new DateGroupedExpenseListAdapter(this, expenses, _dateGroupType);
-            var listView = FindViewById<ExpandableListView>(Resource.Id.listViewExpenses);
+            var transactions = (await Repository.GetTransactions()).ToList();
+            var adapter = new DateGroupedExpenseListAdapter(this, transactions, _dateGroupType);
+            var listView = FindViewById<ExpandableListView>(Resource.Id.listViewTransactions);
             listView.SetAdapter(adapter);
         }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+            RefreshList();
+        }
+
+        #region Menu
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return true;
+            return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
+            switch (item.ItemId)
             {
-                return true;
+                case Resource.Id.group_menu_day:
+                    UpdateGrouping(DateGroupType.Day);
+                    return true;
+                case Resource.Id.group_menu_week:
+                    UpdateGrouping(DateGroupType.Week);
+                    return true;
+                case Resource.Id.group_menu_month:
+                    UpdateGrouping(DateGroupType.Month);
+                    return true;
+                case Resource.Id.user_action:
+                    //StartActivity(typeof(UserSettingsActivity));
+                    return true;
+                case Resource.Id.upload_action:
+                    //UploadDb();
+                    return true;
+                default:
+                    return base.OnOptionsItemSelected(item);
             }
-
-            return base.OnOptionsItemSelected(item);
         }
+        #endregion
 
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
@@ -110,6 +135,24 @@ namespace WMM.Mobile
             Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
                 .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
         }
-	}
+
+        private void UpdateGrouping(DateGroupType groupType)
+        {
+            if (groupType == _dateGroupType) return;
+
+            _dateGroupType = groupType;
+            RefreshList();
+        }
+
+        //private async Task UploadDb()
+        //{
+        //    //TODO: status updates (floating stats thingy like in GMail)
+        //    var userName = PreferenceManager.GetDefaultSharedPreferences(this).GetString("pref_user_name", "");
+        //    if (string.IsNullOrEmpty(userName))
+        //        return;
+
+        //    await Repository.UploadAsync(userName);
+        //}
+    }
 }
 

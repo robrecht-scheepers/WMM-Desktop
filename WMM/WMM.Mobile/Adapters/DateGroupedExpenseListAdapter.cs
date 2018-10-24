@@ -78,7 +78,7 @@ namespace WMM.Mobile.Adapters
 
         public override long GetChildId(int groupPosition, int childPosition)
         {
-            return _groups[groupPosition].Transactions[childPosition].Id;
+            return 0; // TODO conflict between Guid id's and expected long --> not sure how this is used...
         }
 
         public override int GetChildrenCount(int groupPosition)
@@ -99,20 +99,20 @@ namespace WMM.Mobile.Adapters
                 holder = new DateGroupedExpenseListAdapterViewHolder();
                 var inflater = _context.GetSystemService(Context.LayoutInflaterService).JavaCast<LayoutInflater>();
                 view = inflater.Inflate(Resource.Layout.expense_list_item_layout, parent, false);
-                holder.Amount = view.FindViewById<TextView>(Resource.Id.expenseItemAmount);
-                holder.Category = view.FindViewById<TextView>(Resource.Id.expenseItemCategory);
-                holder.Date = view.FindViewById<TextView>(Resource.Id.expenseItemDate);
+                holder.Amount = view.FindViewById<TextView>(Resource.Id.transactionItemAmount);
+                holder.Category = view.FindViewById<TextView>(Resource.Id.transactionItemCategory);
+                holder.Date = view.FindViewById<TextView>(Resource.Id.transactionItemDate);
 
                 view.Tag = holder;
             }
 
-            var expense = (Expense)GetChild(groupPosition, childPosition);
+            var transaction = GetChild(groupPosition, childPosition).ToNetObject<Transaction>();
 
-            holder.Amount.Text = expense.Amount.ToString("#.00");
-            holder.Category.Text = expense.Category;
-            holder.Date.Text = expense.Date.ToString("dd.MM.yy");
+            holder.Amount.Text = transaction.Amount.ToString("#.00");
+            holder.Category.Text = transaction.Category;
+            holder.Date.Text = transaction.Date.ToString("dd.MM.yy");
 
-            view.SetBackgroundColor(expense.Amount > 0 ? new Color(200, 215, 200) : new Color(215, 215, 215));
+            view.SetBackgroundColor(transaction.Amount > 0 ? new Color(200, 215, 200) : new Color(215, 215, 215));
 
             return view;
         }
