@@ -18,6 +18,7 @@
                 <DataGridTextColumn Binding="{Binding Category}"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+                <DataGridTextColumn Binding="{Binding Comments}"/>
                 <DataGridTemplateColumn Width="{StaticResource DoubleButtonColumnWidth}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">

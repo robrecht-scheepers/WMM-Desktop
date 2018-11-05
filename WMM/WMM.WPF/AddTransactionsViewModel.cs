@@ -17,7 +17,8 @@ namespace WMM.WPF
         private AsyncRelayCommand _addTransactionCommand;
         private ObservableCollection<string> _categories;
         private string _selectedSign;
-        
+        private string _newTransactionComment;
+
         public AddTransactionsViewModel(IRepository repository, IWindowService windowService)
             :base(repository,windowService, true)
         {
@@ -55,6 +56,12 @@ namespace WMM.WPF
             set => SetValue(ref _newTransactionAmount, value);
         }
 
+        public string NewTransactionComment
+        {
+            get => _newTransactionComment;
+            set => SetValue(ref _newTransactionComment, value);
+        }
+
         public ObservableCollection<string> Categories
         {
             get => _categories;
@@ -74,10 +81,13 @@ namespace WMM.WPF
         {
             var amount = SelectedSign == "-" ? NewTransactionAmount * -1.0 : NewTransactionAmount;
 
-            var transaction = await Repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, null);
+            var transaction = await Repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, NewTransactionComment);
 
             Transactions.Insert(0,transaction);
             RaiseTransactionModified(transaction);
+
+            NewTransactionAmount = 0.00;
+            NewTransactionComment = "";
         }
     }
 }

@@ -18,16 +18,22 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <DatePicker Grid.Column="0" SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
-            <ComboBox Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <ComboBox  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-                <TextBox Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" />
-            </StackPanel>
-            <controls:ImageButton Grid.Column="3" Command="{Binding AddTransactionCommand}" ImageSource="/Resources/ic_add.png" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <DatePicker Grid.Row="0" Grid.Column="0" SelectedDate="{Binding NewTransactionDate, Mode=TwoWay}" />
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTransactionCategory, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+            <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Path=NewTransactionAmount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding NewTransactionComment, Mode=TwoWay}" Height="32"/>
+
+            <controls:ImageButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" Command="{Binding AddTransactionCommand}" ImageSource="/Resources/ic_add.png" />
+
         </Grid>
         <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
     </Grid>

@@ -18,6 +18,8 @@ namespace WMM.WPF
         private double _amount;
         private AsyncRelayCommand _saveChangesCommand;
         private readonly bool _editDate;
+        private string _comments;
+        private string _selectedSign;
 
         public EditTransactionViewModel(Transaction transaction, IRepository repository, bool editDate = true)
         {
@@ -25,9 +27,11 @@ namespace WMM.WPF
             _repository = repository;
             _editDate = editDate;
 
-            Date = transaction.Date;
-            Category = transaction.Category;
-            Amount = transaction.Amount;
+            Date = _transaction.Date;
+            Category = _transaction.Category;
+            SelectedSign = _transaction.Amount > 0 ? "+" : "-";
+            Amount = Math.Abs(_transaction.Amount);
+            Comments = _transaction.Comments;
             Categories = new ObservableCollection<string>( _repository.GetCategories());
         }
 
@@ -53,18 +57,34 @@ namespace WMM.WPF
             set => SetValue(ref _amount, value);
         }
 
+        public string Comments
+        {
+            get => _comments;
+            set => SetValue(ref _comments , value);
+        }
+
+        public List<string> Signs => new List<string> { "+", "-" };
+
+        public string SelectedSign
+        {
+            get => _selectedSign;
+            set => SetValue(ref _selectedSign, value);
+        }
+
         public AsyncRelayCommand SaveChangesCommand => _saveChangesCommand ?? (_saveChangesCommand = new AsyncRelayCommand(SaveChanges,CanExecuteSaveChanges));
         private bool CanExecuteSaveChanges()
         {
-            return Category != _transaction.Category ||
+            return Category != _transaction.Category || Comments != _transaction.Comments ||
                    (Date > DateTime.MinValue && Date != _transaction.Date) ||
                    Math.Abs(Amount - _transaction.Amount) >= 0.01;
         }
         private async Task SaveChanges()
         {
+            var amount = SelectedSign == "-" ? Amount * -1.0 : Amount;
+
             var newTransaction = _editDate
-                ? await _repository.UpdateTransaction(_transaction, Category, Amount, "")
-                : await _repository.UpdateTransaction(_transaction, Date, Category, Amount, "");
+                ? await _repository.UpdateTransaction(_transaction, Category, amount, Comments)
+                : await _repository.UpdateTransaction(_transaction, Date, Category, amount, Comments);
             RaiseTransactionUpdated(_transaction, newTransaction);
         }
 
