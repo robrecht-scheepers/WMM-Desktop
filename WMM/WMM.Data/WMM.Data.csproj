@@ -9,6 +9,9 @@
     <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
     <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
     <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
+    <Authors>RS</Authors>
+    <Company>RS</Company>
+    <Product>WMM</Product>
 </PropertyGroup>
 
   <ItemGroup>
