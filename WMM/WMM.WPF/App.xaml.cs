@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Markup;
 using WMM.Data;
 using WMM.WPF.Helpers;
+using WMM.WPF.Properties;
 
 namespace WMM.WPF
 {
@@ -31,7 +32,7 @@ namespace WMM.WPF
 
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
-            var mainViewModel = new MainViewModel(new DbRepository(@"c:\TEMP\WMM\DB\"), new WindowService());
+            var mainViewModel = new MainViewModel(new DbRepository(Settings.Default.DbDirectory), new WindowService());
             var mainWindow = new MainWindow {DataContext = mainViewModel};
             mainWindow.Show();
             await mainViewModel.Initialize();
