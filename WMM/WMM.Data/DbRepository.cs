@@ -344,6 +344,35 @@ namespace WMM.Data
             }
         }
 
+        public async Task<Balance> GetRecurringTemplatesBalance()
+        {
+            var amounts = new List<double>();
+            const string commandText =
+                "SELECT t.Amount " +
+                "FROM Transactions t " +
+                "WHERE t.Deleted = 0 AND t.Recurring = 1 AND t.Date IS NULL";
+            using (var dbConnection = GetConnection())
+            {
+                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    dbConnection.Open();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (!reader.HasRows)
+                        {
+                            return default(Balance);
+                        }
+                        while (reader.Read())
+                        {
+                            amounts.Add(reader.GetDouble(0));
+                        }
+                    }
+                }
+            }
+
+            return CalculateBalance(amounts);
+        }
+
         public async Task<IEnumerable<Transaction>> GetRecurringTransactions(DateTime dateFrom, DateTime dateTo)
         {
             const string commandText =
@@ -363,6 +392,37 @@ namespace WMM.Data
                     }
                 }
             }
+        }
+
+        public async Task<Balance> GetRecurringTransactionsBalance(DateTime dateFrom, DateTime dateTo)
+        {
+            var amounts = new List<double>();
+            const string commandText =
+                "SELECT t.Amount " +
+                "FROM Transactions t " +
+                "WHERE Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND Recurring = 1";
+            using (var dbConnection = GetConnection())
+            {
+                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    command.Parameters.AddWithValue("@dateFrom", dateFrom);
+                    command.Parameters.AddWithValue("@dateTo", dateTo);
+                    dbConnection.Open();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (!reader.HasRows)
+                        {
+                            return default(Balance);
+                        }
+                        while (reader.Read())
+                        {
+                            amounts.Add(reader.GetDouble(0));
+                        }
+                    }
+                }
+            }
+
+            return CalculateBalance(amounts);
         }
 
         public async Task ApplyRecurringTemplates(DateTime date)
@@ -404,7 +464,7 @@ namespace WMM.Data
                     }
                 }
             }
-            return new Balance(amounts.Where(x => x > 0).Sum(), amounts.Where(x => x < 0).Sum());
+            return CalculateBalance(amounts);
         }
 
         public async Task<Dictionary<string, Balance>> GetAreaBalances(DateTime dateFrom, DateTime dateTo)

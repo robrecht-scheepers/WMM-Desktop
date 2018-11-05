@@ -93,7 +93,17 @@ namespace WMM.Data
             return Task.FromResult(DummyTransactions.Where(x => x.Recurring));
         }
 
+        public Task<Balance> GetRecurringTemplatesBalance()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<Transaction>> GetRecurringTransactions(DateTime dateFrom, DateTime dateTo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Balance> GetRecurringTransactionsBalance(DateTime dateFrom, DateTime dateTo)
         {
             throw new NotImplementedException();
         }

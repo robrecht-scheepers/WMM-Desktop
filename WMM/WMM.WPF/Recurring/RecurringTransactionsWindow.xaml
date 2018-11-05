@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WMM.WPF.Recurring"
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
+        xmlns:wpf="clr-namespace:WMM.WPF"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="450" Width="600"
         d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}"
@@ -23,33 +24,37 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory, Mode=TwoWay}"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <ComboBox ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-                <TextBox Text="{Binding Path=NewAmount, StringFormat=C, Mode=TwoWay}" />
-            </StackPanel>
-            <controls:ImageButton Grid.Column="2" Command="{Binding AddCommand}" ImageSource="/Resources/ic_add.png" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory, Mode=TwoWay}"/>
+            <ComboBox  Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=NewAmount, StringFormat=C, Mode=TwoWay}" />
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Path=NewComments, Mode=TwoWay}" Height="32" />
+
+            <controls:ImageButton Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Command="{Binding AddCommand}" ImageSource="/Resources/ic_add.png" />
         </Grid>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Category}"/>
-                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}"/>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type data:Transaction}">
-                            <StackPanel Orientation="Horizontal">
-                                <Button Command="{Binding ElementName=RecurringWindow, Path=DataContext.DeleteTransactionCommand}" CommandParameter="{Binding}">X</Button>
-                                <Button Command="{Binding ElementName=RecurringWindow, Path=DataContext.EditTransactionCommand}" CommandParameter="{Binding}">E</Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <controls:TextButton Grid.Row="2" HorizontalAlignment="Left" Command="{Binding ApplyTemplatesCommand}" Text="Vorlagen anwenden" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
-        <controls:TextButton x:Name="CloseButton" Grid.Row="2" HorizontalAlignment="Right" Click="CloseButton_OnClick" Text="Schließen" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
+        <wpf:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" DataContext="{Binding TotalRecurringBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="{StaticResource SCB1}"/>
+            <TextBlock Grid.Column="1" DataContext="{Binding TotalRecurringBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="{StaticResource SCB1}"/>
+            <TextBlock Grid.Column="2" DataContext="{Binding TotalRecurringBalance.Total}" Style="{StaticResource ColoredAmountStyle}" Background="{StaticResource SCB3}" />
+            <controls:TextButton Grid.Column="4" Command="{Binding ApplyTemplatesCommand}" Text="Vorlagen anwenden" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
+            <controls:TextButton Grid.Column="5" x:Name="CloseButton" Click="CloseButton_OnClick" Text="Schließen" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
+        </Grid>
+        
     </Grid>
 </Window>

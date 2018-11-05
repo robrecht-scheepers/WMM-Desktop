@@ -17,15 +17,16 @@ namespace WMM.WPF
         private RelayCommand<Transaction> _editTransactionCommand;
         protected readonly IRepository Repository;
         protected readonly IWindowService WindowService;
-        private readonly bool _showDate;
-
+        
         public TransactionListViewModelBase(IRepository repository, IWindowService windowService, bool showDate)
         {
             Repository = repository;
             WindowService = windowService;
-            _showDate = showDate;
+            ShowDate = showDate;
             Transactions = new ObservableCollection<Transaction>();
         }
+
+        public bool ShowDate { get; }
 
         public ObservableCollection<Transaction> Transactions
         {
@@ -46,7 +47,7 @@ namespace WMM.WPF
 
         private void EditTransaction(Transaction transaction)
         {
-            var editTransactionViewModel = new EditTransactionViewModel(transaction, Repository, _showDate);
+            var editTransactionViewModel = new EditTransactionViewModel(transaction, Repository, ShowDate);
             editTransactionViewModel.TransactionChanged += (sender, args) =>
             {
                 var index = Transactions.IndexOf(args.OldTransaction);

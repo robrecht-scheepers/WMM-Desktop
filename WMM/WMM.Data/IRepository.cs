@@ -24,8 +24,12 @@ namespace WMM.Data
         
         Task<IEnumerable<Transaction>> GetRecurringTemplates();
 
+        Task<Balance> GetRecurringTemplatesBalance();
+
         Task<IEnumerable<Transaction>> GetRecurringTransactions(DateTime dateFrom, DateTime dateTo);
-        
+
+        Task<Balance> GetRecurringTransactionsBalance(DateTime dateFrom, DateTime dateTo);
+
         Task ApplyRecurringTemplates(DateTime date);
 
         Task<Balance> GetBalance(DateTime dateFrom, DateTime dateTo);

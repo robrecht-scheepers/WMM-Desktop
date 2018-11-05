@@ -11,10 +11,12 @@
              Name="TransactionListControlRoot"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <FrameworkElement x:Name="dummy" Visibility="Collapsed"/> <!-- dummy element to pass the data context for binding column visibility --> 
         <DataGrid ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
                   HorizontalAlignment="Stretch" ColumnWidth="*">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}"/>
+                <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}" 
+                                    Visibility="{Binding Path=DataContext.ShowDate, Source={x:Reference dummy}, Converter={StaticResource CollapseWhenFalseConverter}}"/>
                 <DataGridTextColumn Binding="{Binding Category}"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />

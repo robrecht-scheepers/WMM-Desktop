@@ -19,7 +19,9 @@ namespace WMM.WPF.Recurring
         private ObservableCollection<string> _categories;
         private string _selectedSign;
         private AsyncRelayCommand _applyTemplatesCommand;
-        
+        private Balance _totalRecurringBalance;
+        private string _newComments;
+
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month) 
             : base(repository, windowService, false)
         {
@@ -68,6 +70,12 @@ namespace WMM.WPF.Recurring
             set => SetValue(ref _newAmount, value);
         }
 
+        public string NewComments
+        {
+            get => _newComments;
+            set => SetValue(ref _newComments, value);
+        }
+
         public ObservableCollection<string> Categories
         {
             get => _categories;
@@ -82,6 +90,12 @@ namespace WMM.WPF.Recurring
             set => SetValue(ref _selectedSign, value);
         }
 
+        public Balance TotalRecurringBalance
+        {
+            get => _totalRecurringBalance;
+            set => SetValue(ref _totalRecurringBalance, value);
+        }
+
         private async Task GetRecurringTemplates()
         {
             Transactions.Clear();
@@ -89,6 +103,7 @@ namespace WMM.WPF.Recurring
             {
                 Transactions.Add(template);
             }
+            TotalRecurringBalance = await Repository.GetRecurringTemplatesBalance();
         }
 
         private async Task GetRecurringTransactions()
@@ -98,6 +113,7 @@ namespace WMM.WPF.Recurring
             {
                 Transactions.Add(template);
             }
+            TotalRecurringBalance = await Repository.GetRecurringTransactionsBalance(_month.FirstDayOfMonth(), _month.LastDayOfMonth());
         }
 
         public AsyncRelayCommand AddCommand => _addCommand ?? (_addCommand = new AsyncRelayCommand(Add));
