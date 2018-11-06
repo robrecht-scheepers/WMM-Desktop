@@ -37,6 +37,7 @@
         <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" >
             <TextBlock Text="Übersicht" Style="{StaticResource TitleStyle}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding ShowManageCategoriesCommand}">Kategorien verwalten</Button>
                 <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"/>
             </StackPanel>
         </Grid>

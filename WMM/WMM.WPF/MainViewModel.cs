@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Balances;
+using WMM.WPF.Categories;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
@@ -15,6 +16,7 @@ namespace WMM.WPF
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private RelayCommand _showRecurringTransactionsCommand;
+        private AsyncRelayCommand _showManageCategoriesCommand;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
         {
@@ -79,5 +81,13 @@ namespace WMM.WPF
             await DetailTransactions.ReloadTransactions();
         }
 
+        public AsyncRelayCommand ShowManageCategoriesCommand => _showManageCategoriesCommand ?? (_showManageCategoriesCommand = new AsyncRelayCommand(ShowManageCategories));
+
+        private async Task ShowManageCategories()
+        {
+            var manageCategoriesViewModel = new ManageCategoriesViewModel(_repository, _windowService);
+            await manageCategoriesViewModel.Initialize();
+            _windowService.OpenDialogWindow(manageCategoriesViewModel);
+        }
     }
 }

@@ -169,6 +169,31 @@ namespace WMM.Data
             return Categories.SelectMany(x => x.Value);
         }
 
+        public IEnumerable<string> GetAreas()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Dictionary<string, List<string>>> GetAreasAndCategories()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddArea(string area)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddCategory(string area, string category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EditCategory(string oldCategory, string newArea, string newCategory)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetAreaForCategory(string category)
         {
             var result = Categories.Values.Any(x => x.Contains(category))

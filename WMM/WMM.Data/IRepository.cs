@@ -45,6 +45,16 @@ namespace WMM.Data
         
         IEnumerable<string> GetCategories();
 
+        IEnumerable<string> GetAreas();
+
+        Task<Dictionary<string, List<string>>> GetAreasAndCategories();
+
+        Task AddArea(string area);
+
+        Task AddCategory(string area, string category);
+
+        Task EditCategory(string oldCategory, string newArea, string newCategory);
+
         string GetAreaForCategory(string category);
     }
 }

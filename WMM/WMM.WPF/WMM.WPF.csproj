@@ -63,6 +63,11 @@
     <Compile Include="Balances\MonthBalanceView.xaml.cs">
       <DependentUpon>MonthBalanceView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Categories\CategoryViewModel.cs" />
+    <Compile Include="Categories\ManageCategoriesViewModel.cs" />
+    <Compile Include="Categories\ManageCategoriesWindow.xaml.cs">
+      <DependentUpon>ManageCategoriesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
@@ -87,6 +92,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Balances\MonthBalanceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Categories\ManageCategoriesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

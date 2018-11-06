@@ -12,6 +12,7 @@
     <Authors>RS</Authors>
     <Company>RS</Company>
     <Product>WMM</Product>
+    <Version>1.0.2</Version>
 </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using WMM.WPF.MVVM;
+﻿using System.Windows;
+using WMM.WPF.Categories;
+using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
 
 namespace WMM.WPF.Helpers
@@ -17,6 +19,16 @@ namespace WMM.WPF.Helpers
                 var window = new EditTransactionWindow{DataContext = dataContext};
                 window.ShowDialog();
             }
+            else if (dataContext is ManageCategoriesViewModel)
+            {
+                var window = new ManageCategoriesWindow{DataContext = dataContext};
+                window.ShowDialog();
+            }
+        }
+
+        public void ShowMessage(string message, string caption)
+        {
+            MessageBox.Show(message, caption);
         }
     }
 }

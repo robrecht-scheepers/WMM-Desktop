@@ -32,6 +32,7 @@ namespace WMM.Data
             {"Haus", new List<string>{"Abzahlung" ,"Nebenkosten", "Baumarkt", "Ausstattung"}},
             {"Gehalt", new List<string>{"Gehalt", "Elterngeld"}},
             {"Versicherung", new List<string>{"Versicherung"}},
+            {"Sonstiges", new List<string>{"Sonstiges"}},
         };
 
         private Dictionary<string, List<string>> _categories;
@@ -612,7 +613,12 @@ namespace WMM.Data
             return _categories?.SelectMany(x => x.Value).Distinct();
         }
 
-        private async Task<Dictionary<string,List<string>>> GetAreasAndCategories()
+        public IEnumerable<string> GetAreas()
+        {
+            return _categories?.Select(x => x.Key);
+        }
+
+        public async Task<Dictionary<string,List<string>>> GetAreasAndCategories()
         {
             var dictionary = new Dictionary<string, List<string>>();
             const string commandText =
@@ -638,6 +644,59 @@ namespace WMM.Data
                 }
             }
             return dictionary;
+        }
+
+        public async Task AddArea(string area)
+        {
+            const string commandText =
+                "INSERT INTO Areas (Id,Name) VALUES (@id,@name);";
+            using (var dbConnection = GetConnection())
+            {
+                using (var dbCommand = new SQLiteCommand(dbConnection) {CommandText = commandText})
+                {
+                    dbCommand.Parameters.AddWithValue("@id", Guid.NewGuid());
+                    dbCommand.Parameters.AddWithValue("@name", area);
+                    dbConnection.Open();
+                    await dbCommand.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task AddCategory(string area, string category)
+        {
+            const string commandText =
+                "INSERT INTO Categories (Id,Area,Name) " +
+                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category);";
+            using (var dbConnection = GetConnection())
+            {
+                using (var dbCommand = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    dbCommand.Parameters.AddWithValue("@id", Guid.NewGuid());
+                    dbCommand.Parameters.AddWithValue("@area", area);
+                    dbCommand.Parameters.AddWithValue("@category", category);
+                    dbConnection.Open();
+                    await dbCommand.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task EditCategory(string oldCategory, string newArea, string newCategory)
+        {
+            const string commandText =
+                "UPDATE Categories " +
+                "SET Name = @newName, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
+                "WHERE Name = @oldName;";
+            using (var dbConnection = GetConnection())
+            {
+                using (var dbCommand = new SQLiteCommand(dbConnection) { CommandText = commandText })
+                {
+                    dbCommand.Parameters.AddWithValue("@oldName", oldCategory);
+                    dbCommand.Parameters.AddWithValue("@newArea", newArea);
+                    dbCommand.Parameters.AddWithValue("@newName", newCategory);
+                    dbConnection.Open();
+                    await dbCommand.ExecuteNonQueryAsync();
+                }
+            }
         }
 
         public string GetAreaForCategory(string category)
