@@ -15,8 +15,8 @@ namespace WMM.WPF.Categories
     {
         private string _area;
         private string _category;
-        private string _newArea;
-        private string _newCategory;
+        private string _editedArea;
+        private string _editedCategory;
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private AsyncRelayCommand _editCategoryCommand;
@@ -30,8 +30,8 @@ namespace WMM.WPF.Categories
             Areas = new ObservableCollection<string>(areas);
             Area = area;
             Category = category;
-            NewArea = area;
-            NewCategory = category;
+            EditedArea = area;
+            EditedCategory = category;
         }
 
         public string Area
@@ -46,16 +46,16 @@ namespace WMM.WPF.Categories
             set => SetValue(ref _category, value);
         }
 
-        public string NewArea
+        public string EditedArea
         {
-            get => _newArea;
-            set => SetValue(ref _newArea, value);
+            get => _editedArea;
+            set => SetValue(ref _editedArea, value);
         }
 
-        public string NewCategory
+        public string EditedCategory
         {
-            get => _newCategory;
-            set => SetValue(ref _newCategory, value);
+            get => _editedCategory;
+            set => SetValue(ref _editedCategory, value);
         }
 
         public ObservableCollection<string> Areas { get; }
@@ -64,33 +64,32 @@ namespace WMM.WPF.Categories
 
         private bool CanExecuteEditCategory()
         {
-            return !string.IsNullOrEmpty(NewArea) 
-                   && NewArea != Area
-                   && !string.IsNullOrEmpty(NewCategory) 
-                   && NewCategory != Category;
+            return !string.IsNullOrEmpty(EditedArea)
+                    && !string.IsNullOrEmpty(EditedCategory)  
+                    && (EditedArea != Area || EditedCategory != Category);
         }
 
         private async Task EditCategory()
         {
             try
             {
-                await _repository.EditCategory(Category, NewArea, NewCategory);
+                await _repository.EditCategory(Category, EditedArea, EditedCategory);
             }
             catch (Exception e)
             {
                 _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
             }
             
-            Category = NewCategory;
-            Area = NewArea;
+            Category = EditedCategory;
+            Area = EditedArea;
         }
 
         public RelayCommand ResetCommand => _resetCommand ?? (_resetCommand = new RelayCommand(Reset));
 
         private void Reset()
         {
-            NewCategory = Category;
-            NewArea = Area;
+            EditedCategory = Category;
+            EditedArea = Area;
         }
     }
 }

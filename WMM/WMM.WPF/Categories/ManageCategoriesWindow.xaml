@@ -21,15 +21,15 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding NewArea}"/>
-            <TextBox Grid.Column="1" Text="{Binding NewCategory}"/>
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding NewArea, Mode=TwoWay}"/>
+            <TextBox Grid.Column="1" Text="{Binding NewCategory, Mode=TwoWay}"/>
             <controls:ImageButton Grid.Column="2" Command="{Binding AddNewCategoryCommand}" ImageSource="/Resources/ic_add.png"/>
         </Grid>
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Categories}" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="*" RowDetailsVisibilityMode="VisibleWhenSelected">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Bereich" Binding="{Binding Area}"/>
-                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}"/>
+                <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" />
+                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" />
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate DataType="local:CategoryViewModel">
@@ -40,8 +40,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding NewArea}"/>
-                        <TextBox Grid.Column="1" Text="{Binding NewCategory}"/>
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding EditedArea, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Grid.Column="1" Text="{Binding EditedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <controls:ImageButton Grid.Column="2" Command="{Binding EditCategoryCommand}" ImageSource="/resources/ic_confirm.png"/>
                         <controls:ImageButton Grid.Column="3" Command="{Binding ResetCommand}" ImageSource="/resources/ic_cancel.png"/>
                     </Grid>
