@@ -83,8 +83,8 @@ namespace WMM.WPF
             var amount = SelectedSign == "-" ? Amount * -1.0 : Amount;
 
             var newTransaction = _editDate
-                ? await _repository.UpdateTransaction(_transaction, Category, amount, Comments)
-                : await _repository.UpdateTransaction(_transaction, Date, Category, amount, Comments);
+                ? await _repository.UpdateTransaction(_transaction, Date, Category, amount, Comments)
+                : await _repository.UpdateTransaction(_transaction, Category, amount, Comments);
             RaiseTransactionUpdated(_transaction, newTransaction);
         }
 
