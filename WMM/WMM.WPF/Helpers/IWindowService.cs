@@ -7,5 +7,7 @@ namespace WMM.WPF.Helpers
         void OpenDialogWindow(ObservableObject dataContext);
 
         void ShowMessage(string message, string caption);
+
+        bool AskConfirmation(string message);
     }
 }

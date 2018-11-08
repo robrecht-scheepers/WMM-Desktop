@@ -30,5 +30,11 @@ namespace WMM.WPF.Helpers
         {
             MessageBox.Show(message, caption);
         }
+
+        public bool AskConfirmation(string message)
+        {
+            var result = MessageBox.Show(message, "Bestätigung", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+            return result == MessageBoxResult.Yes;
+        }
     }
 }

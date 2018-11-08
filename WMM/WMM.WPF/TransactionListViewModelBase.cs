@@ -37,6 +37,9 @@ namespace WMM.WPF
         public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
         private async Task DeleteTransaction(Transaction transaction)
         {
+            if(!WindowService.AskConfirmation("Möchten sie die ausgewählte Transaktion löschen? Diese Aktion kann nicht Rückgängig gemacht werden."))
+                return;
+
             await Repository.DeleteTransaction(transaction);
             Transactions.Remove(transaction);
             RaiseTransactionModified(transaction);

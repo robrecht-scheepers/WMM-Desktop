@@ -15,9 +15,9 @@
         <DataGrid ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
                   HorizontalAlignment="Stretch" ColumnWidth="*">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}" 
+                <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}" Width="SizeToCells"
                                     Visibility="{Binding Path=DataContext.ShowDate, Source={x:Reference dummy}, Converter={StaticResource CollapseWhenFalseConverter}}"/>
-                <DataGridTextColumn Binding="{Binding Category}"/>
+                <DataGridTextColumn Binding="{Binding Category}" Width="SizeToCells"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
                 <DataGridTextColumn Binding="{Binding Comments}"/>

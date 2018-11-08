@@ -30,6 +30,7 @@
             <system:Double x:Key="LargeFontSize">18</system:Double>
             <system:Double x:Key="SmallFontSize">10</system:Double>
             <system:String x:Key="AmountFormat">{0:+###,##0.00€;-###,##0.00€;0.00€}</system:String>
+            <system:Double x:Key="GridRowHeight">32</system:Double>
 
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
@@ -65,8 +66,8 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="DataGridCell">
-                            <Grid Background="{TemplateBinding Background}">
-                                <ContentPresenter VerticalAlignment="Center"/>
+                            <Grid Background="{TemplateBinding Background}" MinHeight="{StaticResource GridRowHeight}">
+                                <ContentPresenter VerticalAlignment="Center" />
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
@@ -100,11 +101,10 @@
                 <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
             </Style>
 
-            <system:Double x:Key="GridButtonSize">32</system:Double>
             <Style TargetType="controls:ImageButton" x:Key="DataGridButtonStyle" BasedOn="{StaticResource {x:Type controls:ImageButton}}" >
                 <Setter Property="Margin" Value="0"/>
-                <Setter Property="Height" Value="{StaticResource GridButtonSize}"/>
-                <Setter Property="Width" Value="{StaticResource GridButtonSize}"/>
+                <Setter Property="Height" Value="{StaticResource GridRowHeight}"/>
+                <Setter Property="Width" Value="{StaticResource GridRowHeight}"/>
                 <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
             </Style>
             <DataGridLength x:Key="SingleButtonColumnWidth">32</DataGridLength>
