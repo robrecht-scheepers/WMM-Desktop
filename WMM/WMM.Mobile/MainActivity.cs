@@ -8,8 +8,8 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
-using WMM.Data;
 using WMM.Mobile.Adapters;
+using WMM.Mobile.Data;
 using Environment = System.Environment;
 
 namespace WMM.Mobile
@@ -18,14 +18,18 @@ namespace WMM.Mobile
     public class MainActivity : AppCompatActivity
     {
         private DateGroupType _dateGroupType;
-        public static IRepository Repository;
+        public static Repository Repository;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
             if (Repository == null)
-                Repository = new DbRepository(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            {
+                Repository = new Repository(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+                var initTask = Repository.Initialize();
+                initTask.Wait();
+            }
 
             var addArea = FindViewById<RelativeLayout>(Resource.Id.addTransactionArea);
             addArea.Visibility = ViewStates.Gone;
