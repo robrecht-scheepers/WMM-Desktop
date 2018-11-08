@@ -37,8 +37,8 @@
         <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" >
             <TextBlock Text="Übersicht" Style="{StaticResource TitleStyle}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Command="{Binding ShowManageCategoriesCommand}">Kategorien verwalten</Button>
-                <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"/>
+                <controls:ImageButton Command="{Binding ShowManageCategoriesCommand}" ImageSource="/Resources/ic_categories.png" ToolTip="Kategorien verwalten"/>
+                <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png" ToolTip="Vorlagen für monatliche kosten verwalten"/>
             </StackPanel>
         </Grid>
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">

@@ -127,8 +127,11 @@ namespace WMM.WPF.Recurring
                 : await Repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, NewComments, true);
             Transactions.Add(transaction);
             RaiseTransactionModified(transaction);
-        }
 
+            NewAmount = 0.0;
+            NewComments = "";
+        }
+        
         public AsyncRelayCommand ApplyTemplatesCommand =>
             _applyTemplatesCommand ?? (_applyTemplatesCommand = new AsyncRelayCommand(ApplyTemplates, CanExecuteApplyTemplates));
 

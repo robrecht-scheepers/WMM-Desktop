@@ -22,7 +22,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
-        <controls:ImageButton Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"/>
+        <controls:ImageButton Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
+                              ToolTip="Monatliche Kosten für diesen Monat verwalten"/>
         <TextBlock Grid.Row="0" Grid.Column="2" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
         <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
         <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 

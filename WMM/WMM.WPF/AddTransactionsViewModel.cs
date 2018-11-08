@@ -30,7 +30,7 @@ namespace WMM.WPF
             Categories = new ObservableCollection<string>( Repository.GetCategories().OrderBy(x => x));
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
-            NewTransactionAmount = 115.29; // should be 0, now dummy value for faster testing
+            NewTransactionAmount = 0.0; 
             SelectedSign = "-";
 
             // currently this method runs synchronously as categories are loaded synchronously,
