@@ -8,6 +8,7 @@ using WMM.WPF.Categories;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
+using WMM.WPF.Transactions;
 
 namespace WMM.WPF
 {

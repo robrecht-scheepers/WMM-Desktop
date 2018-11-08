@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Windows.Controls.Primitives;
 using WMM.Data;
 
-namespace WMM.WPF
+namespace WMM.WPF.Transactions
 {
     public class TransactionEventArgs
     {

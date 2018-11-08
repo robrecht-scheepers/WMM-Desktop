@@ -7,7 +7,7 @@ using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 
-namespace WMM.WPF
+namespace WMM.WPF.Transactions
 {
     public class AddTransactionsViewModel : TransactionListViewModelBase
     {

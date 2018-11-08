@@ -19,12 +19,6 @@
             <Color x:Key="C3">#dfe3ee</Color>
             <Color x:Key="C4">#8b9dc3</Color>
             <Color x:Key="C5">#3b5998</Color>
-            <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
-            <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
-            <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
-            <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
-            <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
-
             <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
             <system:Double x:Key="CommonFontSize">14</system:Double>
             <system:Double x:Key="LargeFontSize">18</system:Double>
@@ -32,6 +26,11 @@
             <system:String x:Key="AmountFormat">{0:+###,##0.00€;-###,##0.00€;0.00€}</system:String>
             <system:Double x:Key="GridRowHeight">32</system:Double>
 
+            <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
+            <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
+            <SolidColorBrush x:Key="SCB3" Color="{StaticResource C3}" />
+            <SolidColorBrush x:Key="SCB4" Color="{StaticResource C4}" />
+            <SolidColorBrush x:Key="SCB5" Color="{StaticResource C5}" />
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
                 <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>

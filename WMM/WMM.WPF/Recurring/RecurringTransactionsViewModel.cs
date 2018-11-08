@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Transactions;
 
 namespace WMM.WPF.Recurring
 {

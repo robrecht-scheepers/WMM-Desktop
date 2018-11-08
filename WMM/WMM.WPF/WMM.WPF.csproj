@@ -55,7 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddTransactionsView.xaml.cs">
+    <Compile Include="Transactions\AddTransactionsView.xaml.cs">
       <DependentUpon>AddTransactionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Balances\AreaBalanceViewModel.cs" />
@@ -71,9 +71,9 @@
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
-    <Compile Include="DetailTransactionListViewModel.cs" />
-    <Compile Include="EditTransactionViewModel.cs" />
-    <Compile Include="EditTransactionWindow.xaml.cs">
+    <Compile Include="Transactions\DetailTransactionListViewModel.cs" />
+    <Compile Include="Transactions\EditTransactionViewModel.cs" />
+    <Compile Include="Transactions\EditTransactionWindow.xaml.cs">
       <DependentUpon>EditTransactionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\IWindowService.cs" />
@@ -82,12 +82,12 @@
     <Compile Include="Recurring\RecurringTransactionsWindow.xaml.cs">
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TransactionEventArgs.cs" />
-    <Compile Include="TransactionListView.xaml.cs">
+    <Compile Include="Transactions\TransactionEventArgs.cs" />
+    <Compile Include="Transactions\TransactionListView.xaml.cs">
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TransactionListViewModelBase.cs" />
-    <Page Include="AddTransactionsView.xaml">
+    <Compile Include="Transactions\TransactionListViewModelBase.cs" />
+    <Page Include="Transactions\AddTransactionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -107,7 +107,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="EditTransactionWindow.xaml">
+    <Page Include="Transactions\EditTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -115,7 +115,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddTransactionsViewModel.cs" />
+    <Compile Include="Transactions\AddTransactionsViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -131,7 +131,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TransactionListView.xaml">
+    <Page Include="Transactions\TransactionListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

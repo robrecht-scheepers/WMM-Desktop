@@ -7,6 +7,7 @@
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:balances="clr-namespace:WMM.WPF.Balances"
+        xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
         Title="Where's my money?" 
         WindowState="Maximized"
@@ -63,13 +64,13 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
         </Grid>
 
-        <local:TransactionListView Grid.Row="1" Grid.Column="1" DataContext="{Binding DetailTransactions}"/>
+        <transactions:TransactionListView Grid.Row="1" Grid.Column="1" DataContext="{Binding DetailTransactions}"/>
 
         <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" >
             <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
         </Grid>
-        <local:AddTransactionsView Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}"/>
+        <transactions:AddTransactionsView Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}"/>
 
         <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
     </Grid>

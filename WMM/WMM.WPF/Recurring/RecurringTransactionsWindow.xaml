@@ -7,6 +7,7 @@
         xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:wpf="clr-namespace:WMM.WPF"
+        xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="450" Width="600"
         d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}"
@@ -39,7 +40,7 @@
 
             <controls:ImageButton Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Command="{Binding AddCommand}" ImageSource="/Resources/ic_add.png" />
         </Grid>
-        <wpf:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
+        <transactions:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
