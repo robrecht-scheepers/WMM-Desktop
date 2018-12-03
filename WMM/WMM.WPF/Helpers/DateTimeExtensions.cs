@@ -11,7 +11,7 @@ namespace WMM.WPF.Helpers
 
         public static DateTime LastDayOfMonth(this DateTime dt)
         {
-            return new DateTime(dt.Year, dt.Month + 1, 1).AddDays(-1);
+            return FirstDayOfMonth(dt).AddMonths(1).AddDays(-1);
         }
 
         public static DateTime PreviousMonth(this DateTime dt)
