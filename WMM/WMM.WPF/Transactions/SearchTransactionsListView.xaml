@@ -46,11 +46,13 @@
             <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" />
             <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Comments, Mode=TwoWay}" Height="32"/>
 
-            <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" />
-            <controls:ImageButton Grid.Row="1" Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" />
+            <controls:ImageButton Grid.Row="2" Grid.Column="4" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="Suchen" />
+            <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="Alles zurücksetzen" />
 
         </Grid>
+
         <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
+
         <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
@@ -66,5 +68,5 @@
 
         </Grid>
 
-        </Grid>
+    </Grid>
 </UserControl>
