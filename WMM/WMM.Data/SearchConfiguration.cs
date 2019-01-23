@@ -19,5 +19,6 @@ namespace WMM.Data
         public string Category { get; set; }
         public string Comments { get; set; }
         public double Amount { get; set; }
+        public bool TransactionDirectionPositive { get; set; }
     }
 }

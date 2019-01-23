@@ -236,6 +236,12 @@ namespace WMM.Data
                         commandTextBuilder.AppendLine($" AND t.Comments LIKE '%{searchConfiguration.Comments.Trim()}%'");
                     }
 
+                    if (searchConfiguration.Parameters.HasFlag(SearchParameter.Direction))
+                    {
+                        var predicate = searchConfiguration.TransactionDirectionPositive ? ">" : "<";
+                        commandTextBuilder.AppendLine($" AND t.Amount {predicate} 0");
+                    }
+
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Amount))
                     {
                         commandTextBuilder.AppendLine(" AND t.Amount BETWEEN @amountMin AND @amountMax");

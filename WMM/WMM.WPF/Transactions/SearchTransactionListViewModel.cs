@@ -124,12 +124,20 @@ namespace WMM.WPF.Transactions
                 searchConfiguration.Comments = Comments;
             }
 
-            if (Amount.HasValue && !string.IsNullOrEmpty(SelectedSign))
+            if (!string.IsNullOrEmpty(SelectedSign))
             {
-                searchConfiguration.Parameters |= SearchParameter.Amount;
-                searchConfiguration.Amount = SelectedSign == "+"
-                    ? Amount.Value
-                    : - 1.0 * Amount.Value;
+                if (Amount.HasValue)
+                {
+                    searchConfiguration.Parameters |= SearchParameter.Amount;
+                    searchConfiguration.Amount = SelectedSign == "+"
+                        ? Amount.Value
+                        : -1.0 * Amount.Value;
+                }
+                else
+                {
+                    searchConfiguration.Parameters |= SearchParameter.Direction;
+                    searchConfiguration.TransactionDirectionPositive = (SelectedSign == "+");
+                }
             }
 
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderBy(x => x.Date));
