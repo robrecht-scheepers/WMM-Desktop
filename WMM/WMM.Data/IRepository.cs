@@ -20,6 +20,8 @@ namespace WMM.Data
 
         Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category);
 
+        Task<IEnumerable<Transaction>> GetTransactions(SearchConfiguration searchConfiguration);
+
         Task<Transaction> AddRecurringTemplate(string category, double amount, string comments);
         
         Task<IEnumerable<Transaction>> GetRecurringTemplates();

@@ -57,6 +57,11 @@ namespace WMM.Data
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<Transaction>> GetTransactions(SearchConfiguration searchConfiguration)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Transaction> AddRecurringTemplate(string category, double amount, string comments)
         {
             return AddTransaction(DateTime.MinValue, category, amount, comments, true);
