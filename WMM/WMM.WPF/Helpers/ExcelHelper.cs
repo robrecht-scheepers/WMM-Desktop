@@ -13,7 +13,7 @@ namespace WMM.WPF.Helpers
 {
     public static class ExcelHelper
     {
-        public static void OpenInExcel(IEnumerable<Transaction> transactions)
+        public static void OpenInExcel(IEnumerable<Transaction> transactions, IRepository repository)
         {
             // check if Excel is installed
             if(Type.GetTypeFromProgID("Excel.Application") == null)
@@ -24,10 +24,12 @@ namespace WMM.WPF.Helpers
             Worksheet sheet = workBook.Sheets[1];
 
             // create header
+            var areas = repository.GetAreasAndCategories();
             var data = new List<object[]>() { new object[] {"Datum", "Bereich", "Kategorie", "Betrag", "Kommentar", "Fix"} };
             foreach (var t in transactions)
             {
-                data.Add(new object[]{t.Date, "", t.Category, t.Amount, t.Comments, t.Recurring});
+                var area = areas.First(x => x.Value.Contains(t.Category)).Key;
+                data.Add(new object[]{t.Date, area, t.Category, t.Amount, t.Comments, t.Recurring});
             }
 
             for(var i = 0; i < data.Count; i++)

@@ -148,7 +148,7 @@ namespace WMM.WPF.Transactions
                 }
             }
 
-            Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderBy(x => x.Date));
+            Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderByDescending(x => x.Date));
             CalculateBalance();
         }
 
@@ -214,7 +214,7 @@ namespace WMM.WPF.Transactions
         {
             try
             {
-                ExcelHelper.OpenInExcel(Transactions);
+                ExcelHelper.OpenInExcel(Transactions, Repository);
             }
             catch (Exception e)
             {

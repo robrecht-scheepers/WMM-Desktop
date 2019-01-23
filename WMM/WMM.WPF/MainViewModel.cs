@@ -17,7 +17,7 @@ namespace WMM.WPF
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private RelayCommand _showRecurringTransactionsCommand;
-        private AsyncRelayCommand _showManageCategoriesCommand;
+        private RelayCommand _showManageCategoriesCommand;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
         {
@@ -89,12 +89,12 @@ namespace WMM.WPF
             await DetailTransactions.ReloadTransactions();
         }
 
-        public AsyncRelayCommand ShowManageCategoriesCommand => _showManageCategoriesCommand ?? (_showManageCategoriesCommand = new AsyncRelayCommand(ShowManageCategories));
+        public RelayCommand ShowManageCategoriesCommand => _showManageCategoriesCommand ?? (_showManageCategoriesCommand = new RelayCommand(ShowManageCategories));
 
-        private async Task ShowManageCategories()
+        private void ShowManageCategories()
         {
             var manageCategoriesViewModel = new ManageCategoriesViewModel(_repository, _windowService);
-            await manageCategoriesViewModel.Initialize();
+            manageCategoriesViewModel.Initialize();
             _windowService.OpenDialogWindow(manageCategoriesViewModel);
         }
     }

@@ -43,13 +43,12 @@ namespace WMM.Data
         Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area);
 
         Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
-
         
         IEnumerable<string> GetCategories();
 
         IEnumerable<string> GetAreas();
 
-        Task<Dictionary<string, List<string>>> GetAreasAndCategories();
+        Dictionary<string, List<string>> GetAreasAndCategories();
 
         Task AddArea(string area);
 

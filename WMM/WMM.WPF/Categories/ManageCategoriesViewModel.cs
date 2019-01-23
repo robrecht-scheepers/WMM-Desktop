@@ -27,9 +27,9 @@ namespace WMM.WPF.Categories
             Categories = new ObservableCollection<CategoryViewModel>();
         }
 
-        public async Task Initialize()
+        public void Initialize()
         {
-            var categories = await _repository.GetAreasAndCategories();
+            var categories = _repository.GetAreasAndCategories();
             _areas = categories.Keys.OrderBy(x => x).ToList();
 
             foreach (var area in _areas)

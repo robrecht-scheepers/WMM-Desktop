@@ -81,7 +81,7 @@ namespace WMM.Data
 
         public async Task Initialize()
         {
-            _categories = await GetAreasAndCategories();
+            _categories = await LoadAreasAndCategories();
         }
         #endregion
 
@@ -491,9 +491,9 @@ namespace WMM.Data
         {
             var balances = new Dictionary<string,Balance>();
             var transactions = (await GetTransactions(dateFrom, dateTo)).ToList();
-            var categories = await GetAreasAndCategories();
+            var categories = GetAreasAndCategories();
 
-            foreach (var area in categories.Keys)
+            foreach (var area in categories.Keys.OrderBy(x => x))
             {
                 balances[area] = CalculateBalance(transactions.Where(x => categories[area].Contains(x.Category))
                     .Select(x => x.Amount).ToList());
@@ -629,15 +629,20 @@ namespace WMM.Data
 
         public IEnumerable<string> GetCategories()
         {
-            return _categories?.SelectMany(x => x.Value).Distinct();
+            return _categories?.SelectMany(x => x.Value).Distinct().OrderBy(x => x);
         }
 
         public IEnumerable<string> GetAreas()
         {
-            return _categories?.Select(x => x.Key);
+            return _categories?.Select(x => x.Key).OrderBy(x => x);
         }
 
-        public async Task<Dictionary<string,List<string>>> GetAreasAndCategories()
+        public Dictionary<string, List<string>> GetAreasAndCategories()
+        {
+            return _categories;
+        }
+
+        private async Task<Dictionary<string,List<string>>> LoadAreasAndCategories()
         {
             var dictionary = new Dictionary<string, List<string>>();
             const string commandText =
