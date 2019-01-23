@@ -149,7 +149,7 @@ namespace WMM.WPF.Transactions
             }
 
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderBy(x => x.Date));
-            Balance = CalculateBalance();
+            CalculateBalance();
         }
 
         public RelayCommand ResetCommand => _resetCommand ?? (_resetCommand = new RelayCommand(Reset));
@@ -163,7 +163,7 @@ namespace WMM.WPF.Transactions
             Comments = "";
 
             Transactions.Clear();
-            Balance = CalculateBalance();
+            CalculateBalance();
         }
 
         private void InitializeAreaCategoryList()
@@ -195,15 +195,20 @@ namespace WMM.WPF.Transactions
             await Search();
         }
 
-        public Balance CalculateBalance()
+        public void CalculateBalance()
         {
-            return new Balance(
+            Balance = new Balance(
                 Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
                 Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
         }
 
         public RelayCommand ExcelExportCommand =>
-            _excelExportCommand ?? (_excelExportCommand = new RelayCommand(ExcelExport));
+            _excelExportCommand ?? (_excelExportCommand = new RelayCommand(ExcelExport, CanExecuteExcelExport));
+
+        private bool CanExecuteExcelExport()
+        {
+            return Transactions.Any();
+        }
 
         private void ExcelExport()
         {
@@ -215,6 +220,18 @@ namespace WMM.WPF.Transactions
             {
                 WindowService.ShowMessage($"Es gab einen Fehler beim öffnen in Excel: {e.Message}.","Fehler");
             }
+        }
+
+        protected override void RaiseTransactionModified(Transaction transaction)
+        {
+            base.RaiseTransactionModified(transaction);
+            CalculateBalance();
+        }
+
+        protected override void RaiseMultipleTransactionsModified()
+        {
+            base.RaiseMultipleTransactionsModified();
+            CalculateBalance();
         }
     }
 }

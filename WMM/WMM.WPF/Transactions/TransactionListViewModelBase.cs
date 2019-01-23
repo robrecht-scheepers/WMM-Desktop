@@ -59,13 +59,13 @@ namespace WMM.WPF.Transactions
         }
 
         public event TransactionEventHandler TransactionModified;
-        protected void RaiseTransactionModified(Transaction transaction)
+        protected virtual void RaiseTransactionModified(Transaction transaction)
         {
             TransactionModified?.Invoke(this, new TransactionEventArgs(transaction));
         }
 
         public event TransactionEventHandler MultipleTransactionsModified;
-        protected void RaiseMultipleTransactionsModified()
+        protected virtual void RaiseMultipleTransactionsModified()
         {
             MultipleTransactionsModified?.Invoke(this, new TransactionEventArgs(null));
         }
