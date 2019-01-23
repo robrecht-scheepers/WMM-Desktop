@@ -56,7 +56,7 @@ namespace WMM.WPF
                 await monthBalanceViewModel.Initialize();
                 monthBalanceViewModel.DetailTransactionsRequested += async (sender, args) =>
                 {
-                    await DetailTransactions.LoadTransactions(args.DateFrom, args.DateTo, args.Category);
+                    await SearchTransactions.SearchForDatesAndCategory(args.DateFrom, args.DateTo, args.Category);
                 };
             }
         }

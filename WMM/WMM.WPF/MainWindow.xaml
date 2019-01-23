@@ -65,7 +65,6 @@
         </Grid>
 
         <transactions:SearchTransactionsListView Grid.Row="1" Grid.Column="1" DataContext="{Binding SearchTransactions}" />
-        <!-- <transactions:TransactionListView Grid.Row="1" Grid.Column="1" DataContext="{Binding DetailTransactions}"/> -->
 
         <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" >
             <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />

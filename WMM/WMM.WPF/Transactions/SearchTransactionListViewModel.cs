@@ -44,6 +44,7 @@ namespace WMM.WPF.Transactions
         public void Initialize()
         {
             InitializeAreaCategoryList();
+            SelectedSign = "";
         }
 
         public DateTime? DateFrom
@@ -76,7 +77,7 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _comments, value);
         }
 
-        public List<string> Signs => new List<string> { "+", "-" };
+        public List<string> Signs => new List<string> {"", "+", "-"};
 
         public string SelectedSign
         {
@@ -103,7 +104,7 @@ namespace WMM.WPF.Transactions
                 searchConfiguration.DateTo = DateTo ?? DateFrom.Value;
             }
 
-            if (SelectedAreaCategoryItem != null)
+            if (!string.IsNullOrWhiteSpace(SelectedAreaCategoryItem?.Name))
             {
                 if (SelectedAreaCategoryItem.IsArea)
                 {
@@ -123,12 +124,12 @@ namespace WMM.WPF.Transactions
                 searchConfiguration.Comments = Comments;
             }
 
-            if (Amount.HasValue)
+            if (Amount.HasValue && !string.IsNullOrEmpty(SelectedSign))
             {
                 searchConfiguration.Parameters |= SearchParameter.Amount;
                 searchConfiguration.Amount = SelectedSign == "+"
                     ? Amount.Value
-                    : -1.0 * Amount.Value;
+                    : - 1.0 * Amount.Value;
             }
 
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderBy(x => x.Date));
@@ -140,15 +141,19 @@ namespace WMM.WPF.Transactions
             DateFrom = null;
             DateTo = null;
             SelectedAreaCategoryItem = null;
+            SelectedSign = "";
             Amount = null;
             Comments = "";
+
+            Transactions.Clear();
         }
 
         private void InitializeAreaCategoryList()
         {
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
-                new AreaCategorySelectionItem("--- Bereich ---",true, false)
+                new AreaCategorySelectionItem("", true),
+                new AreaCategorySelectionItem("--- Bereich ---", true, false)
             };
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
@@ -159,6 +164,17 @@ namespace WMM.WPF.Transactions
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
             }
+        }
+
+        public async Task SearchForDatesAndCategory(DateTime dateFrom, DateTime dateTo, string category)
+        {
+            Reset();
+
+            DateFrom = dateFrom;
+            DateTo = dateTo;
+            SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(x => !x.IsArea && x.IsSelectable && x.Name == category);
+
+            await Search();
         }
     }
 }
