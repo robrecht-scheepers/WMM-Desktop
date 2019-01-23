@@ -4,12 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF"
-        xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:balances="clr-namespace:WMM.WPF.Balances"
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
-        Title="Where's my money?" 
+        Title="Haushaltsbuch" 
         WindowState="Maximized"
         Background="{StaticResource SCB1}"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
@@ -35,14 +34,14 @@
         <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="{StaticResource MiddleColumnMargin}" />
         <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="0,0,0,1" />
 
-        <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" >
+        <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource SCB5}" Margin="2,0">
             <TextBlock Text="Übersicht" Style="{StaticResource TitleStyle}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <controls:ImageButton Command="{Binding ShowManageCategoriesCommand}" ImageSource="/Resources/ic_categories.png" ToolTip="Kategorien verwalten"/>
                 <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png" ToolTip="Vorlagen für monatliche kosten verwalten"/>
             </StackPanel>
         </Grid>
-        <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="0">
+        <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="1">
             <ListView ItemsSource="{Binding MonthBalanceViewModels}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -59,18 +58,18 @@
             </ListView>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource SCB5}" Margin="2,0">
+        <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}">
             <TextBlock Text="Suchen" Style="{StaticResource TitleStyle}" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
         </Grid>
 
-        <transactions:SearchTransactionsListView Grid.Row="1" Grid.Column="1" DataContext="{Binding SearchTransactions}" />
+        <transactions:SearchTransactionsListView Grid.Row="1" Grid.Column="2" DataContext="{Binding SearchTransactions}" />
 
-        <Grid Grid.Row="0" Grid.Column="2" Background="{StaticResource SCB5}" >
+        <Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource SCB5}" >
             <TextBlock Text="Hinzufügen" Style="{StaticResource TitleStyle}" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
         </Grid>
-        <transactions:AddTransactionsView Grid.Row="1" Grid.Column="2" DataContext="{Binding AddTransactionsViewModel}"/>
+        <transactions:AddTransactionsView Grid.Row="1" Grid.Column="0" DataContext="{Binding AddTransactionsViewModel}"/>
 
         <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
     </Grid>
