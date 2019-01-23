@@ -34,6 +34,10 @@ namespace WMM.WPF
             DetailTransactions.TransactionModified += 
                 async (s, a) => { await OnTransactionModified(a.Transaction); };
 
+            SearchTransactions = new SearchTransactionListViewModel(_repository, _windowService);
+            SearchTransactions.TransactionModified +=
+                async (s, a) => { await OnTransactionModified(a.Transaction); };
+
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService);
         }
         
@@ -42,6 +46,7 @@ namespace WMM.WPF
             await _repository.Initialize();
             await AddTransactionsViewModel.Initialize();
             await RecurringTransactionsViewModel.Initialize();
+            SearchTransactions.Initialize();
 
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository, _windowService));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository, _windowService));
@@ -63,6 +68,8 @@ namespace WMM.WPF
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
         public DetailTransactionListViewModel DetailTransactions { get; }
+
+        public SearchTransactionListViewModel SearchTransactions { get; }
 
         public RelayCommand ShowRecurringTransactionsCommand => 
             _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));

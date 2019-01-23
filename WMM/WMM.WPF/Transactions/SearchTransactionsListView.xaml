@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="WMM.WPF.Transactions.SearchTransactionsListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WMM.WPF.Transactions"
+             xmlns:controls="clr-namespace:WMM.WPF.Controls"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:SearchTransactionListViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <DatePicker Grid.Row="0" Grid.Column="0" SelectedDate="{Binding DateFrom, Mode=TwoWay}" />
+            <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding DateTo, Mode=TwoWay}" />
+            <ComboBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding AreaCategoryList}" 
+                      SelectedItem="{Binding SelectedAreaCategoryItem, Mode=TwoWay}" DisplayMemberPath="Name">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsSelectable}" Value="false">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+            <ComboBox Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Comments, Mode=TwoWay}" Height="32"/>
+
+            <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" />
+            <controls:ImageButton Grid.Row="1" Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" />
+
+        </Grid>
+        <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
+    </Grid>
+</UserControl>

@@ -3,11 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WMM.WPF"
              xmlns:controls="clr-namespace:WMM.WPF.Controls"
              xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance local:AddTransactionsViewModel}"
+             d:DataContext="{d:DesignInstance transactions:AddTransactionsViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>

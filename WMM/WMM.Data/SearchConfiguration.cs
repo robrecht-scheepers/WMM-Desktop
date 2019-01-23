@@ -6,6 +6,11 @@ namespace WMM.Data
 {
     public class SearchConfiguration
     {
+        public SearchConfiguration()
+        {
+            Parameters = SearchParameter.None;
+        }
+
         public SearchParameter Parameters { get; set; }
 
         public DateTime DateFrom { get; set; }

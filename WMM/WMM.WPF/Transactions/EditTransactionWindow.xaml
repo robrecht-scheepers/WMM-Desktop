@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WMM.WPF"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
+        xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
         Title="EditTransactionWindow"
         SizeToContent="WidthAndHeight"
-        d:DataContext="{d:DesignInstance local:EditTransactionViewModel}"
+        d:DataContext="{d:DesignInstance transactions:EditTransactionViewModel}"
         WindowStyle="None"
         ResizeMode="NoResize">
     <Grid Background="{StaticResource SCB5}">

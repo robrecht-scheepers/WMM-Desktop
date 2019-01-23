@@ -82,6 +82,10 @@
     <Compile Include="Recurring\RecurringTransactionsWindow.xaml.cs">
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Transactions\SearchTransactionListViewModel.cs" />
+    <Compile Include="Transactions\SearchTransactionsListView.xaml.cs">
+      <DependentUpon>SearchTransactionsListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Transactions\TransactionEventArgs.cs" />
     <Compile Include="Transactions\TransactionListView.xaml.cs">
       <DependentUpon>TransactionListView.xaml</DependentUpon>
@@ -128,6 +132,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Recurring\RecurringTransactionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Transactions\SearchTransactionsListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

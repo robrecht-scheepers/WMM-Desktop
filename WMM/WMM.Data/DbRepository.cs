@@ -230,35 +230,35 @@ namespace WMM.Data
             var commandTextBuilder = new StringBuilder(
                 "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
                 "FROM Transactions t JOIN categories c ON t.Category = c.Id JOIN Areas a ON c.Area = a.Id " +
-                "WHERE Deleted = 0");
+                "WHERE t.Deleted = 0 AND t.Date IS NOT NULL");
             using (var dbConnection = GetConnection())
             {
                 using (var command = new SQLiteCommand(dbConnection))
                 {
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Date))
                     {
-                        commandTextBuilder.AppendLine("AND t.Date >= @dateFrom AND t.Date <= @dateTo");
+                        commandTextBuilder.AppendLine(" AND t.Date >= @dateFrom AND t.Date <= @dateTo");
                         command.Parameters.AddWithValue("@dateFrom", searchConfiguration.DateFrom);
                         command.Parameters.AddWithValue("@dateTo", searchConfiguration.DateTo);
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Area))
                     {
-                        commandTextBuilder.AppendLine("AND a.Name = @area");
+                        commandTextBuilder.AppendLine(" AND a.Name = @area");
                         command.Parameters.AddWithValue("@area", searchConfiguration.Area);
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Category))
                     {
-                        commandTextBuilder.AppendLine("AND c.Name = @category");
+                        commandTextBuilder.AppendLine(" AND c.Name = @category");
                         command.Parameters.AddWithValue("@category", searchConfiguration.Category);
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Comments))
                     {
-                        commandTextBuilder.AppendLine($"AND t.Comments LIKE '%{searchConfiguration.Comments.Trim()}%");
+                        commandTextBuilder.AppendLine($" AND t.Comments LIKE '%{searchConfiguration.Comments.Trim()}%");
                     }
 
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Amount))
                     {
-                        commandTextBuilder.AppendLine($"AND t.Amount BETWEEN @amountMin AND @amountMax");
+                        commandTextBuilder.AppendLine($" AND t.Amount BETWEEN @amountMin AND @amountMax");
                         command.Parameters.AddWithValue("@amountMin", searchConfiguration.Amount - 0.001);
                         command.Parameters.AddWithValue("@amountMax", searchConfiguration.Amount + 0.001);
                     }

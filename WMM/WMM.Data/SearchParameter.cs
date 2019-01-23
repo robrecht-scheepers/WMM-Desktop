@@ -7,6 +7,7 @@ namespace WMM.Data
     [Flags]
     public enum SearchParameter
     {
+        None = 0,
         Date = 1,
         Area = 2,
         Category = 4,
