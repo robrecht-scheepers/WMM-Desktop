@@ -53,7 +53,7 @@
 
         <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
 
-        <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
+        <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}" Height="{StaticResource GridRowHeight}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="*"/>
