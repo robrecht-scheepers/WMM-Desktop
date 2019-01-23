@@ -203,28 +203,8 @@ namespace WMM.Data
                     }
                 }
             }
-            
         }
-
-        public async Task<IEnumerable<Transaction>> GetTransactions()
-        {
-            const string commandText =
-                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
-                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id" +
-                "WHERE Deleted = 0";
-            using (var dbConnection = GetConnection())
-            {
-                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
-                {
-                    dbConnection.Open();
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        return await ReadTransactions(reader);
-                    }
-                }
-            }
-        }
-
+        
         public async Task<IEnumerable<Transaction>> GetTransactions(SearchConfiguration searchConfiguration)
         {
             var commandTextBuilder = new StringBuilder(
@@ -253,12 +233,12 @@ namespace WMM.Data
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Comments))
                     {
-                        commandTextBuilder.AppendLine($" AND t.Comments LIKE '%{searchConfiguration.Comments.Trim()}%");
+                        commandTextBuilder.AppendLine($" AND t.Comments LIKE '%{searchConfiguration.Comments.Trim()}%'");
                     }
 
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Amount))
                     {
-                        commandTextBuilder.AppendLine($" AND t.Amount BETWEEN @amountMin AND @amountMax");
+                        commandTextBuilder.AppendLine(" AND t.Amount BETWEEN @amountMin AND @amountMax");
                         command.Parameters.AddWithValue("@amountMin", searchConfiguration.Amount - 0.001);
                         command.Parameters.AddWithValue("@amountMax", searchConfiguration.Amount + 0.001);
                     }
@@ -275,46 +255,31 @@ namespace WMM.Data
 
         public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo)
         {
-            const string commandText =
-                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
-                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
-                "WHERE Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo";
-            using (var dbConnection = GetConnection())
-            {
-                using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
-                {
-                    command.Parameters.AddWithValue("@dateFrom", dateFrom);
-                    command.Parameters.AddWithValue("@dateTo", dateTo);
-                    dbConnection.Open();
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        return await ReadTransactions(reader);
-                    }
-                }
-            }
+            var config = new SearchConfiguration();
+            config.Parameters |= SearchParameter.Date;
+            config.DateFrom = dateFrom;
+            config.DateTo = dateTo;
+
+            return await GetTransactions(config);
         }
 
         public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category)
         {
-            const string commandText =
-                "SELECT t.Id,t.[Date],c.Name,t.Amount,t.Comments,t.CreatedTime,t.CreatedAccount,t.LastUpdateTime,t.LastUpdateAccount,t.Deleted,t.Recurring " +
-                "FROM Transactions t LEFT JOIN Categories c ON t.Category = c.Id " +
-                "WHERE Deleted = 0 AND t.Date >= @dateFrom AND t.Date <= @dateTo AND c.Name = @category";
-            using (var dbConnection = GetConnection())
-            {
-                using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
-                {
-                    command.Parameters.AddWithValue("@dateFrom", dateFrom);
-                    command.Parameters.AddWithValue("@dateTo", dateTo);
-                    command.Parameters.AddWithValue("@category", category);
-                    dbConnection.Open();
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        return await ReadTransactions(reader);
-                    }
-                }
-            }
+            var config = new SearchConfiguration();
+            config.Parameters |= SearchParameter.Date;
+            config.DateFrom = dateFrom;
+            config.DateTo = dateTo;
+            config.Parameters |= SearchParameter.Category;
+            config.Category = category;
+            
+            return await GetTransactions(config);
         }
+
+        public async Task<IEnumerable<Transaction>> GetTransactions()
+        {
+            return await GetTransactions(new SearchConfiguration());
+        }
+
         private async Task<List<Transaction>> ReadTransactions(DbDataReader reader)
         {
             var transactions = new List<Transaction>();
