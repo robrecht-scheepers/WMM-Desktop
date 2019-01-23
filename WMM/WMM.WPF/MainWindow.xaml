@@ -41,7 +41,7 @@
                 <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png" ToolTip="Vorlagen für monatliche kosten verwalten"/>
             </StackPanel>
         </Grid>
-        <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="1">
+        <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="1" Margin="{StaticResource CommonMarginBottom}">
             <ListView ItemsSource="{Binding MonthBalanceViewModels}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -51,7 +51,7 @@
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="balances:MonthBalanceViewModel">
-                        <balances:MonthBalanceView DataContext="{Binding}" Margin="-10,0,0,0"
+                        <balances:MonthBalanceView DataContext="{Binding}" Margin="-5,0,0,0"
                                                    Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsPresenter}}}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
