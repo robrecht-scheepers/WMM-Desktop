@@ -36,6 +36,7 @@ namespace WMM.WPF.Transactions
         private AsyncRelayCommand _searchCommand;
         private RelayCommand _resetCommand;
         private Balance _balance;
+        private RelayCommand _excelExportCommand;
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
@@ -199,6 +200,21 @@ namespace WMM.WPF.Transactions
             return new Balance(
                 Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
                 Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
+        }
+
+        public RelayCommand ExcelExportCommand =>
+            _excelExportCommand ?? (_excelExportCommand = new RelayCommand(ExcelExport));
+
+        private void ExcelExport()
+        {
+            try
+            {
+                ExcelHelper.OpenInExcel(Transactions);
+            }
+            catch (Exception e)
+            {
+                WindowService.ShowMessage($"Es gab einen Fehler beim öffnen in Excel: {e.Message}.","Fehler");
+            }
         }
     }
 }

@@ -53,17 +53,19 @@
 
         <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
 
-        <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}" Height="{StaticResource GridRowHeight}">
+        <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" DataContext="{Binding Balance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
-            <TextBlock Grid.Column="2" DataContext="{Binding Balance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
-            <TextBlock Grid.Column="3" DataContext="{Binding Balance.Total}" Style="{StaticResource ColoredAmountStyle}" 
+            <controls:ImageButton Grid.Column="0" Command="{Binding ExcelExportCommand}" ImageSource="/Resources/ic_excel.png" ToolTip="Suchergebnis in Excel öffnen" />
+            <TextBlock Grid.Column="2" DataContext="{Binding Balance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
+            <TextBlock Grid.Column="3" DataContext="{Binding Balance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
+            <TextBlock Grid.Column="4" DataContext="{Binding Balance.Total}" Style="{StaticResource ColoredAmountStyle}" 
                        HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
 
         </Grid>
