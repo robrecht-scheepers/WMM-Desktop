@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
@@ -50,5 +51,20 @@
 
         </Grid>
         <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
-    </Grid>
+        <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="1" DataContext="{Binding Balance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
+            <TextBlock Grid.Column="2" DataContext="{Binding Balance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
+            <TextBlock Grid.Column="3" DataContext="{Binding Balance.Total}" Style="{StaticResource ColoredAmountStyle}" 
+                       HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
+
+        </Grid>
+
+        </Grid>
 </UserControl>

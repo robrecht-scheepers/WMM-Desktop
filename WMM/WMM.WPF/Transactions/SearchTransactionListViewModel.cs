@@ -35,6 +35,7 @@ namespace WMM.WPF.Transactions
         private AreaCategorySelectionItem _selectedAreaCategoryItem;
         private AsyncRelayCommand _searchCommand;
         private RelayCommand _resetCommand;
+        private Balance _balance;
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
@@ -45,6 +46,12 @@ namespace WMM.WPF.Transactions
         {
             InitializeAreaCategoryList();
             SelectedSign = "";
+        }
+
+        public Balance Balance
+        {
+            get => _balance;
+            set => SetValue(ref _balance, value);
         }
 
         public DateTime? DateFrom
@@ -141,6 +148,7 @@ namespace WMM.WPF.Transactions
             }
 
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderBy(x => x.Date));
+            Balance = CalculateBalance();
         }
 
         public RelayCommand ResetCommand => _resetCommand ?? (_resetCommand = new RelayCommand(Reset));
@@ -154,6 +162,7 @@ namespace WMM.WPF.Transactions
             Comments = "";
 
             Transactions.Clear();
+            Balance = CalculateBalance();
         }
 
         private void InitializeAreaCategoryList()
@@ -183,6 +192,13 @@ namespace WMM.WPF.Transactions
             SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(x => !x.IsArea && x.IsSelectable && x.Name == category);
 
             await Search();
+        }
+
+        public Balance CalculateBalance()
+        {
+            return new Balance(
+                Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
+                Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
         }
     }
 }

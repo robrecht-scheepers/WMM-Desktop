@@ -8,7 +8,7 @@
 
         public double Total => Income + Expense;
 
-        internal Balance(double income, double expense)
+        public Balance(double income, double expense)
         {
             Income = income;
             Expense = expense;
