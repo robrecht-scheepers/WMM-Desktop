@@ -101,7 +101,7 @@ namespace WMM.WPF.Recurring
         private async Task GetRecurringTemplates()
         {
             Transactions.Clear();
-            foreach (var template in await Repository.GetRecurringTemplates())
+            foreach (var template in (await Repository.GetRecurringTemplates()).OrderBy(t => t.Category))
             {
                 Transactions.Add(template);
             }
@@ -111,7 +111,7 @@ namespace WMM.WPF.Recurring
         private async Task GetRecurringTransactions()
         {
             Transactions.Clear();
-            foreach (var template in await Repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth()))
+            foreach (var template in (await Repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth())).OrderBy(t => t.Category))
             {
                 Transactions.Add(template);
             }
