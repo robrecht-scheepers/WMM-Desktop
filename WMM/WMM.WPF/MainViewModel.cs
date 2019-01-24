@@ -29,14 +29,14 @@ namespace WMM.WPF
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
             AddTransactionsViewModel.TransactionModified += 
                 async (s, a) => { await OnTransactionModified(a.Transaction); };
-
-            DetailTransactions = new DetailTransactionListViewModel(_repository, _windowService);
-            DetailTransactions.TransactionModified += 
-                async (s, a) => { await OnTransactionModified(a.Transaction); };
+            AddTransactionsViewModel.UseAsTemplateRequested +=
+                (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
 
             SearchTransactions = new SearchTransactionListViewModel(_repository, _windowService);
             SearchTransactions.TransactionModified +=
                 async (s, a) => { await OnTransactionModified(a.Transaction); };
+            SearchTransactions.UseAsTemplateRequested +=
+                (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
 
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService);
         }
@@ -66,9 +66,7 @@ namespace WMM.WPF
         public AddTransactionsViewModel AddTransactionsViewModel { get; }
 
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
-
-        public DetailTransactionListViewModel DetailTransactions { get; }
-
+        
         public SearchTransactionListViewModel SearchTransactions { get; }
 
         public RelayCommand ShowRecurringTransactionsCommand => 
@@ -86,7 +84,6 @@ namespace WMM.WPF
             var monthViewModel = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == month);
             if(monthViewModel != null)
                 await monthViewModel.RecalculateBalances(newTransaction.Date, newTransaction.Category);
-            await DetailTransactions.ReloadTransactions();
         }
 
         public RelayCommand ShowManageCategoriesCommand => _showManageCategoriesCommand ?? (_showManageCategoriesCommand = new RelayCommand(ShowManageCategories));

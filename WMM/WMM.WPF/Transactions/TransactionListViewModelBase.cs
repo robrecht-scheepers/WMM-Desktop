@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
@@ -13,7 +14,8 @@ namespace WMM.WPF.Transactions
         private RelayCommand<Transaction> _editTransactionCommand;
         protected readonly IRepository Repository;
         protected readonly IWindowService WindowService;
-        
+        private RelayCommand<Transaction> _useAsTemplateCommand;
+
         public TransactionListViewModelBase(IRepository repository, IWindowService windowService, bool showDate)
         {
             Repository = repository;
@@ -58,16 +60,32 @@ namespace WMM.WPF.Transactions
             WindowService.OpenDialogWindow(editTransactionViewModel);
         }
 
+        public RelayCommand<Transaction> UseAsTemplateCommand =>
+            _useAsTemplateCommand ?? (_useAsTemplateCommand = new RelayCommand<Transaction>(UseTransactionAsTemplate));
+
+        private void UseTransactionAsTemplate(Transaction transaction)
+        {
+            RaiseUseAsTemplateRequested(transaction);
+        }
+
+
         public event TransactionEventHandler TransactionModified;
         protected virtual void RaiseTransactionModified(Transaction transaction)
         {
             TransactionModified?.Invoke(this, new TransactionEventArgs(transaction));
         }
 
-        public event TransactionEventHandler MultipleTransactionsModified;
+        public event EventHandler MultipleTransactionsModified;
         protected virtual void RaiseMultipleTransactionsModified()
         {
-            MultipleTransactionsModified?.Invoke(this, new TransactionEventArgs(null));
+            MultipleTransactionsModified?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event TransactionEventHandler UseAsTemplateRequested;
+
+        private void RaiseUseAsTemplateRequested(Transaction transaction)
+        {
+            UseAsTemplateRequested?.Invoke(this, new TransactionEventArgs(transaction));
         }
     }
 }

@@ -89,5 +89,14 @@ namespace WMM.WPF.Transactions
             NewTransactionAmount = 0.00;
             NewTransactionComment = "";
         }
+
+        public void UseTransactionAsTemplate(Transaction transaction)
+        {
+            NewTransactionDate = DateTime.Today;
+            NewTransactionCategory = transaction.Category;
+            NewTransactionAmount = System.Math.Abs(transaction.Amount);
+            SelectedSign = (transaction.Amount <= 0) ? "-" : "+";
+            NewTransactionComment = transaction.Comments;
+        }
     }
 }

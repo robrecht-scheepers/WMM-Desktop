@@ -109,9 +109,7 @@
                 <Setter Property="Width" Value="{StaticResource GridRowHeight}"/>
                 <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
             </Style>
-            <DataGridLength x:Key="SingleButtonColumnWidth">32</DataGridLength>
-            <DataGridLength x:Key="DoubleButtonColumnWidth">64</DataGridLength>
-            <DataGridLength x:Key="AmountColumnWidth">100</DataGridLength>
+            <DataGridLength x:Key="AmountColumnWidth">80</DataGridLength>
 
 </ResourceDictionary>
     </Application.Resources>

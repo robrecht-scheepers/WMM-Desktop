@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:WMM.WPF"
              xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
              xmlns:controls="clr-namespace:WMM.WPF.Controls"
+             xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance local:TransactionListViewModelBase}"
+             d:DataContext="{d:DesignInstance transactions:TransactionListViewModelBase}"
              Name="TransactionListControlRoot"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -20,8 +21,8 @@
                 <DataGridTextColumn Binding="{Binding Category}" Width="SizeToCells"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-                <DataGridTextColumn Binding="{Binding Comments}"/>
-                <DataGridTemplateColumn Width="{StaticResource DoubleButtonColumnWidth}">
+                <DataGridTextColumn Binding="{Binding Comments}" Width="*" />
+                <DataGridTemplateColumn Width="SizeToCells">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">
                             <StackPanel Orientation="Horizontal">
@@ -33,6 +34,11 @@
                                     Command="{Binding ElementName=TransactionListControlRoot, Path=DataContext.DeleteTransactionCommand}" 
                                     CommandParameter="{Binding}"
                                     ImageSource="/Resources/ic_delete.png" Style="{StaticResource DataGridButtonStyle}" />
+                                <controls:ImageButton 
+                                    Command="{Binding ElementName=TransactionListControlRoot, Path=DataContext.UseAsTemplateCommand}" 
+                                    CommandParameter="{Binding}"
+                                    ImageSource="/Resources/ic_template.png" Style="{StaticResource DataGridButtonStyle}"
+                                    Visibility="{Binding ElementName=TransactionListControlRoot,  Path=DataContext.ShowDate, Converter={StaticResource CollapseWhenFalseConverter}}"/> 
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
