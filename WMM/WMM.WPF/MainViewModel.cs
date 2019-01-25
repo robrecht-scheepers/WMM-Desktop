@@ -16,7 +16,7 @@ namespace WMM.WPF
     {
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
-        private RelayCommand _showRecurringTransactionsCommand;
+        private AsyncRelayCommand _showRecurringTransactionsCommand;
         private RelayCommand _showManageCategoriesCommand;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
@@ -38,14 +38,13 @@ namespace WMM.WPF
             SearchTransactions.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
 
-            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService);
+            
         }
         
         public async Task Initialize()
         {
             await _repository.Initialize();
             await AddTransactionsViewModel.Initialize();
-            await RecurringTransactionsViewModel.Initialize();
             SearchTransactions.Initialize();
 
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository, _windowService));
@@ -65,15 +64,17 @@ namespace WMM.WPF
 
         public AddTransactionsViewModel AddTransactionsViewModel { get; }
 
-        public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
+        public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; set; }
         
         public SearchTransactionListViewModel SearchTransactions { get; }
 
-        public RelayCommand ShowRecurringTransactionsCommand => 
-            _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new RelayCommand(ShowRecurringTransactions));
+        public AsyncRelayCommand ShowRecurringTransactionsCommand => 
+            _showRecurringTransactionsCommand ?? (_showRecurringTransactionsCommand = new AsyncRelayCommand(ShowRecurringTransactions));
 
-        private void ShowRecurringTransactions()
+        private async Task ShowRecurringTransactions()
         {
+            RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService);
+            await RecurringTransactionsViewModel.Initialize();
             _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
         }
 

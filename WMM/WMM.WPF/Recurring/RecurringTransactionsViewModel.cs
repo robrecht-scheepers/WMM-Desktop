@@ -43,14 +43,7 @@ namespace WMM.WPF.Recurring
             NewAmount = 0.0;
             SelectedSign = "-";
 
-            if (ManageTemplates)
-            {
-                await GetRecurringTemplates();
-            }
-            else
-            {
-                await GetRecurringTransactions();
-            }
+            await GetItems();
         }
 
         public string Title => ManageTemplates
@@ -98,24 +91,27 @@ namespace WMM.WPF.Recurring
             set => SetValue(ref _totalRecurringBalance, value);
         }
 
-        private async Task GetRecurringTemplates()
+        private async Task GetItems()
         {
+            var transactions = (ManageTemplates
+                    ? await Repository.GetRecurringTemplates()
+                    : await Repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth())
+                ).OrderBy(t => t.Category);
+
             Transactions.Clear();
-            foreach (var template in (await Repository.GetRecurringTemplates()).OrderBy(t => t.Category))
+            foreach (var t in transactions)
             {
-                Transactions.Add(template);
+                Transactions.Add(t);
             }
-            TotalRecurringBalance = await Repository.GetRecurringTemplatesBalance();
+
+            CalculateBalance();
         }
 
-        private async Task GetRecurringTransactions()
+        private void CalculateBalance()
         {
-            Transactions.Clear();
-            foreach (var template in (await Repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth())).OrderBy(t => t.Category))
-            {
-                Transactions.Add(template);
-            }
-            TotalRecurringBalance = await Repository.GetRecurringTransactionsBalance(_month.FirstDayOfMonth(), _month.LastDayOfMonth());
+            TotalRecurringBalance = new Balance(
+                Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
+                Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
         }
 
         public AsyncRelayCommand AddCommand => _addCommand ?? (_addCommand = new AsyncRelayCommand(Add));
@@ -126,7 +122,9 @@ namespace WMM.WPF.Recurring
             var transaction = ManageTemplates
                 ? await Repository.AddRecurringTemplate(NewCategory, amount, NewComments)
                 : await Repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, NewComments, true);
-            Transactions.Add(transaction);
+
+            await GetItems();
+
             RaiseTransactionModified(transaction);
 
             NewAmount = 0.0;
@@ -143,8 +141,14 @@ namespace WMM.WPF.Recurring
         private async Task ApplyTemplates()
         {
             await Repository.ApplyRecurringTemplates(_month);
-            await GetRecurringTransactions();
+            await GetItems();
             RaiseMultipleTransactionsModified();
+        }
+
+        protected override void RaiseTransactionModified(Transaction transaction)
+        {
+            base.RaiseTransactionModified(transaction);
+            CalculateBalance();
         }
     }
 }

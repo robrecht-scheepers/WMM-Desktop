@@ -32,8 +32,9 @@ namespace WMM.WPF
 
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
-            var mainViewModel = new MainViewModel(new DbRepository(Settings.Default.DbDirectory), new WindowService());
-            var mainWindow = new MainWindow {DataContext = mainViewModel};
+            var mainWindow = new MainWindow();
+            var mainViewModel = new MainViewModel(new DbRepository(Settings.Default.DbDirectory), new WindowService(mainWindow));
+            mainWindow.DataContext = mainViewModel;
             mainWindow.Show();
             await mainViewModel.Initialize();
         }
