@@ -56,7 +56,7 @@
         <Grid Grid.Row="2" Background="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
