@@ -83,7 +83,11 @@ namespace WMM.WPF.Transactions
 
             var transaction = await Repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, NewTransactionComment);
 
-            Transactions.Insert(0,transaction);
+            if(!Transactions.Any()) // workaround for bug in DataGrid when adding an element to an empty list
+                Transactions = new ObservableCollection<Transaction>(new List<Transaction>{transaction});
+            else
+                Transactions.Insert(0,transaction);
+
             RaiseTransactionModified(transaction);
 
             NewTransactionAmount = 0.00;

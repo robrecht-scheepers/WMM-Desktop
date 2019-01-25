@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WMM.WPF"
              xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
              xmlns:controls="clr-namespace:WMM.WPF.Controls"
              xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
