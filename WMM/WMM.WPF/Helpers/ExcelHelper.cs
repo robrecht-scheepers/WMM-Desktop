@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -21,9 +22,10 @@ namespace WMM.WPF.Helpers
 
             var app = new Application();
             var workBook = app.Workbooks.Add();
-            Worksheet sheet = workBook.Sheets[1];
+            Worksheet dataSheet = workBook.Sheets[1];
+            dataSheet.Name = "Data";
 
-            // create header
+            // write the data
             var areas = repository.GetAreasAndCategories();
             var data = new List<object[]>() { new object[] {"Datum", "Bereich", "Kategorie", "Betrag", "Kommentar", "Fix"} };
             foreach (var t in transactions)
@@ -35,12 +37,22 @@ namespace WMM.WPF.Helpers
             for(var i = 0; i < data.Count; i++)
             for(var j = 0; j < data[0].Length; j++)
             {
-                sheet.Cells[i + 1, j + 1] = data[i][j];
+                dataSheet.Cells[i + 1, j + 1] = data[i][j];
             }
 
-            var table = sheet.ListObjects.Add();
+            // create and format an excel table
+            var table = dataSheet.ListObjects.Add();
             table.Range.EntireColumn.AutoFit();
             table.ListColumns[4].Range.NumberFormat = "0.00";
+
+            // create a pivot table
+            Worksheet pivotSheet = workBook.Sheets[2];
+            pivotSheet.Name = "Pivot";
+            var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
+            cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
+            //PivotTables pivotTables = pivotSheet.PivotTables(Missing.Value);
+            //PivotTable pivot = pivotTables.Add(cache, pivotSheet.Range["A1"], "Pivot Table 1", Missing.Value, Missing.Value);
+
 
             app.Visible = true;
 
