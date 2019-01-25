@@ -43,8 +43,8 @@
         <Grid Grid.Row="0" Grid.Column="1" Background="{StaticResource SCB5}" Margin="2,0">
             <TextBlock Text="Übersicht" Style="{StaticResource TitleStyle}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <controls:ImageButton Command="{Binding ShowManageCategoriesCommand}" ImageSource="/Resources/ic_categories.png" ToolTip="Kategorien verwalten"/>
                 <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png" ToolTip="Vorlagen für monatliche kosten verwalten"/>
+                <controls:ImageButton Command="{Binding ShowManageCategoriesCommand}" ImageSource="/Resources/ic_categories.png" ToolTip="Kategorien verwalten"/>
             </StackPanel>
         </Grid>
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="1" Margin="{StaticResource CommonMarginBottom}">

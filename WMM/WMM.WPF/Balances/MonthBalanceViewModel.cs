@@ -78,7 +78,7 @@ namespace WMM.WPF.Balances
             var balanceDictionary =
                 await _repository.GetCategoryBalances(Month.FirstDayOfMonth(), Month.LastDayOfMonth(), areaBalanceViewModel.Area);
 
-            foreach (var item in balanceDictionary)
+            foreach (var item in balanceDictionary.OrderBy(x => x.Key))
             {
                 areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(item.Key, item.Value));
             }
