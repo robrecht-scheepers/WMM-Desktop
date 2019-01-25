@@ -16,14 +16,24 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Background="{StaticResource SCB5}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding NewArea, Mode=TwoWay}"/>
-            <TextBox Grid.Column="1" Text="{Binding NewCategory, Mode=TwoWay}"/>
-            <controls:ImageButton Grid.Column="2" Command="{Binding AddNewCategoryCommand}" ImageSource="/Resources/ic_add.png"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Kategorie hinzufügen" Foreground="White" />
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Areas}" SelectedItem="{Binding AreaForNewCategory, Mode=TwoWay}"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding NewCategory, Mode=TwoWay}"/>
+            <controls:ImageButton Grid.Row="0" Grid.Column="3" Command="{Binding AddNewCategoryCommand}" ImageSource="/Resources/ic_add.png"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Bereich hinzufügen" Foreground="White" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NewArea, Mode=TwoWay}"/>
+            <controls:ImageButton Grid.Row="1" Grid.Column="3" Command="{Binding AddNewAreaCommand}" ImageSource="/Resources/ic_add.png"/>
         </Grid>
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Categories}" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="*" RowDetailsVisibilityMode="VisibleWhenSelected">

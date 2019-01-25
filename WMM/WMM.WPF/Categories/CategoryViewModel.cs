@@ -22,12 +22,12 @@ namespace WMM.WPF.Categories
         private AsyncRelayCommand _editCategoryCommand;
         private RelayCommand _resetCommand;
 
-        public CategoryViewModel(IEnumerable<string> areas, IRepository repository, string area, string category, IWindowService windowService)
+        public CategoryViewModel(ObservableCollection<string> areas, IRepository repository, string area, string category, IWindowService windowService)
         {
             _repository = repository;
             _windowService = windowService;
 
-            Areas = new ObservableCollection<string>(areas);
+            Areas = areas;
             Area = area;
             Category = category;
             EditedArea = area;

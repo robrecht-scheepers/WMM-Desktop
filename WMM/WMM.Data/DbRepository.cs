@@ -81,7 +81,7 @@ namespace WMM.Data
 
         public async Task Initialize()
         {
-            _categories = await LoadAreasAndCategories();
+            await LoadAreasAndCategories();
         }
         #endregion
 
@@ -642,32 +642,33 @@ namespace WMM.Data
             return _categories;
         }
 
-        private async Task<Dictionary<string,List<string>>> LoadAreasAndCategories()
+        private async Task LoadAreasAndCategories()
         {
             var dictionary = new Dictionary<string, List<string>>();
             const string commandText =
-                "SELECT a.Name AS Area, c.Name AS Category FROM Categories c JOIN Areas a on c.Area = a.Id ORDER BY a.Name, c.Name";
+                "SELECT a.Name AS Area, c.Name AS Category FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
             var command = new SQLiteCommand() { CommandText = commandText };
             using (var dbConnection = GetConnection())
             {
                 command.Connection = dbConnection;
                 dbConnection.Open();
                 using (var reader = await command.ExecuteReaderAsync())
-                { 
+                {
                     if (!reader.HasRows)
-                        return dictionary;
+                        return;
                     while (reader.Read())
                     {
                         var area = reader.GetString(0);
-                        var category = reader.GetString(1);
-                        if (dictionary.ContainsKey(area))
+                        var category = reader.GetStringNullSafe(1);
+                        if (!dictionary.ContainsKey(area))
+                            dictionary[area] = new List<string>();
+                        if(!string.IsNullOrEmpty(category))
                             dictionary[area].Add(category);
-                        else
-                            dictionary[area] = new List<string> {category};
                     }
                 }
             }
-            return dictionary;
+
+            _categories = dictionary;
         }
 
         public async Task AddArea(string area)
@@ -684,6 +685,8 @@ namespace WMM.Data
                     await dbCommand.ExecuteNonQueryAsync();
                 }
             }
+
+            await LoadAreasAndCategories();
         }
 
         public async Task AddCategory(string area, string category)
@@ -702,6 +705,8 @@ namespace WMM.Data
                     await dbCommand.ExecuteNonQueryAsync();
                 }
             }
+
+            await LoadAreasAndCategories();
         }
 
         public async Task EditCategory(string oldCategory, string newArea, string newCategory)
@@ -721,6 +726,8 @@ namespace WMM.Data
                     await dbCommand.ExecuteNonQueryAsync();
                 }
             }
+
+            await LoadAreasAndCategories();
         }
 
         public string GetAreaForCategory(string category)
