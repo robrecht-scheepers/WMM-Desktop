@@ -45,14 +45,21 @@ namespace WMM.WPF.Helpers
             table.Range.EntireColumn.AutoFit();
             table.ListColumns[4].Range.NumberFormat = "0.00";
 
-            // create a pivot table
-            Worksheet pivotSheet = workBook.Sheets[2];
-            pivotSheet.Name = "Pivot";
-            var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
-            cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
-            //PivotTables pivotTables = pivotSheet.PivotTables(Missing.Value);
-            //PivotTable pivot = pivotTables.Add(cache, pivotSheet.Range["A1"], "Pivot Table 1", Missing.Value, Missing.Value);
+            //// create a pivot table
+            //Worksheet pivotSheet = workBook.Sheets[2];
+            //pivotSheet.Name = "Pivot";
+            //var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
+            //var pivotTable = cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
 
+            //pivotTable.SmallGrid = false;
+            //pivotTable.ShowTableStyleRowStripes = true;
+            //pivotTable.TableStyle2 = "PivotStyleLight1";
+
+            //// configure pivotTable
+            //var datum = pivotTable.PivotFields("Datum");
+            //datum.Orientation = XlPivotFieldOrientation.xlColumnField;
+            ////datum.DataRange.Group(Missing.Value, Missing.Value, Missing.Value,
+            ////    new[] {false, false, false, false, true, false, true});
 
             app.Visible = true;
 
