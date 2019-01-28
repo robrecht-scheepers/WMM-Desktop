@@ -109,7 +109,7 @@
                 <Setter Property="Width" Value="{StaticResource GridRowHeight}"/>
                 <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
             </Style>
-            <DataGridLength x:Key="AmountColumnWidth">80</DataGridLength>
+            <DataGridLength x:Key="AmountColumnWidth">100</DataGridLength>
 
 </ResourceDictionary>
     </Application.Resources>

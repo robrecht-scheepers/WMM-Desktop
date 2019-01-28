@@ -37,8 +37,6 @@ namespace WMM.WPF
                 async (s, a) => { await OnTransactionModified(a.Transaction); };
             SearchTransactions.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
-
-            
         }
         
         public async Task Initialize()
@@ -50,6 +48,7 @@ namespace WMM.WPF
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository, _windowService));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository, _windowService));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth().PreviousMonth(), _repository, _windowService));
+            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth().PreviousMonth().PreviousMonth(), _repository, _windowService));
             foreach (var monthBalanceViewModel in MonthBalanceViewModels)
             {
                 await monthBalanceViewModel.Initialize();
