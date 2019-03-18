@@ -18,5 +18,16 @@ namespace WMM.WPF.Helpers
         {
             return dt.FirstDayOfMonth().AddDays(-1).FirstDayOfMonth();
         }
+
+        public static DateTime PreviousMonth(this DateTime dt, int amount)
+        {
+            var tmpDate = dt;
+            while (amount-- > 0)
+            {
+                tmpDate = tmpDate.PreviousMonth();
+            }
+
+            return tmpDate;
+        }
     }
 }

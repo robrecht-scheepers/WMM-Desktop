@@ -47,8 +47,9 @@ namespace WMM.WPF
 
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository, _windowService));
             MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository, _windowService));
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth().PreviousMonth(), _repository, _windowService));
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth().PreviousMonth().PreviousMonth(), _repository, _windowService));
+            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(2), _repository, _windowService));
+            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(3), _repository, _windowService));
+            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(4), _repository, _windowService));
             foreach (var monthBalanceViewModel in MonthBalanceViewModels)
             {
                 await monthBalanceViewModel.Initialize();

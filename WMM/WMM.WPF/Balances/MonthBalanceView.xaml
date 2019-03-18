@@ -15,11 +15,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
         <controls:ImageButton Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
