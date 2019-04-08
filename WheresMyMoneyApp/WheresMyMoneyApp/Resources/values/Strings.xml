@@ -2,6 +2,11 @@
     <string name="app_name">Where\'s My Money?</string>
     <string name="action_settings">Settings</string>
     <string name="category">Category</string>
+    <string name="amount">Amount</string>
+    <string name="expense">Expense</string>
+    <string name="income">Income</string>
+    <string name="user_name">User name</string>
+    <string name="save">Save</string>
   <string-array name="listItemContextMenu">
     <item>Edit</item>
     <item>Delete</item>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">WMM.Mobile</string>
+    <string name="action_settings">Settings</string>
+  <string name="category">Category</string>
+  <string name="amount">Amount</string>
+  <string name="expense">Expense</string>
+  <string name="income">Income</string>
+  <string name="user_name">User name</string>
+  <string name="save">Save</string>
+  <string-array name="listItemContextMenu">
+    <item>Edit</item>
+    <item>Delete</item>
+  </string-array>
+  <string name="group_menu_day">Group by day</string>
+  <string name="group_menu_week">Group by week</string>
+  <string name="group_menu_month">Group by month</string>
+</resources>
+

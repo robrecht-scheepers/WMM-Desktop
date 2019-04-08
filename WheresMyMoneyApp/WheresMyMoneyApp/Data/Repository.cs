@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
+using Dropbox.Api;
+using Dropbox.Api.Files;
 using SQLite;
 using Environment = System.Environment;
 
@@ -20,6 +21,7 @@ namespace WheresMyMoneyApp.Data
     public class Repository
     {
         private SQLiteConnection _db;
+        
         public Repository()
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MoneyDb.db3");
@@ -73,6 +75,27 @@ namespace WheresMyMoneyApp.Data
         public void DeleteExpense(Expense expense)
         {
             _db.Delete(expense);
+        }
+
+        public async Task UploadAsync(string userName)
+        {
+            //string apiKey = "mswskukexoj5fq5";
+            //var authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(apiKey);
+
+            string accessToken = "P_WvdncL8IQAAAAAAAAVkd8_lFU13NapY0NloRVLSNvIAGbTzZSc38laQZRdBLHx"; // generated token for testing
+            
+            using (var dbx = new DropboxClient(accessToken))
+            {
+                byte[] content = File.ReadAllBytes(_db.DatabasePath);
+                using (var mem = new MemoryStream(content))
+                {
+                    var updated = await dbx.Files.UploadAsync(
+                        $"/{userName}.db3", 
+                        WriteMode.Overwrite.Instance,
+                        body: mem);
+                }
+                // TODO: error handling
+            }
         }
     }
 }

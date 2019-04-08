@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Widget;
 using Android.OS;
+using Android.Preferences;
 using Android.Support.V7.App;
 using Android.Views;
 using SQLite;
@@ -26,17 +29,57 @@ namespace WheresMyMoneyApp
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
-            // Create dtaabse if not exists
             if(Repository == null)
                 Repository = new Repository();
-            
+
+            var addArea = FindViewById<RelativeLayout>(Resource.Id.addExpenseArea);
+            addArea.Visibility = ViewStates.Gone;
+
             var addButton = FindViewById<Button>(Resource.Id.addNewExpenseButton);
-            addButton.Click += delegate { StartActivity(typeof(AddExpenseActivity)); };
+            addButton.Click += delegate
+            {
+                switch (addArea.Visibility)
+                {
+                    case ViewStates.Gone:
+                    case ViewStates.Invisible:
+                        addArea.Visibility = ViewStates.Visible;
+                        break;
+                    case ViewStates.Visible:
+                        addArea.Visibility = ViewStates.Gone;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            };
+
+            var categoryEditText = FindViewById<EditText>(Resource.Id.newExpenseCategoryEditText);
+            var amountEditText = FindViewById<EditText>(Resource.Id.newExpenseAmountEditText);
+            var datePicker = FindViewById<DatePicker>(Resource.Id.newExpenseDatePicker);
+            var addContinueButon = FindViewById<Button>(Resource.Id.newExpenseAddContinueButton);
+            
+            addContinueButon.Click += delegate
+            {
+                AddExpense(categoryEditText.Text, double.Parse(amountEditText.Text), datePicker.DateTime);
+                categoryEditText.Text = "";
+                amountEditText.Text = "";
+                categoryEditText.RequestFocus();
+                RefreshList();
+            };
 
             var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
             RegisterForContextMenu(listView);
 
             _dateGroupType = DateGroupType.Day;
+        }
+
+        private void AddExpense(string category, double amount, DateTime date)
+        {
+            var typeRadioGroup = FindViewById<RadioGroup>(Resource.Id.newExpenseTypeRadioGroup);
+            var selectedType = typeRadioGroup.CheckedRadioButtonId;
+            if (selectedType == Resource.Id.newExpenseRadioButtonExpense)
+                amount *= -1.0;
+
+            Repository.SaveExpense(new Expense(category, amount, date));
         }
 
         private void RefreshList()
@@ -53,11 +96,13 @@ namespace WheresMyMoneyApp
             RefreshList();
         }
 
+        #region context menu
+
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             if (v.Id == Resource.Id.listViewExpenses)
             {
-                var info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                //var info = (AdapterView.AdapterContextMenuInfo)menuInfo;
                 //menu.SetHeaderTitle(_countries[info.Position]);
                 var menuItems = Resources.GetStringArray(Resource.Array.listItemContextMenu);
                 for (var i = 0; i < menuItems.Length; i++)
@@ -67,9 +112,11 @@ namespace WheresMyMoneyApp
 
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            var info = (AdapterView.AdapterContextMenuInfo)item.MenuInfo;
-            var listView = FindViewById<ListView>(Resource.Id.listViewExpenses);
-            var expense = (Expense)listView.Adapter.GetItem(info.Position);
+            var info = (ExpandableListView.ExpandableListContextMenuInfo)item.MenuInfo;
+            var listView = FindViewById<ExpandableListView>(Resource.Id.listViewExpenses);
+            var adapter = listView.ExpandableListAdapter;
+            var expense = (Expense) adapter.GetChild(ExpandableListView.GetPackedPositionGroup(info.PackedPosition),
+                ExpandableListView.GetPackedPositionChild(info.PackedPosition));
 
             var menuItemIndex = item.ItemId;
             if (menuItemIndex == 0) // edit
@@ -98,38 +145,58 @@ namespace WheresMyMoneyApp
             }
         }
 
+        #endregion
+        
+        #region Menu
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            MenuInflater.Inflate(Resource.Menu.menu_grouping, menu);
+            MenuInflater.Inflate(Resource.Menu.menu, menu);
             return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            DateGroupType newGroupType;
             switch (item.ItemId)
             {
                 case Resource.Id.group_menu_day:
-                    newGroupType = DateGroupType.Day;
-                    break;
+                    UpdateGrouping(DateGroupType.Day);
+                    return true;
                 case Resource.Id.group_menu_week:
-                    newGroupType = DateGroupType.Week;
-                    break;
+                    UpdateGrouping(DateGroupType.Week);
+                    return true;
                 case Resource.Id.group_menu_month:
-                    newGroupType = DateGroupType.Month;
-                    break;
+                    UpdateGrouping(DateGroupType.Month);
+                    return true;
+                case Resource.Id.user_action:
+                    StartActivity(typeof(UserSettingsActivity));
+                    return true;
+                case Resource.Id.upload_action:
+                    UploadDb();
+                    return true;
                 default:
                     return base.OnOptionsItemSelected(item);
             }
-
-            if (newGroupType != _dateGroupType)
-            {
-                _dateGroupType = newGroupType;
-                RefreshList();
-            }
-
-            return true;
         }
+        #endregion
+
+        private void UpdateGrouping(DateGroupType groupType)
+        {
+            if (groupType == _dateGroupType) return;
+
+            _dateGroupType = groupType;
+            RefreshList();
+        }
+
+        private async Task UploadDb()
+        {
+            //TODO: status updates (floating stats thingy like in GMail)
+            var userName = PreferenceManager.GetDefaultSharedPreferences(this).GetString("pref_user_name", "");
+            if(string.IsNullOrEmpty(userName))
+                return;
+
+            await Repository.UploadAsync(userName);
+        }
+
     }
 }
 

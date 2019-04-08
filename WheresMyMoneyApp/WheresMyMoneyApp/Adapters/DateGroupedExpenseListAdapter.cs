@@ -166,8 +166,8 @@ namespace WheresMyMoneyApp.Adapters
             }
 
             holder.DateView.Text = dateText;
-            holder.IncomeView.Text = group.TotalIncome.ToString("0.##");
-            holder.ExpenseView.Text = group.TotalExpense.ToString("0.##");
+            holder.IncomeView.Text = Math.Abs(group.TotalIncome) > 0 ? group.TotalIncome.ToString("0.##") : "";
+            holder.ExpenseView.Text = Math.Abs(group.TotalExpense) > 0 ? group.TotalExpense.ToString("0.##") : "";
             holder.BalanceView.Text = group.Balance.ToString("0.##");
 
             return view;
@@ -211,8 +211,8 @@ namespace WheresMyMoneyApp.Adapters
         public DateTime EndDate { get; set; }
 
         public double Balance => Expenses.Sum(x => x.Amount);
-        public double TotalExpense => Expenses.Where(x => x.Amount > 0).Sum(x => x.Amount);
-        public double TotalIncome => Expenses.Where(x => x.Amount < 0).Sum(x => x.Amount);
+        public double TotalExpense => Expenses.Where(x => x.Amount <= 0).Sum(x => x.Amount);
+        public double TotalIncome => Expenses.Where(x => x.Amount > 0).Sum(x => x.Amount);
         public List<Expense> Expenses { get; set; }
     }
 }
