@@ -44,20 +44,28 @@ namespace WMM.WPF
             await _repository.Initialize();
             await AddTransactionsViewModel.Initialize();
             SearchTransactions.Initialize();
-
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now, _repository, _windowService));
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(), _repository, _windowService));
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(2), _repository, _windowService));
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(3), _repository, _windowService));
-            MonthBalanceViewModels.Add(new MonthBalanceViewModel(DateTime.Now.PreviousMonth(4), _repository, _windowService));
-            foreach (var monthBalanceViewModel in MonthBalanceViewModels)
+            
+            var i = 0;
+            while(true)
             {
+                var monthBalanceViewModel = new MonthBalanceViewModel(DateTime.Now.PreviousMonth(i), _repository, _windowService);
                 await monthBalanceViewModel.Initialize();
-                monthBalanceViewModel.DetailTransactionsRequested += async (sender, args) =>
+
+                if (monthBalanceViewModel.TotalBalance.Income > 0 || monthBalanceViewModel.TotalBalance.Expense < 0 || i == 0) // always add current month
                 {
-                    await SearchTransactions.SearchForDatesAndCategory(args.DateFrom, args.DateTo, args.Category);
-                };
+                    monthBalanceViewModel.DetailTransactionsRequested += async (sender, args) =>
+                    {
+                        await SearchTransactions.SearchForDatesAndCategory(args.DateFrom, args.DateTo, args.Category);
+                    };
+                    MonthBalanceViewModels.Add(monthBalanceViewModel);
+                    i++;
+                }
+                else
+                {
+                    break;
+                }
             }
+            
         }
         
         public ObservableCollection<MonthBalanceViewModel> MonthBalanceViewModels { get; }
