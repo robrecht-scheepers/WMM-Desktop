@@ -26,7 +26,6 @@ namespace WMM.WPF.Categories
 
         public CategoryViewModel(ObservableCollection<string> areas, IRepository repository, string area, string name, IWindowService windowService)
         {
-            
             Areas = areas;
             Area = area;
             Name = name;
@@ -38,7 +37,9 @@ namespace WMM.WPF.Categories
         {
             _repository = repository;
             _windowService = windowService;
+
             Areas = areas;
+            ForecastTypes = new ObservableCollection<ForecastType>{ForecastType.Exception, ForecastType.Monthly, ForecastType.Daily};
 
             Area = category.Area;
             Name = category.Name;
@@ -87,13 +88,15 @@ namespace WMM.WPF.Categories
 
         public ObservableCollection<string> Areas { get; }
 
+        public ObservableCollection<ForecastType> ForecastTypes { get; }
+
         public AsyncRelayCommand EditCategoryCommand => _editCategoryCommand ?? (_editCategoryCommand = new AsyncRelayCommand(EditCategory, CanExecuteEditCategory));
 
         private bool CanExecuteEditCategory()
         {
             return !string.IsNullOrEmpty(EditedArea)
                     && !string.IsNullOrEmpty(EditedName)  
-                    && (EditedArea != Area || EditedName != Name);
+                    && (EditedArea != Area || EditedName != Name || EditedForecastType != ForecastType);
         }
 
         private async Task EditCategory()
