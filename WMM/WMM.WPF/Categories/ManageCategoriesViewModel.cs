@@ -28,13 +28,14 @@ namespace WMM.WPF.Categories
             _windowService = windowService;
             Areas = new ObservableCollection<string>();
             Categories = new ObservableCollection<CategoryViewModel>();
+            ForecastTypes = new ObservableCollection<ForecastType> { ForecastType.Exception, ForecastType.Monthly, ForecastType.Daily };
         }
 
         public void Initialize()
         {
             var categories = _repository.GetCategories();
             Areas = new ObservableCollection<string>(categories.Select(x => x.Area).Distinct().OrderBy(x => x));
-
+            
             foreach (var area in Areas)
             {
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
@@ -51,6 +52,8 @@ namespace WMM.WPF.Categories
         }
 
         public ObservableCollection<CategoryViewModel> Categories { get; }
+
+        public ObservableCollection<ForecastType> ForecastTypes { get; }
 
         public string AreaForNewCategory
         {
