@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
+    <Compile Include="Forecast\ForecastViewModel.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Transactions\AddTransactionsView.xaml.cs">
       <DependentUpon>AddTransactionsView.xaml</DependentUpon>

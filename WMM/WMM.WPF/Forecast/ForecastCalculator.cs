@@ -68,6 +68,5 @@ namespace WMM.WPF.Forecast
             return currentTotal + daysRemaining * dailyMean;
         }
 
-
     }
 }
