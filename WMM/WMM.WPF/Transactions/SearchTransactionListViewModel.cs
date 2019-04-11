@@ -178,7 +178,7 @@ namespace WMM.WPF.Transactions
                 AreaCategoryList.Add(new AreaCategorySelectionItem(area, true));
             }
             AreaCategoryList.Add(new AreaCategorySelectionItem("--- Kategorie ---",false,false));
-            foreach (var category in Repository.GetCategories().OrderBy(x => x))
+            foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
             }

@@ -27,7 +27,7 @@ namespace WMM.WPF.Transactions
 
         public Task Initialize()
         {
-            Categories = new ObservableCollection<string>( Repository.GetCategories().OrderBy(x => x));
+            Categories = new ObservableCollection<string>( Repository.GetCategoryNames().OrderBy(x => x));
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
             NewTransactionAmount = 0.0; 

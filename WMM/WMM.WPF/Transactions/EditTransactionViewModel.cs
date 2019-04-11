@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.MVVM;
@@ -30,7 +31,7 @@ namespace WMM.WPF.Transactions
             SelectedSign = _transaction.Amount > 0 ? "+" : "-";
             Amount = Math.Abs(_transaction.Amount);
             Comments = _transaction.Comments;
-            Categories = new ObservableCollection<string>( _repository.GetCategories());
+            Categories = new ObservableCollection<string>( _repository.GetCategoryNames().OrderBy(x => x));
         }
 
         public ObservableCollection<string> Categories { get; }

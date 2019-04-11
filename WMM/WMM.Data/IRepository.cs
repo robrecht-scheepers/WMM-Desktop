@@ -44,17 +44,17 @@ namespace WMM.Data
 
         Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
         
-        IEnumerable<string> GetCategories();
+        IEnumerable<string> GetCategoryNames();
 
         IEnumerable<string> GetAreas();
 
-        Dictionary<string, List<string>> GetAreasAndCategories();
+        List<Category> GetCategories();
 
         Task AddArea(string area);
 
-        Task AddCategory(string area, string category);
+        Task AddCategory(string area, string category, ForecastType forecastType);
 
-        Task EditCategory(string oldCategory, string newArea, string newCategory);
+        Task EditCategory(string oldCategory, string newArea, string newCategory, ForecastType newForecastType);
 
         string GetAreaForCategory(string category);
     }

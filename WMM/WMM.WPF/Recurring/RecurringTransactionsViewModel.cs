@@ -38,7 +38,7 @@ namespace WMM.WPF.Recurring
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<string>(Repository.GetCategories().OrderBy(x => x));
+            Categories = new ObservableCollection<string>(Repository.GetCategoryNames().OrderBy(x => x));
             NewCategory = Categories.FirstOrDefault();
             NewAmount = 0.0;
             SelectedSign = "-";

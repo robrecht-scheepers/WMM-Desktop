@@ -35,7 +35,7 @@ namespace WMM.Data
             {"Sonstiges", new List<string>{"Sonstiges"}},
         };
 
-        private Dictionary<string, List<string>> _categories;
+        private List<Category> _categories;
 
         public DbRepository(string dbFolder)
         {
@@ -491,11 +491,11 @@ namespace WMM.Data
         {
             var balances = new Dictionary<string,Balance>();
             var transactions = (await GetTransactions(dateFrom, dateTo)).ToList();
-            var categories = GetAreasAndCategories();
+            var categories = GetCategories();
 
-            foreach (var area in categories.Keys.OrderBy(x => x))
+            foreach (var area in GetAreas())
             {
-                balances[area] = CalculateBalance(transactions.Where(x => categories[area].Contains(x.Category))
+                balances[area] = CalculateBalance(transactions.Where(x => categories.Any(y => y.Area == area && y.Name == x.Category))
                     .Select(x => x.Amount).ToList());
             }
 
@@ -627,26 +627,26 @@ namespace WMM.Data
 
         #region categories
 
-        public IEnumerable<string> GetCategories()
+        public IEnumerable<string> GetCategoryNames()
         {
-            return _categories?.SelectMany(x => x.Value).Distinct().OrderBy(x => x);
+            return _categories.Select(x => x.Name).Distinct().OrderBy(x => x);
         }
 
         public IEnumerable<string> GetAreas()
         {
-            return _categories?.Select(x => x.Key).OrderBy(x => x);
+            return _categories?.Select(x => x.Area).Distinct().OrderBy(x => x);
         }
 
-        public Dictionary<string, List<string>> GetAreasAndCategories()
+        public List<Category> GetCategories()
         {
             return _categories;
         }
-
+        
         private async Task LoadAreasAndCategories()
         {
-            var dictionary = new Dictionary<string, List<string>>();
+            var categories = new List<Category>();
             const string commandText =
-                "SELECT a.Name AS Area, c.Name AS Category FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
+                "SELECT a.Name AS Area, c.Name AS Category, c.ForecastType as ForecastType FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
             var command = new SQLiteCommand() { CommandText = commandText };
             using (var dbConnection = GetConnection())
             {
@@ -660,15 +660,15 @@ namespace WMM.Data
                     {
                         var area = reader.GetString(0);
                         var category = reader.GetStringNullSafe(1);
-                        if (!dictionary.ContainsKey(area))
-                            dictionary[area] = new List<string>();
-                        if(!string.IsNullOrEmpty(category))
-                            dictionary[area].Add(category);
+                        var forecastType = (ForecastType)reader.GetInt32(2);
+
+                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area))
+                            categories.Add(new Category {Area = area, Name = category, ForecastType = forecastType});
                     }
                 }
             }
 
-            _categories = dictionary;
+            _categories = categories;
         }
 
         public async Task AddArea(string area)
@@ -689,11 +689,11 @@ namespace WMM.Data
             await LoadAreasAndCategories();
         }
 
-        public async Task AddCategory(string area, string category)
+        public async Task AddCategory(string area, string category, ForecastType forecastType)
         {
             const string commandText =
-                "INSERT INTO Categories (Id,Area,Name) " +
-                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category);";
+                "INSERT INTO Categories (Id,Area,Name,ForecastType) " +
+                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category, @forecastType);";
             using (var dbConnection = GetConnection())
             {
                 using (var dbCommand = new SQLiteCommand(dbConnection) { CommandText = commandText })
@@ -701,6 +701,7 @@ namespace WMM.Data
                     dbCommand.Parameters.AddWithValue("@id", Guid.NewGuid());
                     dbCommand.Parameters.AddWithValue("@area", area);
                     dbCommand.Parameters.AddWithValue("@category", category);
+                    dbCommand.Parameters.AddWithValue("@forecastType", forecastType);
                     dbConnection.Open();
                     await dbCommand.ExecuteNonQueryAsync();
                 }
@@ -709,11 +710,12 @@ namespace WMM.Data
             await LoadAreasAndCategories();
         }
 
-        public async Task EditCategory(string oldCategory, string newArea, string newCategory)
+        public async Task EditCategory(string oldCategory, string newArea, string newCategory,
+            ForecastType newForecastType)
         {
             const string commandText =
                 "UPDATE Categories " +
-                "SET Name = @newName, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
+                "SET Name = @newName, ForecastType = @newForecastType, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
                 "WHERE Name = @oldName;";
             using (var dbConnection = GetConnection())
             {
@@ -722,6 +724,7 @@ namespace WMM.Data
                     dbCommand.Parameters.AddWithValue("@oldName", oldCategory);
                     dbCommand.Parameters.AddWithValue("@newArea", newArea);
                     dbCommand.Parameters.AddWithValue("@newName", newCategory);
+                    dbCommand.Parameters.AddWithValue("@newForecastType", newForecastType);
                     dbConnection.Open();
                     await dbCommand.ExecuteNonQueryAsync();
                 }
@@ -732,7 +735,7 @@ namespace WMM.Data
 
         public string GetAreaForCategory(string category)
         {
-            return _categories.Keys.FirstOrDefault(x => _categories[x].Contains(category));
+            return _categories.FirstOrDefault(x => x.Name == category)?.Area;
         }
         
         private void SeedCategories(Dictionary<string, List<string>> categories)

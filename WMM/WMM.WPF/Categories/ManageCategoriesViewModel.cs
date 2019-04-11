@@ -20,6 +20,7 @@ namespace WMM.WPF.Categories
         private AsyncRelayCommand _addNewAreaCommand;
         private string _newArea;
         private ObservableCollection<string> _areas;
+        private ForecastType _newForecastType;
 
         public ManageCategoriesViewModel(IRepository repository, IWindowService windowService)
         {
@@ -31,14 +32,14 @@ namespace WMM.WPF.Categories
 
         public void Initialize()
         {
-            Areas = new ObservableCollection<string>(_repository.GetAreas().OrderBy(x => x));
-            var categories = _repository.GetAreasAndCategories();
-            
+            var categories = _repository.GetCategories();
+            Areas = new ObservableCollection<string>(categories.Select(x => x.Area).Distinct().OrderBy(x => x));
+
             foreach (var area in Areas)
             {
-                foreach (var category in categories[area].OrderBy(x => x))
+                foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
-                    Categories.Add(new CategoryViewModel(Areas, _repository, area, category, _windowService));
+                    Categories.Add(new CategoryViewModel(category, Areas, _repository, _windowService));
                 }
             }
         }
@@ -69,6 +70,12 @@ namespace WMM.WPF.Categories
             set => SetValue(ref _newArea, value);
         }
 
+        public ForecastType NewForecastType
+        {
+            get => _newForecastType;
+            set => SetValue(ref _newForecastType, value);
+        }
+
         public AsyncRelayCommand AddNewCategoryCommand => _addNewCategoryCommand ?? (_addNewCategoryCommand = new AsyncRelayCommand(AddNewCategory, CanExecuteAddNewCategory));
 
         private bool CanExecuteAddNewCategory()
@@ -80,7 +87,7 @@ namespace WMM.WPF.Categories
         {
             try
             {
-                await _repository.AddCategory(AreaForNewCategory, NewCategory);
+                await _repository.AddCategory(AreaForNewCategory, NewCategory, NewForecastType);
             }
             catch (Exception e)
             {
