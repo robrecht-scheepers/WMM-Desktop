@@ -6,7 +6,7 @@ namespace WMM.Data
     {
         public Guid Id { get; }
 
-        public string Category { get; }
+        public Category Category { get; }
 
         public DateTime Date { get; }
 
@@ -26,7 +26,7 @@ namespace WMM.Data
 
         public bool Recurring { get; }
 
-        internal Transaction(Guid id, DateTime date, string category, double amount, string comments, DateTime createdTime, string createdAccount, DateTime lastUpdateTime, string lastUpdateAccount, bool deleted, bool recurring)
+        internal Transaction(Guid id, DateTime date, Category category, double amount, string comments, DateTime createdTime, string createdAccount, DateTime lastUpdateTime, string lastUpdateAccount, bool deleted, bool recurring)
         {
             Id = id; 
             Date = date;

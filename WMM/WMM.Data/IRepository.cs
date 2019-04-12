@@ -8,21 +8,21 @@ namespace WMM.Data
     {
         Task Initialize();
 
-        Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring = false);
+        Task<Transaction> AddTransaction(DateTime date, Category category, double amount, string comments, bool recurring = false);
 
-        Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount, string newComments);
+        Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, Category newCategory, double newAmount, string newComments);
 
-        Task<Transaction> UpdateTransaction(Transaction transaction, string newCategory, double newAmount, string newComments);
+        Task<Transaction> UpdateTransaction(Transaction transaction, Category newCategory, double newAmount, string newComments);
 
         Task DeleteTransaction(Transaction transaction);
 
         Task<IEnumerable<Transaction>> GetTransactions();
 
-        Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category);
+        Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Category category);
 
         Task<IEnumerable<Transaction>> GetTransactions(SearchConfiguration searchConfiguration);
 
-        Task<Transaction> AddRecurringTemplate(string category, double amount, string comments);
+        Task<Transaction> AddRecurringTemplate(Category category, double amount, string comments);
         
         Task<IEnumerable<Transaction>> GetRecurringTemplates();
 
@@ -42,7 +42,7 @@ namespace WMM.Data
 
         Task<Balance> GetBalanceForArea(DateTime dateFrom, DateTime dateTo, string area);
 
-        Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category);
+        Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, Category category);
         
         IEnumerable<string> GetCategoryNames();
 
@@ -56,6 +56,6 @@ namespace WMM.Data
 
         Task EditCategory(string oldCategory, string newArea, string newCategory, ForecastType newForecastType);
 
-        string GetAreaForCategory(string category);
+        //string GetAreaForCategory(string category);
     }
 }

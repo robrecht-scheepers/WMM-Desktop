@@ -13,10 +13,10 @@ namespace WMM.WPF.Recurring
     public class RecurringTransactionsViewModel : TransactionListViewModelBase
     {
         private readonly DateTime _month;
-        private string _newCategory;
+        private Category _newCategory;
         private double _newAmount;
         private AsyncRelayCommand _addCommand;
-        private ObservableCollection<string> _categories;
+        private ObservableCollection<Category> _categories;
         private string _selectedSign;
         private AsyncRelayCommand _applyTemplatesCommand;
         private Balance _totalRecurringBalance;
@@ -27,18 +27,18 @@ namespace WMM.WPF.Recurring
         {
             ManageTemplates = false;
             _month = month;
-            Categories = new ObservableCollection<string>();
+            Categories = new ObservableCollection<Category>();
         }
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService)
             : base(repository, windowService, false)
         {
             ManageTemplates = true;
-            Categories = new ObservableCollection<string>();
+            Categories = new ObservableCollection<Category>();
         }
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<string>(Repository.GetCategoryNames().OrderBy(x => x));
+            Categories = new ObservableCollection<Category>(Repository.GetCategories().OrderBy(x => x.Name));
             NewCategory = Categories.FirstOrDefault();
             NewAmount = 0.0;
             SelectedSign = "-";
@@ -53,7 +53,7 @@ namespace WMM.WPF.Recurring
         public bool ManageTemplates { get; }
 
 
-        public string NewCategory
+        public Category NewCategory
         {
             get => _newCategory;
             set => SetValue(ref _newCategory, value);
@@ -71,7 +71,7 @@ namespace WMM.WPF.Recurring
             set => SetValue(ref _newComments, value);
         }
 
-        public ObservableCollection<string> Categories
+        public ObservableCollection<Category> Categories
         {
             get => _categories;
             private set => SetValue(ref _categories, value);

@@ -30,8 +30,7 @@ namespace WMM.WPF.Helpers
             var data = new List<object[]>() { new object[] {"Datum", "Bereich", "Kategorie", "Betrag", "Kommentar", "Fix"} };
             foreach (var t in transactions)
             {
-                var area = categories.First(x => x.Name == t.Category).Area;
-                data.Add(new object[]{t.Date, area, t.Category, t.Amount, t.Comments, t.Recurring});
+                data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring});
             }
 
             for(var i = 0; i < data.Count; i++)

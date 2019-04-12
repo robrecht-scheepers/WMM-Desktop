@@ -84,14 +84,14 @@ namespace WMM.WPF.Balances
             }
         }
 
-        public async Task RecalculateBalances(DateTime date, string category)
+        public async Task RecalculateBalances(DateTime date, Category category)
         {
             if(date < Month.FirstDayOfMonth() || date > Month.LastDayOfMonth()) return;
 
             // recalculate total balance for this month
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
 
-            var area = _repository.GetAreaForCategory(category);
+            var area = category.Area;
             var areaBalance = await _repository.GetBalanceForArea(Month.FirstDayOfMonth(), Month.LastDayOfMonth(), area);
             var categoryBalance = await _repository.GetBalanceForCategory(Month.FirstDayOfMonth(),
                 Month.LastDayOfMonth(), category);
@@ -107,10 +107,10 @@ namespace WMM.WPF.Balances
             {
                 areaBalanceViewModel.Balance = areaBalance;
                 var categoryBalanceViewModel =
-                    areaBalanceViewModel.CategoryBalances.FirstOrDefault(x => x.Name == category);
+                    areaBalanceViewModel.CategoryBalances.FirstOrDefault(x => x.Name == category.Name);
                 if (categoryBalanceViewModel == null)
                 {
-                    areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(category, categoryBalance));
+                    areaBalanceViewModel.CategoryBalances.Add(new CategoryBalanceViewModel(category.Name, categoryBalance));
                 }
                 else
                 {

@@ -13,7 +13,7 @@ namespace WMM.WPF.Transactions
         private readonly Transaction _transaction;
         private readonly IRepository _repository;
         private DateTime _date;
-        private string _category;
+        private Category _category;
         private double _amount;
         private AsyncRelayCommand _saveChangesCommand;
         private readonly bool _editDate;
@@ -31,10 +31,10 @@ namespace WMM.WPF.Transactions
             SelectedSign = _transaction.Amount > 0 ? "+" : "-";
             Amount = Math.Abs(_transaction.Amount);
             Comments = _transaction.Comments;
-            Categories = new ObservableCollection<string>( _repository.GetCategoryNames().OrderBy(x => x));
+            Categories = new ObservableCollection<Category>( _repository.GetCategories().OrderBy(x => x.Name));
         }
 
-        public ObservableCollection<string> Categories { get; }
+        public ObservableCollection<Category> Categories { get; }
 
         public bool EditDate => _editDate;
 
@@ -44,7 +44,7 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _date, value);
         }
 
-        public string Category
+        public Category Category
         {
             get => _category;
             set => SetValue(ref _category, value);

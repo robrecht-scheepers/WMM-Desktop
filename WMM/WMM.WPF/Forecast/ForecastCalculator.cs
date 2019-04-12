@@ -37,7 +37,7 @@ namespace WMM.WPF.Forecast
             return history.Where(t => 
                 t.Date >= date.FirstDayOfMonth() &&
                 t.Date <= date.LastDayOfMonth() &&
-                t.Category == category.Name)
+                t.Category == category)
                 .Select(x => x.Amount).Sum();
         }
 
@@ -49,7 +49,7 @@ namespace WMM.WPF.Forecast
             var month = date.PreviousMonth().FirstDayOfMonth();
             while (month >= startDate)
             {
-                monthTotals.Add(history.Where(t => t.Date >= month && t.Date <= month.LastDayOfMonth() && t.Category == category.Name).Select(t => t.Amount).Sum());
+                monthTotals.Add(history.Where(t => t.Date >= month && t.Date <= month.LastDayOfMonth() && t.Category == category).Select(t => t.Amount).Sum());
                 month = month.PreviousMonth().FirstDayOfMonth();
             }
 
@@ -61,11 +61,11 @@ namespace WMM.WPF.Forecast
             // calculate daily mean from history
             var startDate = history.Select(x => x.Date).Min();
             var numberOfDays = Math.Ceiling((date - startDate).TotalDays);
-            var total = history.Where(t => t.Date <= date && t.Category == category.Name).Select(t => t.Amount).Sum();
+            var total = history.Where(t => t.Date <= date && t.Category == category).Select(t => t.Amount).Sum();
             var dailyMean = total / numberOfDays;
 
             // calculate current total
-            var currentTotal = history.Where(t => t.Date >= date.FirstDayOfMonth() && t.Date <= date && t.Category == category.Name)
+            var currentTotal = history.Where(t => t.Date >= date.FirstDayOfMonth() && t.Date <= date && t.Category == category)
                 .Select(x => x.Amount).Sum();
             
             // extrapolate for remainder of month

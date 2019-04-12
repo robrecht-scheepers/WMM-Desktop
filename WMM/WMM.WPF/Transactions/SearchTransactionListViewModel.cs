@@ -122,7 +122,7 @@ namespace WMM.WPF.Transactions
                 else
                 {
                     searchConfiguration.Parameters |= SearchParameter.Category;
-                    searchConfiguration.Category = SelectedAreaCategoryItem.Name;
+                    searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
                 }
             }
 

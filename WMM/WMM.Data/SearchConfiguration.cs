@@ -16,7 +16,7 @@ namespace WMM.Data
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public string Area { get; set; }
-        public string Category { get; set; }
+        public string CategoryName { get; set; }
         public string Comments { get; set; }
         public double Amount { get; set; }
         public bool TransactionDirectionPositive { get; set; }

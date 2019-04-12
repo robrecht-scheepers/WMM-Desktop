@@ -86,7 +86,7 @@ namespace WMM.Data
         #endregion
 
         #region transactions
-        public async Task<Transaction> AddTransaction(DateTime date, string category, double amount, string comments, bool recurring)
+        public async Task<Transaction> AddTransaction(DateTime date, Category category, double amount, string comments, bool recurring)
         {
             var id = Guid.NewGuid();
             var now = DateTime.Now;
@@ -100,7 +100,7 @@ namespace WMM.Data
                 {
                     command.Parameters.AddWithValue("@id", id);
                     command.Parameters.AddWithValue("@date", date);
-                    command.Parameters.AddWithValue("@category", category);
+                    command.Parameters.AddWithValue("@category", category.Name);
                     command.Parameters.AddWithValue("@amount", amount);
                     command.Parameters.AddWithValue("@comments", comments);
                     command.Parameters.AddWithValue("@createdTime", now);
@@ -120,7 +120,7 @@ namespace WMM.Data
                 : await GetTransaction(id);
         }
 
-        public async Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, string newCategory, double newAmount,
+        public async Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, Category newCategory, double newAmount,
             string newComments)
         {
             const string commandText =
@@ -133,7 +133,7 @@ namespace WMM.Data
                 {
                     command.Parameters.AddWithValue("@id", transaction.Id);
                     command.Parameters.AddWithValue("@date", newDate);
-                    command.Parameters.AddWithValue("@category", newCategory);
+                    command.Parameters.AddWithValue("@category", newCategory.Name);
                     command.Parameters.AddWithValue("@amount", newAmount);
                     command.Parameters.AddWithValue("@comments", newComments);
                     command.Parameters.AddWithValue("@now", DateTime.Now);
@@ -145,7 +145,7 @@ namespace WMM.Data
             return await GetTransaction(transaction.Id);
         }
 
-        public async Task<Transaction> UpdateTransaction(Transaction transaction, string newCategory, double newAmount, string newComments)
+        public async Task<Transaction> UpdateTransaction(Transaction transaction, Category newCategory, double newAmount, string newComments)
         {
             const string commandText =
                 "UPDATE Transactions " +
@@ -156,7 +156,7 @@ namespace WMM.Data
                 using (var command = new SQLiteCommand(dbConnection) { CommandText = commandText })
                 {
                     command.Parameters.AddWithValue("@id", transaction.Id);
-                    command.Parameters.AddWithValue("@category", newCategory);
+                    command.Parameters.AddWithValue("@category", newCategory.Name);
                     command.Parameters.AddWithValue("@amount", newAmount);
                     command.Parameters.AddWithValue("@comments", newComments);
                     command.Parameters.AddWithValue("@now", DateTime.Now);
@@ -229,7 +229,7 @@ namespace WMM.Data
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Category))
                     {
                         commandTextBuilder.AppendLine(" AND c.Name = @category");
-                        command.Parameters.AddWithValue("@category", searchConfiguration.Category);
+                        command.Parameters.AddWithValue("@category", searchConfiguration.CategoryName);
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Comments))
                     {
@@ -269,14 +269,14 @@ namespace WMM.Data
             return await GetTransactions(config);
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, string category)
+        public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Category category)
         {
             var config = new SearchConfiguration();
             config.Parameters |= SearchParameter.Date;
             config.DateFrom = dateFrom;
             config.DateTo = dateTo;
             config.Parameters |= SearchParameter.Category;
-            config.Category = category;
+            config.CategoryName = category.Name;
             
             return await GetTransactions(config);
         }
@@ -296,7 +296,7 @@ namespace WMM.Data
                 transactions.Add(new Transaction(
                     reader.GetGuid(0),
                     reader.GetDateTimeNullSafe(1),
-                    reader.GetString(2),
+                    _categories.First(x => x.Name == reader.GetString(2)),
                     reader.GetDouble(3),
                     reader.GetStringNullSafe(4),
                     reader.GetDateTime(5),
@@ -311,7 +311,7 @@ namespace WMM.Data
         #endregion
 
         #region recurring
-        public async Task<Transaction> AddRecurringTemplate(string category, double amount, string comments)
+        public async Task<Transaction> AddRecurringTemplate(Category category, double amount, string comments)
         {
             var id = Guid.NewGuid();
             var now = DateTime.Now;
@@ -324,7 +324,7 @@ namespace WMM.Data
                 using (var command = new SQLiteCommand(dbConnection) {CommandText = commandText})
                 {
                     command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@category", category);
+                    command.Parameters.AddWithValue("@category", category.Name);
                     command.Parameters.AddWithValue("@amount", amount);
                     command.Parameters.AddWithValue("@comments", comments);
                     command.Parameters.AddWithValue("@createdTime", now);
@@ -495,7 +495,7 @@ namespace WMM.Data
 
             foreach (var area in GetAreas())
             {
-                balances[area] = CalculateBalance(transactions.Where(x => categories.Any(y => y.Area == area && y.Name == x.Category))
+                balances[area] = CalculateBalance(transactions.Where(x => x.Category.Area == area)
                     .Select(x => x.Amount).ToList());
             }
 
@@ -586,7 +586,7 @@ namespace WMM.Data
             return CalculateBalance(amounts);
         }
 
-        public async Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, string category)
+        public async Task<Balance> GetBalanceForCategory(DateTime dateFrom, DateTime dateTo, Category category)
         {
             var amounts = new List<double>();
             const string commandText =
@@ -599,7 +599,7 @@ namespace WMM.Data
                 {
                     command.Parameters.AddWithValue("@dateFrom", dateFrom);
                     command.Parameters.AddWithValue("@dateTo", dateTo);
-                    command.Parameters.AddWithValue("@category", category);
+                    command.Parameters.AddWithValue("@category", category.Name);
 
                     command.Connection = dbConnection;
                     dbConnection.Open();
@@ -663,7 +663,7 @@ namespace WMM.Data
                         var forecastType = (ForecastType)reader.GetInt32(2);
 
                         if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area))
-                            categories.Add(new Category {Area = area, Name = category, ForecastType = forecastType});
+                            categories.Add(new Category(area,category,forecastType));
                     }
                 }
             }

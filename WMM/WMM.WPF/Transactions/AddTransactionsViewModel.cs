@@ -12,22 +12,22 @@ namespace WMM.WPF.Transactions
     public class AddTransactionsViewModel : TransactionListViewModelBase
     {
         private DateTime _newTransactionDate;
-        private string _newTransactionCategory;
+        private Category _newTransactionCategory;
         private double _newTransactionAmount;
         private AsyncRelayCommand _addTransactionCommand;
-        private ObservableCollection<string> _categories;
+        private ObservableCollection<Category> _categories;
         private string _selectedSign;
         private string _newTransactionComment;
 
         public AddTransactionsViewModel(IRepository repository, IWindowService windowService)
             :base(repository,windowService, true)
         {
-            Categories = new ObservableCollection<string>();
+            Categories = new ObservableCollection<Category>();
         }
 
         public Task Initialize()
         {
-            Categories = new ObservableCollection<string>( Repository.GetCategoryNames().OrderBy(x => x));
+            Categories = new ObservableCollection<Category>( Repository.GetCategories().OrderBy(x => x.Name));
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
             NewTransactionAmount = 0.0; 
@@ -44,7 +44,7 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _newTransactionDate, value);
         }
 
-        public string NewTransactionCategory
+        public Category NewTransactionCategory
         {
             get => _newTransactionCategory;
             set => SetValue(ref _newTransactionCategory, value);
@@ -62,7 +62,7 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _newTransactionComment, value);
         }
 
-        public ObservableCollection<string> Categories
+        public ObservableCollection<Category> Categories
         {
             get => _categories;
             private set => SetValue(ref _categories, value);
