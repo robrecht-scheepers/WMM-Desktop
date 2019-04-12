@@ -6,26 +6,32 @@
         xmlns:local="clr-namespace:WMM.WPF.Forecast"
         xmlns:converters="clr-namespace:WMM.WPF.Converters"
         mc:Ignorable="d"
-        Title="ForecastWindow" Height="600" Width="800"
+        Title="Vorhersage für den aktuellen Monat" Height="600" Width="800"
         d:DataContext="{d:DesignInstance local:ForecastViewModel}">
-    <Grid>
+    <Grid Background="{StaticResource SCB5}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="0" ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="{StaticResource SCB5}"/>
+                    <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Area}" />
-                <DataGridTextColumn Binding="{Binding Category}"/>
-                <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
+                <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" MinWidth="80" />
+                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" MinWidth="80" />
+                <DataGridTextColumn Header="Aktuell" Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-                <DataGridTextColumn Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
+                <DataGridTextColumn Header="Vorhersage" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-                <DataGridTextColumn Binding="{Binding Difference, StringFormat={StaticResource AmountFormat}}" 
+                <DataGridTextColumn Header="Unterschied" Binding="{Binding Difference, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Grid.Row="1" Text="{Binding CurrentTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" />
+        <TextBlock Grid.Row="1" Text="{Binding CurrentTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Left" Foreground="{StaticResource SCB1}" />
+        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" Foreground="{StaticResource SCB1}" />
     </Grid>
 </Window>
