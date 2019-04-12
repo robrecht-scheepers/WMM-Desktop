@@ -11,9 +11,11 @@ namespace WMM.WPF.Forecast
 {
     public class ForecastLine
     {
-        public string Name { get; set; }
+        public string Area { get; set; }
+        public string Category { get; set; }
         public double CurrentAmount { get; set; }
         public double ForecastAmount { get; set; }
+        public double Difference => ForecastAmount - CurrentAmount;
     }
 
     public class ForecastViewModel : ObservableObject
@@ -64,7 +66,7 @@ namespace WMM.WPF.Forecast
                     var forecast = ForecastCalculator.CalculateForecast(category, history, DateTime.Today);
                     if (Math.Abs(forecast.Item1) > 0.0 || Math.Abs(forecast.Item2) > 0.0)
                     {
-                        areaLines.Add(new ForecastLine{Name = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
+                        areaLines.Add(new ForecastLine{Area = area, Category = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
                     }
                 }
 
@@ -75,7 +77,7 @@ namespace WMM.WPF.Forecast
 
                     totalCurrentAmount += areaCurrentAmount;
                     totalForecastAmount += areaForecastAmount;
-                    ForecastLines.Add(new ForecastLine{Name = area, CurrentAmount = areaCurrentAmount, ForecastAmount = areaForecastAmount});
+                    ForecastLines.Add(new ForecastLine{Area = area, Category = "", CurrentAmount = areaCurrentAmount, ForecastAmount = areaForecastAmount});
                     foreach (var categoryLine in areaLines)
                     {
                         ForecastLines.Add(categoryLine);

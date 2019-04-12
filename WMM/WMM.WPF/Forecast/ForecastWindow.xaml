@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF.Forecast"
+        xmlns:converters="clr-namespace:WMM.WPF.Converters"
         mc:Ignorable="d"
         Title="ForecastWindow" Height="600" Width="800"
         d:DataContext="{d:DesignInstance local:ForecastViewModel}">
@@ -14,14 +15,17 @@
         </Grid.RowDefinitions>
         <DataGrid Grid.Row="0" ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}"/>
+                <DataGridTextColumn Binding="{Binding Area}" />
+                <DataGridTextColumn Binding="{Binding Category}"/>
                 <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
                 <DataGridTextColumn Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                <DataGridTextColumn Binding="{Binding Difference, StringFormat={StaticResource AmountFormat}}" 
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Grid.Row="1" Text="{Binding CurrentTotal}" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal}" HorizontalAlignment="Right" />
+        <TextBlock Grid.Row="1" Text="{Binding CurrentTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" />
     </Grid>
 </Window>
