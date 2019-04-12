@@ -8,22 +8,28 @@ namespace WMM.WPF.Forecast
 {
     public class ForecastCalculator
     {
-        public static double CalculateForecast(Category category, List<Transaction> history, DateTime date)
+        public static (double,double) CalculateForecast(Category category, List<Transaction> history, DateTime date)
         {
+            var actual = CalculateActualTotal(category, history, date);
+            double forecast;
             switch (category.ForecastType)
             {
                 case ForecastType.Exception:
-                    return CalculateActualTotal(category, history, date); // no forecast
+                    forecast = actual; // no forecast
+                    break;
                 case ForecastType.Monthly:
-                    var actual = CalculateActualTotal(category, history, date);
                     var mean = CalculateMonthlyMean(category, history, date);
-                    return Math.Abs(actual) > Math.Abs(mean)
+                    forecast =  Math.Abs(actual) > Math.Abs(mean)
                            ? actual : mean;
+                    break;
                 case ForecastType.Daily:
-                    return CalculateDailyForecast(category, history, date);
+                    forecast = CalculateDailyForecast(category, history, date);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            return (actual, forecast);
         }
 
         private static double CalculateActualTotal(Category category, List<Transaction> history, DateTime date)

@@ -12,7 +12,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="True" />
-        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal}" />
+        <DataGrid Grid.Row="0" ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}"/>
+                <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                <DataGridTextColumn Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="1" Text="{Binding CurrentTotal}" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal}" HorizontalAlignment="Right" />
     </Grid>
 </Window>
