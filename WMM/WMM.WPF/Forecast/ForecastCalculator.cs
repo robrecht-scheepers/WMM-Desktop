@@ -15,10 +15,10 @@ namespace WMM.WPF.Forecast
                 case ForecastType.Exception:
                     return CalculateActualTotal(category, history, date); // no forecast
                 case ForecastType.Monthly:
-                    return Math.Max(
-                        CalculateActualTotal(category, history, date),
-                        CalculateMonthlyMean(category, history, date)
-                        );
+                    var actual = CalculateActualTotal(category, history, date);
+                    var mean = CalculateMonthlyMean(category, history, date);
+                    return Math.Abs(actual) > Math.Abs(mean)
+                           ? actual : mean;
                 case ForecastType.Daily:
                     return CalculateDailyForecast(category, history, date);
                 default:

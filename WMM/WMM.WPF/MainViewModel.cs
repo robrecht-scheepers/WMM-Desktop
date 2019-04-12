@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Balances;
 using WMM.WPF.Categories;
+using WMM.WPF.Forecast;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
@@ -18,6 +19,7 @@ namespace WMM.WPF
         private readonly IWindowService _windowService;
         private AsyncRelayCommand _showRecurringTransactionsCommand;
         private RelayCommand _showManageCategoriesCommand;
+        private AsyncRelayCommand _showForecastCommand;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
         {
@@ -102,6 +104,16 @@ namespace WMM.WPF
             var manageCategoriesViewModel = new ManageCategoriesViewModel(_repository, _windowService);
             manageCategoriesViewModel.Initialize();
             _windowService.OpenDialogWindow(manageCategoriesViewModel);
+        }
+
+        public AsyncRelayCommand ShowForecastCommand =>
+            _showForecastCommand ?? (_showForecastCommand = new AsyncRelayCommand(ShowForecast));
+
+        private async Task ShowForecast()
+        {
+            var forecastViewModel = new ForecastViewModel(_repository);
+            await forecastViewModel.Initialize();
+            _windowService.OpenDialogWindow(forecastViewModel);
         }
     }
 }

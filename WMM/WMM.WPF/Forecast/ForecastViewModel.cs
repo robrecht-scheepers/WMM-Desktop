@@ -9,16 +9,17 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Forecast
 {
-    public struct ForecastLine
+    public class ForecastLine
     {
-        public string Name;
-        public double Amount;
+        public string Name { get; set; }
+        public double Amount { get; set; }
     }
 
     public class ForecastViewModel : ObservableObject
     {
         private readonly IRepository _repository;
         private ObservableCollection<ForecastLine> _forecastLines;
+        private double _forecastTotal;
 
         public ForecastViewModel(IRepository _repository)
         {
@@ -32,38 +33,45 @@ namespace WMM.WPF.Forecast
             set => SetValue(ref _forecastLines, value);
         }
 
+        public double ForecastTotal
+        {
+            get => _forecastTotal;
+            set => SetValue(ref _forecastTotal, value);
+        }
+
         public async Task Initialize()
         {
             var history = (await _repository.GetTransactions()).ToList();
             var categories = _repository.GetCategories();
 
-            var forecastLines = new ObservableCollection<ForecastLine>();
             double totalForecastAmount = 0.0;
 
             var areas = categories.Select(x => x.Area).Distinct().OrderBy(y => y);
             foreach (var area in areas)
             {
                 var areaLines = new List<ForecastLine>();
-                foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x))
+                foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
                     var forecastAmount = ForecastCalculator.CalculateForecast(category, history, DateTime.Today);
-                    if (forecastAmount > 0.0)
+                    if (Math.Abs(forecastAmount) > 0.0)
                     {
                         areaLines.Add(new ForecastLine{Name = category.Name, Amount = forecastAmount});
                     }
                 }
 
-                if (forecastLines.Any())
+                if (areaLines.Any())
                 {
                     var areaAmount = areaLines.Select(x => x.Amount).Sum();
                     totalForecastAmount += areaAmount;
-                    forecastLines.Add(new ForecastLine{Name = area, Amount = areaAmount});
+                    ForecastLines.Add(new ForecastLine{Name = area, Amount = areaAmount});
                     foreach (var categoryLine in areaLines)
                     {
-                        forecastLines.Add(categoryLine);
+                        ForecastLines.Add(categoryLine);
                     }
                 }
             }
+
+            ForecastTotal = totalForecastAmount;
         }
     }
 }

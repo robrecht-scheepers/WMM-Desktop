@@ -67,6 +67,9 @@
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
     <Compile Include="Forecast\ForecastViewModel.cs" />
+    <Compile Include="Forecast\ForecastWindow.xaml.cs">
+      <DependentUpon>ForecastWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Transactions\AddTransactionsView.xaml.cs">
       <DependentUpon>AddTransactionsView.xaml</DependentUpon>
@@ -104,6 +107,10 @@
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Transactions\TransactionListViewModelBase.cs" />
+    <Page Include="Forecast\ForecastWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Transactions\AddTransactionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -257,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ic_template.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_forecast.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

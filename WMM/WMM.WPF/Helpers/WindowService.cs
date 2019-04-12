@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using WMM.WPF.Categories;
+using WMM.WPF.Forecast;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
 using WMM.WPF.Transactions;
@@ -30,6 +31,11 @@ namespace WMM.WPF.Helpers
             else if (dataContext is ManageCategoriesViewModel)
             {
                 var window = new ManageCategoriesWindow{DataContext = dataContext, Owner = _ownerWindow };
+                window.Show();
+            }
+            else if (dataContext is ForecastViewModel)
+            {
+                var window = new ForecastWindow{DataContext = dataContext, Owner = _ownerWindow };
                 window.Show();
             }
         }
