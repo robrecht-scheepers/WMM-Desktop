@@ -44,10 +44,7 @@
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
             <ComboBox Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" >
-                <TextBox.InputBindings>
-                    <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
-                </TextBox.InputBindings>
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" >
                 <i:Interaction.Behaviors>
                     <controls:SelectAllOnFocusBehavior />
                 </i:Interaction.Behaviors>
