@@ -23,27 +23,31 @@ namespace WMM.WPF.Recurring
         private string _newComments;
 
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month) 
-            : base(repository, windowService, false)
+            : this(repository, windowService)
         {
-            ManageTemplates = false;
             _month = month;
-            Categories = new ObservableCollection<Category>();
         }
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService)
             : base(repository, windowService, false)
         {
             ManageTemplates = true;
+            Repository.CategoriesUpdated += (s, a) => InitalizeCategories();
             Categories = new ObservableCollection<Category>();
         }
 
         public async Task Initialize()
         {
-            Categories = new ObservableCollection<Category>(Repository.GetCategories().OrderBy(x => x.Name));
+            InitalizeCategories();
             NewCategory = Categories.FirstOrDefault();
             NewAmount = 0.0;
             SelectedSign = "-";
 
             await GetItems();
+        }
+
+        private void InitalizeCategories()
+        {
+            Categories = new ObservableCollection<Category>(Repository.GetCategories().OrderBy(x => x.Name));
         }
 
         public string Title => ManageTemplates
