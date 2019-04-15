@@ -23,11 +23,12 @@ namespace WMM.WPF.Transactions
             :base(repository,windowService, true)
         {
             Categories = new ObservableCollection<Category>();
+            Repository.CategoriesUpdated += (s, a) => InitCategories();
         }
 
         public Task Initialize()
         {
-            Categories = new ObservableCollection<Category>( Repository.GetCategories().OrderBy(x => x.Name));
+            InitCategories();
             NewTransactionCategory = Categories.FirstOrDefault();
             NewTransactionDate = DateTime.Today;
             NewTransactionAmount = 0.0; 
@@ -36,6 +37,11 @@ namespace WMM.WPF.Transactions
             // currently this method runs synchronously as categories are loaded synchronously,
             // but I don't want to mix up the async initialize pattern
             return Task.CompletedTask; 
+        }
+
+        private void InitCategories()
+        {
+            Categories = new ObservableCollection<Category>(Repository.GetCategories().OrderBy(x => x.Name));
         }
 
         public DateTime NewTransactionDate

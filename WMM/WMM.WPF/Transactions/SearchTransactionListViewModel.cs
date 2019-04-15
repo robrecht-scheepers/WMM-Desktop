@@ -40,7 +40,7 @@ namespace WMM.WPF.Transactions
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
-            
+            Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
         }
 
         public void Initialize()

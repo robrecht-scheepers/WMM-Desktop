@@ -688,6 +688,7 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
+            OnCategoresUpdated();
         }
 
         public async Task AddCategory(string area, string category, ForecastType forecastType)
@@ -709,6 +710,7 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
+            OnCategoresUpdated();
         }
 
         public async Task EditCategory(string oldCategory, string newArea, string newCategory,
@@ -732,6 +734,14 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
+            OnCategoresUpdated();
+        }
+
+        public event EventHandler CategoriesUpdated;
+
+        private void OnCategoresUpdated()
+        {
+            CategoriesUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public string GetAreaForCategory(string category)
