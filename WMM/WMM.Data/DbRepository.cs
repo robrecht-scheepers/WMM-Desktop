@@ -30,9 +30,13 @@ namespace WMM.Data
         private List<Category> _categories;
         private List<string> _areas;
 
-        public DbRepository(string dbFolder)
+        public DbRepository(string dbFolderInput)
         {
             _account = Environment.MachineName;
+
+            string dbFolder = dbFolderInput == "."
+                ? Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "db")
+                : dbFolderInput;
 
             if (!Directory.Exists(dbFolder))
                 Directory.CreateDirectory(dbFolder);
