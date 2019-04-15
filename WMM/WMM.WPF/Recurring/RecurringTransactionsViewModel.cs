@@ -31,8 +31,8 @@ namespace WMM.WPF.Recurring
             : base(repository, windowService, false)
         {
             ManageTemplates = true;
-            Repository.CategoriesUpdated += (s, a) => InitalizeCategories();
             Categories = new ObservableCollection<Category>();
+            Repository.CategoriesUpdated += (s, a) => InitalizeCategories();
         }
 
         public async Task Initialize()
