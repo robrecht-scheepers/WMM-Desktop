@@ -12,6 +12,13 @@ namespace WMM.Data.Helpers
                 : reader.GetString(colIndex);
         }
 
+        public static int GetInt32NullSafe(this DbDataReader reader, int colIndex)
+        {
+            return reader.IsDBNull(colIndex)
+                ? -1
+                : reader.GetInt32(colIndex);
+        }
+
         public static DateTime GetDateTimeNullSafe(this DbDataReader reader, int colIndex)
         {
             return reader.IsDBNull(colIndex)

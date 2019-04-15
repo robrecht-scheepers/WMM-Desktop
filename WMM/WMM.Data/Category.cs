@@ -34,7 +34,7 @@ namespace WMM.Data
 
         public static bool operator ==(Category c1, Category c2)
         {
-            return c1 != null && c2 != null && c1.Equals(c2);
+            return c1.Equals(c2);
         }
 
         public static bool operator !=(Category c1, Category oc2)

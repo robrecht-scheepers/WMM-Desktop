@@ -96,7 +96,7 @@ namespace WMM.WPF.Recurring
             var transactions = (ManageTemplates
                     ? await Repository.GetRecurringTemplates()
                     : await Repository.GetRecurringTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth())
-                ).OrderBy(t => t.Category);
+                ).OrderBy(t => t.Category.Name);
 
             Transactions.Clear();
             foreach (var t in transactions)

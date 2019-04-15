@@ -24,18 +24,11 @@ namespace WMM.Data
         #region constructor and initialization
         private static readonly Dictionary<string, List<string>> InitialCategories = new Dictionary<string, List<string>>
         {
-            {"Haushalt", new List<string>{"Supermarkt", "Drogerie", "Essen unterwegs"}},
-            {"Auto", new List<string>{"Werkstatt", "Tanken", "Parking", "PKW steuer", "PKW versicherung"}},
-            {"Kinder", new List<string>{"Kinderkleidung", "Spielzeug", "Pflege", "Kindergeld", "Kita"}},
-            {"Medisch", new List<string>{"Arzt", "Apotheke", "Barmenia premie", "Barmenia rückzahlung"}},
-            {"Freizeit", new List<string>{"Urlaub", "Restaurant & Cafe", "Party", "Bücher & Media"}},
-            {"Haus", new List<string>{"Abzahlung" ,"Nebenkosten", "Baumarkt", "Ausstattung"}},
-            {"Gehalt", new List<string>{"Gehalt", "Elterngeld"}},
-            {"Versicherung", new List<string>{"Versicherung"}},
-            {"Sonstiges", new List<string>{"Sonstiges"}},
+            {"Divers", new List<string>{"Divers"}},
         };
 
         private List<Category> _categories;
+        private List<string> _areas;
 
         public DbRepository(string dbFolder)
         {
@@ -634,7 +627,7 @@ namespace WMM.Data
 
         public IEnumerable<string> GetAreas()
         {
-            return _categories?.Select(x => x.Area).Distinct().OrderBy(x => x);
+            return _areas.Distinct().OrderBy(x => x);
         }
 
         public List<Category> GetCategories()
@@ -645,6 +638,8 @@ namespace WMM.Data
         private async Task LoadAreasAndCategories()
         {
             var categories = new List<Category>();
+            var areas = new List<string>();
+
             const string commandText =
                 "SELECT a.Name AS Area, c.Name AS Category, c.ForecastType as ForecastType FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
             var command = new SQLiteCommand() { CommandText = commandText };
@@ -660,14 +655,20 @@ namespace WMM.Data
                     {
                         var area = reader.GetString(0);
                         var category = reader.GetStringNullSafe(1);
-                        var forecastType = (ForecastType)reader.GetInt32(2);
+                        var forecastType = (ForecastType)reader.GetInt32NullSafe(2);
 
-                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area))
+                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && forecastType >= 0)
                             categories.Add(new Category(area,category,forecastType));
+
+                        if (!string.IsNullOrEmpty(area))
+                        {
+                            areas.Add(area);
+                        }
                     }
                 }
             }
 
+            _areas = areas;
             _categories = categories;
         }
 
@@ -741,7 +742,7 @@ namespace WMM.Data
         private void SeedCategories(Dictionary<string, List<string>> categories)
         {
             const string insertAreaCommand = "INSERT INTO Areas(Id,Name) VALUES(@area{0}Id,'{1}'); ";
-            const string insertCategoryCommand = "INSERT INTO Categories(Id,Name,Area) VALUES(@category{0}Id,'{1}',(SELECT Id FROM Areas WHERE Name = '{2}')); ";
+            const string insertCategoryCommand = "INSERT INTO Categories(Id,Name,Area,ForecastType) VALUES(@category{0}Id,'{1}',(SELECT Id FROM Areas WHERE Name = '{2}'),1); ";
 
             StringBuilder commandText = new StringBuilder();
             using (var dbConnection = new SQLiteConnection(_dbConnectionString))

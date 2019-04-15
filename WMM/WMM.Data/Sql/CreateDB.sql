@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `Categories` (
 	`Id`	BLOB NOT NULL,
 	`Area`	BLOB NOT NULL,
 	`Name`	TEXT NOT NULL UNIQUE,
+	`ForecastType`	INTEGER,
 	FOREIGN KEY(`Area`) REFERENCES `Areas`(`Id`),
 	PRIMARY KEY(`Id`)
 );

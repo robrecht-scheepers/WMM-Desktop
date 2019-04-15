@@ -34,7 +34,7 @@ namespace WMM.WPF.Categories
         public void Initialize()
         {
             var categories = _repository.GetCategories();
-            Areas = new ObservableCollection<string>(categories.Select(x => x.Area).Distinct().OrderBy(x => x));
+            Areas = new ObservableCollection<string>(_repository.GetAreas().OrderBy(x => x));
             
             foreach (var area in Areas)
             {
