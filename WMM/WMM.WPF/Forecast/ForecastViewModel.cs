@@ -21,26 +21,41 @@ namespace WMM.WPF.Forecast
     public class ForecastViewModel : ObservableObject
     {
         private readonly IRepository _repository;
-        private ObservableCollection<ForecastLine> _forecastLines;
-        private double _forecastTotal;
+        private ObservableCollection<ForecastLine> _currentMonthForecastLines;
+        private double _currentMonthForecastTotal;
         private double _currentTotal;
+        private double _genericForecastTotal;
+        private ObservableCollection<ForecastLine> _genericForecastLines;
 
         public ForecastViewModel(IRepository repository)
         {
             _repository = repository;
-            ForecastLines = new ObservableCollection<ForecastLine>();
+            CurrentMonthForecastLines = new ObservableCollection<ForecastLine>();
+            GenericForecastLines = new ObservableCollection<ForecastLine>();
         }
 
-        public ObservableCollection<ForecastLine> ForecastLines 
+        public ObservableCollection<ForecastLine> CurrentMonthForecastLines 
         {
-            get => _forecastLines;
-            set => SetValue(ref _forecastLines, value);
+            get => _currentMonthForecastLines;
+            set => SetValue(ref _currentMonthForecastLines, value);
         }
 
-        public double ForecastTotal
+        public ObservableCollection<ForecastLine> GenericForecastLines
         {
-            get => _forecastTotal;
-            set => SetValue(ref _forecastTotal, value);
+            get => _genericForecastLines;
+            set => SetValue(ref _genericForecastLines, value);
+        }
+
+        public double CurrentMonthForecastTotal
+        {
+            get => _currentMonthForecastTotal;
+            set => SetValue(ref _currentMonthForecastTotal, value);
+        }
+
+        public double GenericForecastTotal
+        {
+            get => _genericForecastTotal;
+            set => SetValue(ref _genericForecastTotal,value);
         }
 
         public double CurrentTotal
@@ -55,38 +70,60 @@ namespace WMM.WPF.Forecast
             var categories = _repository.GetCategories();
 
             double totalCurrentAmount = 0.0;
-            double totalForecastAmount = 0.0;
+            double totalCurrentForecastAmount = 0.0;
+
+            double totalGenericForecastAmount = 0.0;
 
             var areas = categories.Select(x => x.Area).Distinct().OrderBy(y => y);
             foreach (var area in areas)
             {
-                var areaLines = new List<ForecastLine>();
+                var areaLinesCurrentMonth = new List<ForecastLine>();
+                var areaLinesGeneric = new List<ForecastLine>();
+
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
-                    var forecast = ForecastCalculator.CalculateForecast(category, history, DateTime.Today);
+                    var forecast = ForecastCalculator.CalculateCurrentMonthForecast(category, history, DateTime.Today);
                     if (Math.Abs(forecast.Item1) > 0.0 || Math.Abs(forecast.Item2) > 0.0)
                     {
-                        areaLines.Add(new ForecastLine{Area = area, Category = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
+                        areaLinesCurrentMonth.Add(new ForecastLine{Area = area, Category = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
+                    }
+
+                    var genericForecast = ForecastCalculator.CalculateGenericMonthForecast(category, history);
+                    if (Math.Abs(genericForecast) > 0.0)
+                    {
+                        areaLinesGeneric.Add(new ForecastLine { Area = area, Category = category.Name, CurrentAmount = 0.0, ForecastAmount = genericForecast});
                     }
                 }
 
-                if (areaLines.Any())
+                if (areaLinesCurrentMonth.Any())
                 {
-                    var areaCurrentAmount = areaLines.Select(x => x.CurrentAmount).Sum();
-                    var areaForecastAmount = areaLines.Select(x => x.ForecastAmount).Sum();
+                    var areaCurrentAmount = areaLinesCurrentMonth.Select(x => x.CurrentAmount).Sum();
+                    var areaForecastAmount = areaLinesCurrentMonth.Select(x => x.ForecastAmount).Sum();
 
                     totalCurrentAmount += areaCurrentAmount;
-                    totalForecastAmount += areaForecastAmount;
-                    ForecastLines.Add(new ForecastLine{Area = area, Category = "", CurrentAmount = areaCurrentAmount, ForecastAmount = areaForecastAmount});
-                    foreach (var categoryLine in areaLines)
+                    totalCurrentForecastAmount += areaForecastAmount;
+                    CurrentMonthForecastLines.Add(new ForecastLine{Area = area, Category = "", CurrentAmount = areaCurrentAmount, ForecastAmount = areaForecastAmount});
+                    foreach (var categoryLine in areaLinesCurrentMonth)
                     {
-                        ForecastLines.Add(categoryLine);
+                        CurrentMonthForecastLines.Add(categoryLine);
+                    }
+                }
+
+                if (areaLinesGeneric.Any())
+                {
+                    var areaGenericAmount = areaLinesGeneric.Select(x => x.ForecastAmount).Sum();
+                    totalGenericForecastAmount += areaGenericAmount;
+                    GenericForecastLines.Add(new ForecastLine { Area = area, Category = "", CurrentAmount = 0.0, ForecastAmount = areaGenericAmount});
+                    foreach (var categoryLine in areaLinesGeneric)
+                    {
+                        GenericForecastLines.Add(categoryLine);
                     }
                 }
             }
 
             CurrentTotal = totalCurrentAmount;
-            ForecastTotal = totalForecastAmount;
+            CurrentMonthForecastTotal = totalCurrentForecastAmount;
+            GenericForecastTotal = totalGenericForecastAmount;
         }
     }
 }
