@@ -122,7 +122,8 @@ namespace WMM.WPF.Categories
             }
 
             Areas = new ObservableCollection<string>(_repository.GetAreas().OrderBy(x => x));
-            NewArea= "";
+            AreaForNewCategory = NewArea;
+            NewArea = "";
         }
     }
 }
