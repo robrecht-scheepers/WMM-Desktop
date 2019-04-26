@@ -23,7 +23,7 @@ namespace WMM.WPF.Recurring
         private string _newComments;
 
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month) 
-            : base(repository, windowService, true)
+            : base(repository, windowService, false)
         {
             _month = month;
             ManageTemplates = false;
