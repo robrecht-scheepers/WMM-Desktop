@@ -85,7 +85,7 @@ namespace WMM.WPF.Forecast
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
                     var forecast = ForecastCalculator.CalculateCurrentMonthForecast(category, history, DateTime.Today);
-                    if (Math.Abs(forecast.Item1) > 0.0 || Math.Abs(forecast.Item2) > 0.0)
+                    if (Math.Abs(forecast.Item1 - forecast.Item2) > 0.0)
                     {
                         areaLinesCurrentMonth.Add(new ForecastLine{Name = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
                     }
