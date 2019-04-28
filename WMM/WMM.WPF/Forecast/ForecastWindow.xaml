@@ -44,7 +44,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding AnyMonthForecastLines}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding GenericForecastLines}" AutoGenerateColumns="False" HeadersVisibility="Column">
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="{StaticResource SCB5}"/>
@@ -58,7 +58,7 @@
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <TextBlock Grid.Row="1" Text="{Binding AnyMonthForecastTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" Foreground="{StaticResource SCB1}" />
+                <TextBlock Grid.Row="1" Text="{Binding GenericForecastTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" Foreground="{StaticResource SCB1}" />
             </Grid>
         </TabItem>
     </TabControl>
