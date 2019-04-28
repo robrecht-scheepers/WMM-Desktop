@@ -8,7 +8,7 @@ namespace WMM.WPF.Forecast
 {
     public class ForecastCalculator
     {
-        public static (double,double) CalculateForecast(Category category, List<Transaction> history, DateTime date)
+        public static (double,double) CalculateCurrentMonthForecast(Category category, List<Transaction> history, DateTime date)
         {
             var actual = CalculateActualTotal(category, history, date);
             double forecast;
@@ -32,7 +32,7 @@ namespace WMM.WPF.Forecast
             return (actual, forecast);
         }
 
-        public static double CalculateForecast(Category category, List<Transaction> history)
+        public static double CalculateGenericMonthForecast(Category category, List<Transaction> history)
         {
             double forecast;
             switch (category.ForecastType)
