@@ -28,6 +28,7 @@
             <system:Double x:Key="SmallFontSize">10</system:Double>
             <system:String x:Key="AmountFormat">{0:+###,##0.00€;-###,##0.00€;0.00€}</system:String>
             <system:Double x:Key="GridRowHeight">32</system:Double>
+            
 
             <SolidColorBrush x:Key="SCB1" Color="{StaticResource C1}" />
             <SolidColorBrush x:Key="SCB2" Color="{StaticResource C2}" />
@@ -110,6 +111,7 @@
                 <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
             </Style>
             <DataGridLength x:Key="AmountColumnWidth">100</DataGridLength>
+            <system:Double x:Key="AmountWidth">100</system:Double>
 
 </ResourceDictionary>
     </Application.Resources>

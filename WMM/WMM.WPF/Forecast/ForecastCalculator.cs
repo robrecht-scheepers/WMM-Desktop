@@ -8,7 +8,7 @@ namespace WMM.WPF.Forecast
 {
     public class ForecastCalculator
     {
-        public static (double,double) CalculateForecast(Category category, List<Transaction> history, DateTime date)
+        public static (double,double) CalculateCurrentMonthForecast(Category category, List<Transaction> history, DateTime date)
         {
             var actual = CalculateActualTotal(category, history, date);
             double forecast;
@@ -30,6 +30,27 @@ namespace WMM.WPF.Forecast
             }
 
             return (actual, forecast);
+        }
+
+        public static double CalculateGenericMonthForecast(Category category, List<Transaction> history)
+        {
+            double forecast;
+            switch (category.ForecastType)
+            {
+                case ForecastType.Exception:
+                    forecast = 0.0; // no forecast
+                    break;
+                case ForecastType.Monthly:
+                    forecast = CalculateMonthlyMean(category, history, DateTime.Now);
+                    break;
+                case ForecastType.Daily:
+                    forecast = CalculateMonthlyMean(category, history, DateTime.Now);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return forecast;
         }
 
         private static double CalculateActualTotal(Category category, List<Transaction> history, DateTime date)
@@ -63,16 +84,18 @@ namespace WMM.WPF.Forecast
             var numberOfDays = Math.Ceiling((date - startDate).TotalDays);
             var total = history.Where(t => t.Date <= date && t.Category == category).Select(t => t.Amount).Sum();
             var dailyMean = total / numberOfDays;
-
+            
             // calculate current total
             var currentTotal = history.Where(t => t.Date >= date.FirstDayOfMonth() && t.Date <= date && t.Category == category)
                 .Select(x => x.Amount).Sum();
-            
+
             // extrapolate for remainder of month
             var daysRemaining = Math.Ceiling((date.LastDayOfMonth() - date).TotalDays);
 
             return currentTotal + daysRemaining * dailyMean;
         }
+
+        
 
     }
 }

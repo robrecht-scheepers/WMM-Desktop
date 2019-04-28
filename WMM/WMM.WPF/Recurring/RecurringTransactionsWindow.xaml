@@ -9,12 +9,12 @@
         xmlns:wpf="clr-namespace:WMM.WPF"
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="600"
+        Title="{Binding Title}" Height="600" Width="600"
         d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}"
         Name="RecurringWindow"
         WindowStyle="SingleBorderWindow"
         Background="{StaticResource SCB5}"
-        ResizeMode="NoResize">
+        ResizeMode="CanResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

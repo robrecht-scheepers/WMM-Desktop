@@ -8,7 +8,7 @@
         xmlns:balances="clr-namespace:WMM.WPF.Balances"
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
-        Title="Haushaltsbuch" 
+        Title="{Binding AppTitle}" 
         WindowState="Maximized"
         Background="{StaticResource SCB1}"
         d:DataContext="{d:DesignInstance local:MainViewModel}">

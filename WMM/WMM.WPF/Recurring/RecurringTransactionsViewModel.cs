@@ -23,9 +23,13 @@ namespace WMM.WPF.Recurring
         private string _newComments;
 
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService, DateTime month) 
-            : this(repository, windowService)
+            : base(repository, windowService, false)
         {
             _month = month;
+            ManageTemplates = false;
+
+            Categories = new ObservableCollection<Category>();
+            Repository.CategoriesUpdated += (s, a) => InitalizeCategories();
         }
         public RecurringTransactionsViewModel(IRepository repository, IWindowService windowService)
             : base(repository, windowService, false)

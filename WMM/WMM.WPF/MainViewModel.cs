@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows;
 using WMM.Data;
 using WMM.WPF.Balances;
 using WMM.WPF.Categories;
@@ -69,6 +71,8 @@ namespace WMM.WPF
             }
             
         }
+
+        public string AppTitle => $"Haushaltsbuch - {Assembly.GetExecutingAssembly().GetName().Version}";
         
         public ObservableCollection<MonthBalanceViewModel> MonthBalanceViewModels { get; }
 

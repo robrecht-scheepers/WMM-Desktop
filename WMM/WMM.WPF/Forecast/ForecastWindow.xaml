@@ -6,32 +6,115 @@
         xmlns:local="clr-namespace:WMM.WPF.Forecast"
         xmlns:converters="clr-namespace:WMM.WPF.Converters"
         mc:Ignorable="d"
-        Title="Vorhersage für den aktuellen Monat" Height="600" Width="800"
+        Title="Vorhersagen" Height="600" Width="600"
         d:DataContext="{d:DesignInstance local:ForecastViewModel}">
-    <Grid Background="{StaticResource SCB5}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False" HeadersVisibility="Column">
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="{StaticResource SCB5}"/>
-                    <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" MinWidth="80" />
-                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" MinWidth="80" />
-                <DataGridTextColumn Header="Aktuell" Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
+    <TabControl>
+        <TabItem Header="Aktueller Monat">
+            <Grid Background="{StaticResource SCB5}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DataGrid Grid.Row="0" ItemsSource="{Binding CurrentMonthForecastAreas}" AutoGenerateColumns="False" HeadersVisibility="Column"  IsReadOnly="True"
+                          SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="{StaticResource SCB5}"/>
+                            <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Bereich" Binding="{Binding Name}" MinWidth="80" />
+                        <DataGridTextColumn Header="Aktuell" Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-                <DataGridTextColumn Header="Vorhersage" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
+                        <DataGridTextColumn Header="Vorhersage" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-                <DataGridTextColumn Header="Unterschied" Binding="{Binding Difference, StringFormat={StaticResource AmountFormat}}" 
+                        <DataGridTextColumn Header="Unterschied" Binding="{Binding Difference, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <TextBlock Grid.Row="1" Text="{Binding CurrentTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Left" Foreground="{StaticResource SCB1}" />
-        <TextBlock Grid.Row="1" Text="{Binding ForecastTotal, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" Foreground="{StaticResource SCB1}" />
-    </Grid>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate DataType="local:ForecastLineGroup">
+                            <Grid Background="{StaticResource SCB5}" Margin="-5,0,0,0"
+                          Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" >
+                                <DataGrid ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0" ColumnWidth="*" HorizontalAlignment="Stretch">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Bereich" Binding="{Binding Name}" MinWidth="80" />
+                                        <DataGridTextColumn Header="Aktuell" Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}" 
+                                                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                                        <DataGridTextColumn Header="Vorhersage" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
+                                                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                                        <DataGridTextColumn Header="Unterschied" Binding="{Binding Difference, StringFormat={StaticResource AmountFormat}}" 
+                                                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+
+                </DataGrid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentMonthActual, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                    <TextBlock Grid.Column="2" Text="{Binding CurrentMonthForecast, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                    <TextBlock Grid.Column="3" Text="{Binding CurrentMonthDiff, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                </Grid>
+                
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="Generell">
+            <Grid Background="{StaticResource SCB5}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DataGrid Grid.Row="0" ItemsSource="{Binding GenericForecastAreas}" AutoGenerateColumns="False" HeadersVisibility="Column"  IsReadOnly="True"
+                          SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="{StaticResource SCB5}"/>
+                            <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Bereich" Binding="{Binding Name}" MinWidth="80" />
+                        <DataGridTextColumn Header="Vorhersage" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate DataType="local:ForecastLineGroup">
+                            <Grid Background="{StaticResource SCB5}" Margin="-5,0,0,0"
+                          Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" >
+                                <DataGrid ItemsSource="{Binding ForecastLines}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0" ColumnWidth="*" HorizontalAlignment="Stretch">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Bereich" Binding="{Binding Name}" MinWidth="80" />
+                                        <DataGridTextColumn Header="Vorhersage" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountFormat}}" 
+                                                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+
+                </DataGrid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Text="{Binding GenericForecast, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+    
 </Window>
