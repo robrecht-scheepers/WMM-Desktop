@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF.Categories"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
+        xmlns:res="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ManageCategoriesViewModel}"
         Title="Kategorien Verwalten" Height="450" Width="800">
@@ -28,12 +29,12 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Bereich hinzufügen" Foreground="White" />
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static res:Captions.NewArea}" Foreground="White" />
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewArea, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding AddNewAreaCommand}" ImageSource="/Resources/ic_add.png"/>
 
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Kategorie hinzufügen" Foreground="White" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static res:Captions.NewCategory}" Foreground="White" />
             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Areas}" SelectedItem="{Binding AreaForNewCategory, Mode=TwoWay}"/>
             <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding NewCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <ComboBox Grid.Row="1" Grid.Column="3" ItemsSource="{Binding ForecastTypes}" SelectedItem="{Binding NewForecastType, Mode=TwoWay}"/>
