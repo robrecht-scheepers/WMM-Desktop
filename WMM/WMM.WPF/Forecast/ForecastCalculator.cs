@@ -10,6 +10,9 @@ namespace WMM.WPF.Forecast
     {
         public static (double,double) CalculateCurrentMonthForecast(Category category, List<Transaction> history, DateTime date)
         {
+            if (!history.Any(x => x.Category == category))
+                return (0.0, 0.0);
+
             var actual = CalculateActualTotal(category, history, date);
             double forecast;
             switch (category.ForecastType)
@@ -34,6 +37,9 @@ namespace WMM.WPF.Forecast
 
         public static double CalculateGenericMonthForecast(Category category, List<Transaction> history)
         {
+            if (!history.Any(x => x.Category == category))
+                return 0.0;
+
             double forecast;
             switch (category.ForecastType)
             {
