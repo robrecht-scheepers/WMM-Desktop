@@ -61,6 +61,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string Add {
+            get {
+                return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home economics.
         /// </summary>
         public static string AppTitle {
@@ -102,6 +111,51 @@ namespace WMM.WPF.Resources {
         public static string NewCategory {
             get {
                 return ResourceManager.GetString("NewCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overview.
+        /// </summary>
+        public static string Overview {
+            get {
+                return ResourceManager.GetString("Overview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage categories.
+        /// </summary>
+        public static string TooltipCategories {
+            get {
+                return ResourceManager.GetString("TooltipCategories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forecast.
+        /// </summary>
+        public static string TooltipForecast {
+            get {
+                return ResourceManager.GetString("TooltipForecast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage recurring cost templates.
+        /// </summary>
+        public static string TooltipRecurring {
+            get {
+                return ResourceManager.GetString("TooltipRecurring", resourceCulture);
             }
         }
     }
