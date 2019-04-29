@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="ApplyTemplates" xml:space="preserve">
+    <value>Apply templates</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Home economics</value>
   </data>
@@ -128,6 +131,24 @@
   </data>
   <data name="Category" xml:space="preserve">
     <value>Category</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="CurrentMonth" xml:space="preserve">
+    <value>Current month</value>
+  </data>
+  <data name="Difference" xml:space="preserve">
+    <value>Difference</value>
+  </data>
+  <data name="Forecast" xml:space="preserve">
+    <value>Forecast</value>
+  </data>
+  <data name="Forecasts" xml:space="preserve">
+    <value>Forecasts</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
   </data>
   <data name="NewArea" xml:space="preserve">
     <value>New area</value>
@@ -144,10 +165,10 @@
   <data name="TooltipCategories" xml:space="preserve">
     <value>Manage categories</value>
   </data>
-  <data name="TooltipForecast" xml:space="preserve">
-    <value>Forecast</value>
-  </data>
   <data name="TooltipRecurring" xml:space="preserve">
     <value>Manage recurring cost templates</value>
+  </data>
+  <data name="TooltipRecurringMonth" xml:space="preserve">
+    <value>Manage monthly transactions for this month</value>
   </data>
 </root>

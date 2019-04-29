@@ -16,6 +16,7 @@ namespace WMM.WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             var vCulture = new CultureInfo("nl-BE");
+            //var vCulture = new CultureInfo("de-DE");
 
             Thread.CurrentThread.CurrentCulture = vCulture;
             Thread.CurrentThread.CurrentUICulture = vCulture;

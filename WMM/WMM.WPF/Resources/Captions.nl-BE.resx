@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Toevoegen</value>
   </data>
+  <data name="ApplyTemplates" xml:space="preserve">
+    <value>Ontwerp uitvoeren</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Huishoudsboek</value>
   </data>
@@ -128,6 +131,24 @@
   </data>
   <data name="Category" xml:space="preserve">
     <value>Categorie</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Huidig</value>
+  </data>
+  <data name="CurrentMonth" xml:space="preserve">
+    <value>Huidige maand</value>
+  </data>
+  <data name="Difference" xml:space="preserve">
+    <value>Verschil</value>
+  </data>
+  <data name="Forecast" xml:space="preserve">
+    <value>Voorspelling</value>
+  </data>
+  <data name="Forecasts" xml:space="preserve">
+    <value>Voorspellingen</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Algemeen</value>
   </data>
   <data name="NewArea" xml:space="preserve">
     <value>Nieuwe rubriek</value>
@@ -144,10 +165,10 @@
   <data name="TooltipCategories" xml:space="preserve">
     <value>Categorieën beheren</value>
   </data>
-  <data name="TooltipForecast" xml:space="preserve">
-    <value>Voorspellingen</value>
-  </data>
   <data name="TooltipRecurring" xml:space="preserve">
     <value>Voorbeelden voor maandelijkse kosten beheren</value>
+  </data>
+  <data name="TooltipRecurringMonth" xml:space="preserve">
+    <value>Maandelijkst kosten voor deze maand beheren</value>
   </data>
 </root>

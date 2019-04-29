@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="ApplyTemplates" xml:space="preserve">
+    <value>Vorlagen anwenden</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Haushaltsbuch</value>
   </data>
@@ -129,6 +132,24 @@
   <data name="Category" xml:space="preserve">
     <value>Kategorie</value>
   </data>
+  <data name="Current" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
+  <data name="CurrentMonth" xml:space="preserve">
+    <value>Aktueller Monat</value>
+  </data>
+  <data name="Difference" xml:space="preserve">
+    <value>Unterschied</value>
+  </data>
+  <data name="Forecast" xml:space="preserve">
+    <value>Vorhersage</value>
+  </data>
+  <data name="Forecasts" xml:space="preserve">
+    <value>Vorhersagen</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Generell</value>
+  </data>
   <data name="NewArea" xml:space="preserve">
     <value>Bereich hinzufügen</value>
   </data>
@@ -136,7 +157,7 @@
     <value>Kategorie hinzufügen</value>
   </data>
   <data name="Overview" xml:space="preserve">
-    <value>Übericht</value>
+    <value>Übersicht</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Suchen</value>
@@ -144,10 +165,10 @@
   <data name="TooltipCategories" xml:space="preserve">
     <value>Kategorien verwalten</value>
   </data>
-  <data name="TooltipForecast" xml:space="preserve">
-    <value>Vorhersagen</value>
-  </data>
   <data name="TooltipRecurring" xml:space="preserve">
     <value>Vorlagen für monatliche Kosten verwalten</value>
+  </data>
+  <data name="TooltipRecurringMonth" xml:space="preserve">
+    <value>Monatliche Kosten für diesen Monat verwalten</value>
   </data>
 </root>

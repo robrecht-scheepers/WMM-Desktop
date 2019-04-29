@@ -70,6 +70,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply templates.
+        /// </summary>
+        public static string ApplyTemplates {
+            get {
+                return ResourceManager.GetString("ApplyTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home economics.
         /// </summary>
         public static string AppTitle {
@@ -93,6 +102,60 @@ namespace WMM.WPF.Resources {
         public static string Category {
             get {
                 return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string Current {
+            get {
+                return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current month.
+        /// </summary>
+        public static string CurrentMonth {
+            get {
+                return ResourceManager.GetString("CurrentMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Difference.
+        /// </summary>
+        public static string Difference {
+            get {
+                return ResourceManager.GetString("Difference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forecast.
+        /// </summary>
+        public static string Forecast {
+            get {
+                return ResourceManager.GetString("Forecast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forecasts.
+        /// </summary>
+        public static string Forecasts {
+            get {
+                return ResourceManager.GetString("Forecasts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string General {
+            get {
+                return ResourceManager.GetString("General", resourceCulture);
             }
         }
         
@@ -142,20 +205,20 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Forecast.
-        /// </summary>
-        public static string TooltipForecast {
-            get {
-                return ResourceManager.GetString("TooltipForecast", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Manage recurring cost templates.
         /// </summary>
         public static string TooltipRecurring {
             get {
                 return ResourceManager.GetString("TooltipRecurring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage monthly transactions for this month.
+        /// </summary>
+        public static string TooltipRecurringMonth {
+            get {
+                return ResourceManager.GetString("TooltipRecurringMonth", resourceCulture);
             }
         }
     }
