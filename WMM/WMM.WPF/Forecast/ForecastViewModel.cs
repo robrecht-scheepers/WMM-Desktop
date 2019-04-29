@@ -72,8 +72,7 @@ namespace WMM.WPF.Forecast
 
             double currentMonthActual = 0.0;
             double currentMonthForecast = 0.0;
-            double currentMonthDiff = 0.0;
-
+            
             double genericForecastTotal = 0.0;
 
             var areas = categories.Select(x => x.Area).Distinct().OrderBy(y => y);
@@ -85,12 +84,16 @@ namespace WMM.WPF.Forecast
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
                     var forecast = ForecastCalculator.CalculateCurrentMonthForecast(category, history, DateTime.Today);
+
+                    currentMonthActual += forecast.Item1;
+                    currentMonthForecast += forecast.Item2;
                     if (Math.Abs(forecast.Item1 - forecast.Item2) > 0.0)
                     {
                         areaLinesCurrentMonth.Add(new ForecastLine{Name = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
                     }
 
                     var genericForecast = ForecastCalculator.CalculateGenericMonthForecast(category, history);
+                    genericForecastTotal += genericForecast;
                     if (Math.Abs(genericForecast) > 0.0)
                     {
                         areaLinesGeneric.Add(new ForecastLine { Name = category.Name, CurrentAmount = 0.0, ForecastAmount = genericForecast});
@@ -112,9 +115,6 @@ namespace WMM.WPF.Forecast
                     }
 
                     CurrentMonthForecastAreas.Add(areaForecast);
-                    currentMonthActual += areaForecast.CurrentAmount;
-                    currentMonthForecast += areaForecast.ForecastAmount;
-                    currentMonthDiff += areaForecast.Difference;
                 }
 
                 if (areaLinesGeneric.Any())
@@ -131,13 +131,12 @@ namespace WMM.WPF.Forecast
                     }
 
                     GenericForecastAreas.Add(areaForecast);
-                    genericForecastTotal += areaForecast.ForecastAmount;
                 }
             }
 
             CurrentMonthActual = currentMonthActual;
             CurrentMonthForecast = currentMonthForecast;
-            CurrentMonthDiff = currentMonthDiff;
+            CurrentMonthDiff = CurrentMonthForecast - CurrentMonthActual;
 
             GenericForecast = genericForecastTotal;
         }
