@@ -141,6 +141,9 @@
   <data name="Difference" xml:space="preserve">
     <value>Verschil</value>
   </data>
+  <data name="EditTransaction" xml:space="preserve">
+    <value>Aanpassen</value>
+  </data>
   <data name="Forecast" xml:space="preserve">
     <value>Voorspelling</value>
   </data>

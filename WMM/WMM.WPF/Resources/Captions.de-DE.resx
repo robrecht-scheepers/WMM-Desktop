@@ -141,6 +141,9 @@
   <data name="Difference" xml:space="preserve">
     <value>Unterschied</value>
   </data>
+  <data name="EditTransaction" xml:space="preserve">
+    <value>Eingabe ändern</value>
+  </data>
   <data name="Forecast" xml:space="preserve">
     <value>Vorhersage</value>
   </data>

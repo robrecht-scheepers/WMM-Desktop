@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
         Title="EditTransactionWindow"
         SizeToContent="WidthAndHeight"
@@ -22,7 +23,7 @@
 
 
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="{StaticResource SCB1}">
-            <TextBlock Text="Eingabe ändern" Style="{StaticResource TitleStyle}" />
+            <TextBlock Text="{x:Static resources:Captions.EditTransaction}" Style="{StaticResource TitleStyle}" />
         </Border>
 
         <Grid Grid.Row="1">

@@ -133,6 +133,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit entry.
+        /// </summary>
+        public static string EditTransaction {
+            get {
+                return ResourceManager.GetString("EditTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Forecast.
         /// </summary>
         public static string Forecast {
