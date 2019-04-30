@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 using WMM.WPF.Transactions;
 
 namespace WMM.WPF.Recurring
@@ -55,8 +56,8 @@ namespace WMM.WPF.Recurring
         }
 
         public string Title => ManageTemplates
-            ? "Vorlagen für monatliche Kosten und Einkunften verwalten"
-            : $"Monatliche Kosten und Einkunften für {_month:Y} verwalten";
+            ? Captions.RecurringTitle
+            : string.Format(Captions.TitleRecurringMonth, _month.ToString("Y"));
 
         public bool ManageTemplates { get; }
 

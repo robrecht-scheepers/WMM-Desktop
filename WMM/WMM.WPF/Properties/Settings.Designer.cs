@@ -34,13 +34,13 @@ namespace WMM.WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("en")]
-        public string AppCulture {
+        [global::System.Configuration.DefaultSettingValueAttribute("de-DE")]
+        public string Language {
             get {
-                return ((string)(this["AppCulture"]));
+                return ((string)(this["Language"]));
             }
             set {
-                this["AppCulture"] = value;
+                this["Language"] = value;
             }
         }
     }

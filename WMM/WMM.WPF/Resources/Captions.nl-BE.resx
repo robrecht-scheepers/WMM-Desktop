@@ -162,14 +162,17 @@
   <data name="Overview" xml:space="preserve">
     <value>Overzicht</value>
   </data>
+  <data name="RecurringTitle" xml:space="preserve">
+    <value>Voorbeelden voor maandelijkse kosten beheren</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Zoeken</value>
   </data>
+  <data name="TitleRecurringMonth" xml:space="preserve">
+    <value>Maandelijkse kosten voor {0} beheren</value>
+  </data>
   <data name="TooltipCategories" xml:space="preserve">
     <value>Categorieën beheren</value>
-  </data>
-  <data name="TooltipRecurring" xml:space="preserve">
-    <value>Voorbeelden voor maandelijkse kosten beheren</value>
   </data>
   <data name="TooltipRecurringMonth" xml:space="preserve">
     <value>Maandelijkst kosten voor deze maand beheren</value>

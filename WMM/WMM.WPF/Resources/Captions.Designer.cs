@@ -196,6 +196,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage recurring cost templates.
+        /// </summary>
+        public static string RecurringTitle {
+            get {
+                return ResourceManager.GetString("RecurringTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Search {
@@ -205,20 +214,20 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage monthly transactons for  {0} .
+        /// </summary>
+        public static string TitleRecurringMonth {
+            get {
+                return ResourceManager.GetString("TitleRecurringMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage categories.
         /// </summary>
         public static string TooltipCategories {
             get {
                 return ResourceManager.GetString("TooltipCategories", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Manage recurring cost templates.
-        /// </summary>
-        public static string TooltipRecurring {
-            get {
-                return ResourceManager.GetString("TooltipRecurring", resourceCulture);
             }
         }
         

@@ -162,14 +162,17 @@
   <data name="Overview" xml:space="preserve">
     <value>Overview</value>
   </data>
+  <data name="RecurringTitle" xml:space="preserve">
+    <value>Manage recurring cost templates</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="TitleRecurringMonth" xml:space="preserve">
+    <value>Manage monthly transactons for  {0} </value>
+  </data>
   <data name="TooltipCategories" xml:space="preserve">
     <value>Manage categories</value>
-  </data>
-  <data name="TooltipRecurring" xml:space="preserve">
-    <value>Manage recurring cost templates</value>
   </data>
   <data name="TooltipRecurringMonth" xml:space="preserve">
     <value>Manage monthly transactions for this month</value>
