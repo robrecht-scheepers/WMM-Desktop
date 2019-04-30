@@ -25,10 +25,22 @@ namespace WMM.WPF.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\TEMP\\WMM\\DB\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".")]
         public string DbDirectory {
             get {
                 return ((string)(this["DbDirectory"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("de-DE")]
+        public string Language {
+            get {
+                return ((string)(this["Language"]));
+            }
+            set {
+                this["Language"] = value;
             }
         }
     }

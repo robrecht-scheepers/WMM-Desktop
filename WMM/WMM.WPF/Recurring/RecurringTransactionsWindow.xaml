@@ -8,6 +8,7 @@
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:wpf="clr-namespace:WMM.WPF"
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
+        xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="600" Width="600"
         d:DataContext="{d:DesignInstance local:RecurringTransactionsViewModel}"
@@ -48,14 +49,12 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" DataContext="{Binding TotalRecurringBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="{StaticResource SCB1}"/>
             <TextBlock Grid.Column="1" DataContext="{Binding TotalRecurringBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="{StaticResource SCB1}"/>
             <TextBlock Grid.Column="2" DataContext="{Binding TotalRecurringBalance.Total}" Style="{StaticResource ColoredAmountStyle}" Background="{StaticResource SCB3}" />
-            <controls:TextButton Grid.Column="4" Command="{Binding ApplyTemplatesCommand}" Text="Vorlagen anwenden" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}"
+            <controls:TextButton Grid.Column="4" Command="{Binding ApplyTemplatesCommand}" Text="{x:Static resources:Captions.ApplyTemplates}" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}"
                                  Visibility="{Binding ManageTemplates, Converter={StaticResource CollapseWhenTrueConverter}}"/>
-            <controls:TextButton Grid.Column="5" x:Name="CloseButton" Click="CloseButton_OnClick" Text="Schließen" Height="30" Foreground="White" Margin="{StaticResource CommonMargin}" />
         </Grid>
         
     </Grid>
