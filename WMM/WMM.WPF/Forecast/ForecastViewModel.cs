@@ -20,6 +20,7 @@ namespace WMM.WPF.Forecast
         private double _genericForecast;
         private ObservableCollection<ForecastLine> _genericForecastAreas;
         private double _currentMonthDiff;
+        private RelayCommand _excelExportCommand;
 
         public ForecastViewModel(IRepository repository)
         {
@@ -64,7 +65,14 @@ namespace WMM.WPF.Forecast
             set => SetValue(ref _genericForecast,value);
         }
 
-        
+        public RelayCommand ExcelExportCommand => _excelExportCommand ?? (_excelExportCommand = new RelayCommand(ExcelExport));
+
+        private void ExcelExport()
+        {
+            // TODO: implement excel export
+        }
+
+
         public async Task Initialize()
         {
             var history = (await _repository.GetTransactions()).ToList();
