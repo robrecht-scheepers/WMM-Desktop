@@ -102,6 +102,7 @@ namespace WMM.WPF.Helpers
             table.ListColumns[3].Range.NumberFormat = "0.00";
             table.ListColumns[4].Range.NumberFormat = "0.00";
             table.ListColumns[5].Range.NumberFormat = "0.00";
+            table.ShowTotals = true;
 
 
             // second sheet: general forecast
@@ -130,6 +131,7 @@ namespace WMM.WPF.Helpers
             table = dataSheetGeneral.ListObjects.Add();
             table.Range.EntireColumn.AutoFit();
             table.ListColumns[3].Range.NumberFormat = "0.00";
+            table.ShowTotals = true;
 
             app.Visible = true;
         }
