@@ -56,6 +56,8 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _amount, value);
         }
 
+        private double SignedAmount => SelectedSign == "-" ? Amount * -1.0 : Amount;
+
         public string Comments
         {
             get => _comments;
@@ -75,15 +77,13 @@ namespace WMM.WPF.Transactions
         {
             return Category != _transaction.Category || Comments != _transaction.Comments ||
                    (Date > DateTime.MinValue && Date != _transaction.Date) ||
-                   Math.Abs(Amount - _transaction.Amount) >= 0.01;
+                   Math.Abs(SignedAmount- _transaction.Amount) >= 0.01;
         }
         private async Task SaveChanges()
         {
-            var amount = SelectedSign == "-" ? Amount * -1.0 : Amount;
-
             var newTransaction = _editDate
-                ? await _repository.UpdateTransaction(_transaction, Date, Category, amount, Comments)
-                : await _repository.UpdateTransaction(_transaction, Category, amount, Comments);
+                ? await _repository.UpdateTransaction(_transaction, Date, Category, SignedAmount, Comments)
+                : await _repository.UpdateTransaction(_transaction, Category, SignedAmount, Comments);
             RaiseTransactionUpdated(_transaction, newTransaction);
         }
 
