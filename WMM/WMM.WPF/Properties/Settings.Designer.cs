@@ -32,15 +32,12 @@ namespace WMM.WPF.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("de-DE")]
         public string Language {
             get {
                 return ((string)(this["Language"]));
-            }
-            set {
-                this["Language"] = value;
             }
         }
     }
