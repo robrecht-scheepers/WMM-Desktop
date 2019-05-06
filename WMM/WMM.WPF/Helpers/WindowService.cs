@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using WMM.WPF.Categories;
 using WMM.WPF.Forecast;
 using WMM.WPF.MVVM;
@@ -20,23 +21,43 @@ namespace WMM.WPF.Helpers
         {
             if (dataContext is RecurringTransactionsViewModel)
             {
-                var window = new Recurring.RecurringTransactionsWindow {DataContext = dataContext, Owner = _ownerWindow};
-                window.Show();
+                var window = new RecurringTransactionsWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
             }
             else if(dataContext is EditTransactionViewModel)
             {
-                var window = new EditTransactionWindow{DataContext = dataContext, Owner = _ownerWindow };
-                window.Show();
+                var window = new EditTransactionWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
             }
             else if (dataContext is ManageCategoriesViewModel)
             {
-                var window = new ManageCategoriesWindow{DataContext = dataContext, Owner = _ownerWindow };
-                window.Show();
+                var window = new ManageCategoriesWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
             }
             else if (dataContext is ForecastViewModel)
             {
-                var window = new ForecastWindow{DataContext = dataContext, Owner = _ownerWindow };
-                window.Show();
+                var window = new ForecastWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
             }
         }
 
