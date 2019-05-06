@@ -87,7 +87,7 @@ namespace WMM.WPF.Forecast
 
                     currentMonthActual += forecast.Item1;
                     currentMonthForecast += forecast.Item2;
-                    if (Math.Abs(forecast.Item1 - forecast.Item2) > 0.0)
+                    if (Math.Abs(forecast.Item1) > 0.0 || Math.Abs(forecast.Item2) > 0.0)
                     {
                         areaLinesCurrentMonth.Add(new ForecastLine{Name = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
                     }
