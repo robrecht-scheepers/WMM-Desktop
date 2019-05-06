@@ -4,6 +4,7 @@ using WMM.WPF.Categories;
 using WMM.WPF.Forecast;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
+using WMM.WPF.Resources;
 using WMM.WPF.Transactions;
 
 namespace WMM.WPF.Helpers
@@ -68,7 +69,7 @@ namespace WMM.WPF.Helpers
 
         public bool AskConfirmation(string message)
         {
-            var result = MessageBox.Show(message, "Bestätigung", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+            var result = MessageBox.Show(message, Captions.Warning, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
             return result == MessageBoxResult.Yes;
         }
     }

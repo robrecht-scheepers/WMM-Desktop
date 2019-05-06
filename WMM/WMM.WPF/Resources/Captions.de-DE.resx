@@ -177,4 +177,40 @@
   <data name="TooltipRecurringMonth" xml:space="preserve">
     <value>Monatliche Kosten für diesen Monat verwalten</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Betrag</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Kommentar</value>
+  </data>
+  <data name="ConfirmDeleteTransaction" xml:space="preserve">
+    <value>Möchten sie die ausgewählte Transaktion löschen? Diese Aktion kann nicht Rückgängig gemacht werden</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="ExcelError" xml:space="preserve">
+    <value>Es gab einen Fehler beim öffnen in Excel: {0}.</value>
+  </data>
+  <data name="ExcelNotInstalled" xml:space="preserve">
+    <value>Excel ist nicht installiert</value>
+  </data>
+  <data name="ExportForecastToExcel" xml:space="preserve">
+    <value>Vorhersage in Excel öffnen</value>
+  </data>
+  <data name="ExportSearchToExcel" xml:space="preserve">
+    <value>Suchergebnis in Excel öffnen</value>
+  </data>
+  <data name="Recurring" xml:space="preserve">
+    <value>Fix</value>
+  </data>
+  <data name="ResetAllFields" xml:space="preserve">
+    <value>Alles zurücksetzen</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Achtung</value>
+  </data>
 </root>

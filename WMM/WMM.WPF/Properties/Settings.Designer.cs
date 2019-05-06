@@ -34,7 +34,7 @@ namespace WMM.WPF.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("de-DE")]
+        [global::System.Configuration.DefaultSettingValueAttribute("nl-BE")]
         public string Language {
             get {
                 return ((string)(this["Language"]));

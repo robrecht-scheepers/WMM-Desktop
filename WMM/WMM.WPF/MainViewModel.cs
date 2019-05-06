@@ -115,7 +115,7 @@ namespace WMM.WPF
 
         private async Task ShowForecast()
         {
-            var forecastViewModel = new ForecastViewModel(_repository);
+            var forecastViewModel = new ForecastViewModel(_repository, _windowService);
             await forecastViewModel.Initialize();
             _windowService.OpenDialogWindow(forecastViewModel);
         }

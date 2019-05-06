@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:WMM.WPF.Transactions"
              xmlns:controls="clr-namespace:WMM.WPF.Controls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:resources="clr-namespace:WMM.WPF.Resources"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:SearchTransactionListViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -58,8 +59,8 @@
                 </i:Interaction.Behaviors>
             </TextBox>
 
-            <controls:ImageButton Grid.Row="2" Grid.Column="4" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="Suchen" />
-            <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="Alles zurücksetzen" />
+            <controls:ImageButton Grid.Row="2" Grid.Column="4" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="{x:Static resources:Captions.Search}" />
+            <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="{x:Static resources:Captions.ResetAllFields}" />
 
         </Grid>
 
@@ -74,7 +75,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <controls:ImageButton Grid.Column="0" Command="{Binding ExcelExportCommand}" ImageSource="/Resources/ic_excel.png" ToolTip="Suchergebnis in Excel öffnen" />
+            <controls:ImageButton Grid.Column="0" Command="{Binding ExcelExportCommand}" ImageSource="/Resources/ic_excel.png" ToolTip="{x:Static resources:Captions.ExportSearchToExcel}" />
             <TextBlock Grid.Column="2" DataContext="{Binding Balance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
             <TextBlock Grid.Column="3" DataContext="{Binding Balance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
             <TextBlock Grid.Column="4" DataContext="{Binding Balance.Total}" Style="{StaticResource ColoredAmountStyle}" 

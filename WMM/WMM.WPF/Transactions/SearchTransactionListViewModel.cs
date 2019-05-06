@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Transactions
 {
@@ -214,11 +215,11 @@ namespace WMM.WPF.Transactions
         {
             try
             {
-                ExcelHelper.OpenInExcel(Transactions, Repository);
+                ExcelHelper.OpenInExcel(Transactions);
             }
             catch (Exception e)
             {
-                WindowService.ShowMessage($"Es gab einen Fehler beim öffnen in Excel: {e.Message}.","Fehler");
+                WindowService.ShowMessage(string.Format(Captions.ExcelError, e.Message),Captions.Error);
             }
         }
 

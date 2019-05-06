@@ -70,6 +70,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        public static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apply templates.
         /// </summary>
         public static string ApplyTemplates {
@@ -106,6 +115,24 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        public static string Comment {
+            get {
+                return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this transaction? This action cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteTransaction {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string Current {
@@ -124,6 +151,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Difference.
         /// </summary>
         public static string Difference {
@@ -138,6 +174,51 @@ namespace WMM.WPF.Resources {
         public static string EditTransaction {
             get {
                 return ResourceManager.GetString("EditTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured while opening thedata in Excel: {0}..
+        /// </summary>
+        public static string ExcelError {
+            get {
+                return ResourceManager.GetString("ExcelError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excel is not installed on this machine.
+        /// </summary>
+        public static string ExcelNotInstalled {
+            get {
+                return ResourceManager.GetString("ExcelNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open forecast in Excel.
+        /// </summary>
+        public static string ExportForecastToExcel {
+            get {
+                return ResourceManager.GetString("ExportForecastToExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open search result in Excel.
+        /// </summary>
+        public static string ExportSearchToExcel {
+            get {
+                return ResourceManager.GetString("ExportSearchToExcel", resourceCulture);
             }
         }
         
@@ -196,11 +277,29 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recurring.
+        /// </summary>
+        public static string Recurring {
+            get {
+                return ResourceManager.GetString("Recurring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage recurring cost templates.
         /// </summary>
         public static string RecurringTitle {
             get {
                 return ResourceManager.GetString("RecurringTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset all fields.
+        /// </summary>
+        public static string ResetAllFields {
+            get {
+                return ResourceManager.GetString("ResetAllFields", resourceCulture);
             }
         }
         
@@ -237,6 +336,15 @@ namespace WMM.WPF.Resources {
         public static string TooltipRecurringMonth {
             get {
                 return ResourceManager.GetString("TooltipRecurringMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string Warning {
+            get {
+                return ResourceManager.GetString("Warning", resourceCulture);
             }
         }
     }

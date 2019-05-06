@@ -177,4 +177,40 @@
   <data name="TooltipRecurringMonth" xml:space="preserve">
     <value>Maandelijkst kosten voor deze maand beheren</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Bedrag</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Commentaar</value>
+  </data>
+  <data name="ConfirmDeleteTransaction" xml:space="preserve">
+    <value>Bent u zeker dat u dit element wilt verwijderen? Dit kan niet ongedaan gemaakt worden.</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fout</value>
+  </data>
+  <data name="ExcelError" xml:space="preserve">
+    <value>Bij het openen in Excel is een fout opgetreden: {0}.</value>
+  </data>
+  <data name="ExcelNotInstalled" xml:space="preserve">
+    <value>Excel is niet geinstalleerd op dit systeem</value>
+  </data>
+  <data name="ExportForecastToExcel" xml:space="preserve">
+    <value>Voorspellingen in Excel openen</value>
+  </data>
+  <data name="ExportSearchToExcel" xml:space="preserve">
+    <value>Zoekresultaat in Excel openen</value>
+  </data>
+  <data name="Recurring" xml:space="preserve">
+    <value>Vaste kost</value>
+  </data>
+  <data name="ResetAllFields" xml:space="preserve">
+    <value>All zoekvelden leegmaken</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Waarschuwing</value>
+  </data>
 </root>

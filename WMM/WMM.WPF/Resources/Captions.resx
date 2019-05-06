@@ -177,4 +177,40 @@
   <data name="TooltipRecurringMonth" xml:space="preserve">
     <value>Manage monthly transactions for this month</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="ConfirmDeleteTransaction" xml:space="preserve">
+    <value>Are you sure you want to delete this transaction? This action cannot be undone.</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ExcelError" xml:space="preserve">
+    <value>An error occured while opening thedata in Excel: {0}.</value>
+  </data>
+  <data name="ExcelNotInstalled" xml:space="preserve">
+    <value>Excel is not installed on this machine</value>
+  </data>
+  <data name="ExportForecastToExcel" xml:space="preserve">
+    <value>Open forecast in Excel</value>
+  </data>
+  <data name="ExportSearchToExcel" xml:space="preserve">
+    <value>Open search result in Excel</value>
+  </data>
+  <data name="Recurring" xml:space="preserve">
+    <value>Recurring</value>
+  </data>
+  <data name="ResetAllFields" xml:space="preserve">
+    <value>Reset all fields</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
 </root>

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Forecast
 {
     public class ForecastViewModel : ObservableObject
     {
         private readonly IRepository _repository;
+        private readonly IWindowService _windowService;
         private ObservableCollection<ForecastLineGroup> _currentMonthForecastAreas;
         private double _currentMonthForecast;
         private double _currentMonthActual;
@@ -20,9 +22,10 @@ namespace WMM.WPF.Forecast
         private double _currentMonthDiff;
         private RelayCommand _excelExportCommand;
 
-        public ForecastViewModel(IRepository repository)
+        public ForecastViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
+            _windowService = windowService;
             CurrentMonthForecastAreas = new ObservableCollection<ForecastLineGroup>();
             GenericForecastAreas = new ObservableCollection<ForecastLineGroup>();
         }
@@ -67,7 +70,15 @@ namespace WMM.WPF.Forecast
 
         private void ExcelExport()
         {
-            ExcelHelper.OpenInExcel(CurrentMonthForecastAreas, GenericForecastAreas);
+            try
+            {
+                ExcelHelper.OpenInExcel(CurrentMonthForecastAreas, GenericForecastAreas);
+
+            }
+            catch (Exception e)
+            {
+                _windowService.ShowMessage(string.Format(Captions.ExcelError, e.Message), Captions.Error);
+            }
         }
 
         public async Task Initialize()

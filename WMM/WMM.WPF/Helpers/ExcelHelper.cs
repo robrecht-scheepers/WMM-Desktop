@@ -1,25 +1,20 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Media;
-using Microsoft.Office.Interop;
-using Microsoft.Office.Interop.Excel;
 using WMM.Data;
 using WMM.WPF.Forecast;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Helpers
 {
     public static class ExcelHelper
     {
-        public static void OpenInExcel(IEnumerable<Transaction> transactions, IRepository repository)
+        public static void OpenInExcel(IEnumerable<Transaction> transactions)
         {
             // check if Excel is installed
             if(Type.GetTypeFromProgID("Excel.Application") == null)
-                throw new Exception("Excel ist nicht installiert");
+                throw new Exception(Captions.ExcelNotInstalled);
 
             var app = new Application();
             var workBook = app.Workbooks.Add();
@@ -27,8 +22,7 @@ namespace WMM.WPF.Helpers
             dataSheet.Name = "Data";
 
             // write the data
-            var categories = repository.GetCategories();
-            var data = new List<object[]>() { new object[] {"Datum", "Bereich", "Kategorie", "Betrag", "Kommentar", "Fix"} };
+            var data = new List<object[]> { new object[] {Captions.Date, Captions.Area, Captions.Category, Captions.Amount, Captions.Comment, Captions.Recurring} };
             foreach (var t in transactions)
             {
                 data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring});
@@ -69,7 +63,7 @@ namespace WMM.WPF.Helpers
         {
             // check if Excel is installed
             if (Type.GetTypeFromProgID("Excel.Application") == null)
-                throw new Exception("Excel ist nicht installiert");
+                throw new Exception(Captions.ExcelNotInstalled);
 
             var app = new Application();
             var workBook = app.Workbooks.Add();
@@ -77,10 +71,10 @@ namespace WMM.WPF.Helpers
             // first sheet: current month forecast
 
             Worksheet dataSheetCurrentMonth = workBook.Sheets[1];
-            dataSheetCurrentMonth.Name = "Aktueller Monat";
+            dataSheetCurrentMonth.Name = Captions.CurrentMonth;
 
             // write the data
-            var data = new List<object[]> { new object[] { "Area", "Category", "Actual", "Diff", "Forecast" } };
+            var data = new List<object[]> { new object[] { Captions.Area, Captions.Category, Captions.Current, Captions.Difference, Captions.Forecast } };
             foreach (var areaForecast in monthForecasts.OrderBy(x => x.Name))
             {
                 var area = areaForecast.Name;
@@ -108,10 +102,10 @@ namespace WMM.WPF.Helpers
             // second sheet: general forecast
 
             Worksheet dataSheetGeneral = workBook.Sheets[2];
-            dataSheetGeneral.Name = "Generell";
+            dataSheetGeneral.Name = Captions.General;
 
             // write the data
-            data = new List<object[]> { new object[] { "Area", "Category", "Forecast"} };
+            data = new List<object[]> { new object[] { Captions.Area, Captions.Category, Captions.Forecast } };
             foreach (var areaForecast in generalForecasts.OrderBy(x => x.Name))
             {
                 var area = areaForecast.Name;

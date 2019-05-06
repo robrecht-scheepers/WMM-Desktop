@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Transactions
 {
@@ -35,7 +36,7 @@ namespace WMM.WPF.Transactions
         public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
         private async Task DeleteTransaction(Transaction transaction)
         {
-            if(!WindowService.AskConfirmation("Möchten sie die ausgewählte Transaktion löschen? Diese Aktion kann nicht Rückgängig gemacht werden."))
+            if(!WindowService.AskConfirmation(Captions.ConfirmDeleteTransaction))
                 return;
 
             await Repository.DeleteTransaction(transaction);
