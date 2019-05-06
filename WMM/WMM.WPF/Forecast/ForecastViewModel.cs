@@ -2,40 +2,38 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Forecast
 {
-    
-
     public class ForecastViewModel : ObservableObject
     {
         private readonly IRepository _repository;
-        private ObservableCollection<ForecastLine> _currentMonthForecastAreas;
+        private ObservableCollection<ForecastLineGroup> _currentMonthForecastAreas;
         private double _currentMonthForecast;
         private double _currentMonthActual;
         private double _genericForecast;
-        private ObservableCollection<ForecastLine> _genericForecastAreas;
+        private ObservableCollection<ForecastLineGroup> _genericForecastAreas;
         private double _currentMonthDiff;
         private RelayCommand _excelExportCommand;
 
         public ForecastViewModel(IRepository repository)
         {
             _repository = repository;
-            CurrentMonthForecastAreas = new ObservableCollection<ForecastLine>();
-            GenericForecastAreas = new ObservableCollection<ForecastLine>();
+            CurrentMonthForecastAreas = new ObservableCollection<ForecastLineGroup>();
+            GenericForecastAreas = new ObservableCollection<ForecastLineGroup>();
         }
 
-        public ObservableCollection<ForecastLine> CurrentMonthForecastAreas 
+        public ObservableCollection<ForecastLineGroup> CurrentMonthForecastAreas 
         {
             get => _currentMonthForecastAreas;
             set => SetValue(ref _currentMonthForecastAreas, value);
         }
 
-        public ObservableCollection<ForecastLine> GenericForecastAreas
+        public ObservableCollection<ForecastLineGroup> GenericForecastAreas
         {
             get => _genericForecastAreas;
             set => SetValue(ref _genericForecastAreas, value);
@@ -69,9 +67,8 @@ namespace WMM.WPF.Forecast
 
         private void ExcelExport()
         {
-            // TODO: implement excel export
+            ExcelHelper.OpenInExcel(CurrentMonthForecastAreas, GenericForecastAreas);
         }
-
 
         public async Task Initialize()
         {
