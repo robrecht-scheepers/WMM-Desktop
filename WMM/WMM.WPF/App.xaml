@@ -81,6 +81,7 @@
                 <Setter Property="RowBackground" Value="{StaticResource SCB2}"/>
                 <Setter Property="AlternatingRowBackground" Value="{StaticResource SCB3}"/>
                 <Setter Property="HeadersVisibility" Value="None"/>
+                <Setter Property="Background" Value="{StaticResource SCB3}"/>
             </Style>
             <Style TargetType="DataGridRow">
                 <Style.Resources>
