@@ -80,13 +80,13 @@ namespace WMM.WPF.Helpers
             dataSheetCurrentMonth.Name = "Aktueller Monat";
 
             // write the data
-            var data = new List<object[]> { new object[] { "Area", "Category", "Actual", "Forecast", "Diff" } };
+            var data = new List<object[]> { new object[] { "Area", "Category", "Actual", "Diff", "Forecast" } };
             foreach (var areaForecast in monthForecasts.OrderBy(x => x.Name))
             {
                 var area = areaForecast.Name;
                 foreach (var fl in areaForecast.ForecastLines)
                 {
-                    data.Add(new object[] { area, fl.Name, fl.CurrentAmount, fl.ForecastAmount, fl.Difference });
+                    data.Add(new object[] { area, fl.Name, fl.CurrentAmount, fl.Difference, fl.ForecastAmount });
                 }
             }
 

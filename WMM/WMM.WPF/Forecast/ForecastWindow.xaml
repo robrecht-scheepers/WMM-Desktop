@@ -28,9 +28,9 @@
                         <DataGridTextColumn Header="{x:Static resources:Captions.Area}" Binding="{Binding Name}" MinWidth="80" />
                         <DataGridTextColumn Header="{x:Static resources:Captions.Current}" Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountHideZeroFormat}}" 
                                         ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-                        <DataGridTextColumn Header="{x:Static resources:Captions.Forecast}" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountHideZeroFormat}}" 
-                                        ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
                         <DataGridTextColumn Header="{x:Static resources:Captions.Difference}" Binding="{Binding Difference, StringFormat={StaticResource AmountHideZeroFormat}}" 
+                                        ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                        <DataGridTextColumn Header="{x:Static resources:Captions.Forecast}" Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountHideZeroFormat}}" 
                                         ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
                     </DataGrid.Columns>
 
@@ -43,9 +43,9 @@
                                         <DataGridTextColumn Binding="{Binding Name}" MinWidth="80" />
                                         <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountHideZeroFormat}}" 
                                                                 ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
-                                        <DataGridTextColumn Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountHideZeroFormat}}" 
-                                                                ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
                                         <DataGridTextColumn Binding="{Binding Difference, StringFormat={StaticResource AmountHideZeroFormat}}" 
+                                                                ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
+                                        <DataGridTextColumn Binding="{Binding ForecastAmount, StringFormat={StaticResource AmountHideZeroFormat}}" 
                                                                 ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -64,8 +64,8 @@
                     </Grid.ColumnDefinitions>
                     <controls:ImageButton Grid.Column="0" Command="{Binding ExcelExportCommand}" ImageSource="/Resources/ic_excel.png" HorizontalAlignment="Left" />
                     <TextBlock Grid.Column="1" Text="{Binding CurrentMonthActual, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
-                    <TextBlock Grid.Column="2" Text="{Binding CurrentMonthForecast, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
-                    <TextBlock Grid.Column="3" Text="{Binding CurrentMonthDiff, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                    <TextBlock Grid.Column="2" Text="{Binding CurrentMonthDiff, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                    <TextBlock Grid.Column="3" DataContext="{Binding CurrentMonthForecast, StringFormat={StaticResource AmountFormat}}" TextAlignment="Right" MinWidth="{StaticResource AmountWidth}" Style="{StaticResource ColoredAmountStyle}" Background="{StaticResource SCB3}" />
                 </Grid>
 
             </Grid>
@@ -108,7 +108,7 @@
                 </DataGrid>
 
                 <controls:ImageButton Grid.Row="1" Command="{Binding ExcelExportCommand}" ImageSource="/Resources/ic_excel.png" HorizontalAlignment="Left" />
-                <TextBlock Grid.Row="1" Text="{Binding GenericForecast, StringFormat={StaticResource AmountFormat}}" HorizontalAlignment="Right" TextAlignment="Right" Foreground="{StaticResource SCB1}" MinWidth="{StaticResource AmountWidth}" Margin="0" Padding="5" />
+                <TextBlock Grid.Row="1" DataContext="{Binding GenericForecast, StringFormat={StaticResource AmountFormat}}" TextAlignment="Right" MinWidth="{StaticResource AmountWidth}" Style="{StaticResource ColoredAmountStyle}" Background="{StaticResource SCB3}" />
             </Grid>
         </TabItem>
     </TabControl>
