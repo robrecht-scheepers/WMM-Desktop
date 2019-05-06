@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Microsoft.Office.Interop;
 using Microsoft.Office.Interop.Excel;
 using WMM.Data;
+using WMM.WPF.Forecast;
 
 namespace WMM.WPF.Helpers
 {
@@ -62,6 +63,77 @@ namespace WMM.WPF.Helpers
 
             app.Visible = true;
 
+        }
+
+        public static void OpenInExcel(IEnumerable<ForecastLineGroup> monthForecasts, IEnumerable<ForecastLineGroup> generalForecasts)
+        {
+            // check if Excel is installed
+            if (Type.GetTypeFromProgID("Excel.Application") == null)
+                throw new Exception("Excel ist nicht installiert");
+
+            var app = new Application();
+            var workBook = app.Workbooks.Add();
+
+            // first sheet: current month forecast
+
+            Worksheet dataSheetCurrentMonth = workBook.Sheets[1];
+            dataSheetCurrentMonth.Name = "Aktueller Monat";
+
+            // write the data
+            var data = new List<object[]> { new object[] { "Area", "Category", "Actual", "Diff", "Forecast" } };
+            foreach (var areaForecast in monthForecasts.OrderBy(x => x.Name))
+            {
+                var area = areaForecast.Name;
+                foreach (var fl in areaForecast.ForecastLines)
+                {
+                    data.Add(new object[] { area, fl.Name, fl.CurrentAmount, fl.Difference, fl.ForecastAmount });
+                }
+            }
+
+            for (var i = 0; i < data.Count; i++)
+                for (var j = 0; j < data[0].Length; j++)
+                {
+                    dataSheetCurrentMonth.Cells[i + 1, j + 1] = data[i][j];
+                }
+
+            // create and format an excel table
+            var table = dataSheetCurrentMonth.ListObjects.Add();
+            table.Range.EntireColumn.AutoFit();
+            table.ListColumns[3].Range.NumberFormat = "0.00";
+            table.ListColumns[4].Range.NumberFormat = "0.00";
+            table.ListColumns[5].Range.NumberFormat = "0.00";
+            table.ShowTotals = true;
+
+
+            // second sheet: general forecast
+
+            Worksheet dataSheetGeneral = workBook.Sheets[2];
+            dataSheetGeneral.Name = "Generell";
+
+            // write the data
+            data = new List<object[]> { new object[] { "Area", "Category", "Forecast"} };
+            foreach (var areaForecast in generalForecasts.OrderBy(x => x.Name))
+            {
+                var area = areaForecast.Name;
+                foreach (var fl in areaForecast.ForecastLines)
+                {
+                    data.Add(new object[] { area, fl.Name, fl.ForecastAmount });
+                }
+            }
+
+            for (var i = 0; i < data.Count; i++)
+            for (var j = 0; j < data[0].Length; j++)
+            {
+                dataSheetGeneral.Cells[i + 1, j + 1] = data[i][j];
+            }
+
+            // create and format an excel table
+            table = dataSheetGeneral.ListObjects.Add();
+            table.Range.EntireColumn.AutoFit();
+            table.ListColumns[3].Range.NumberFormat = "0.00";
+            table.ShowTotals = true;
+
+            app.Visible = true;
         }
     }
 }
