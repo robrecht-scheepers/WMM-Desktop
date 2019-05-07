@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ImageToggleButton.cs" />
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
     <Compile Include="Forecast\ForecastLineGroup.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
@@ -123,6 +124,10 @@
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Transactions\TransactionListViewModelBase.cs" />
+    <Page Include="Controls\ImageToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Forecast\ForecastWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -295,6 +300,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ic_forecast.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_collapse.png" />
+    <Resource Include="Resources\ic_expand.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
