@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
@@ -21,6 +22,7 @@ namespace WMM.WPF.Categories
         private string _newArea;
         private ObservableCollection<string> _areas;
         private ForecastType _newForecastType;
+        private AsyncRelayCommand<CategoryViewModel> _deleteCategiryCommand;
 
         public ManageCategoriesViewModel(IRepository repository, IWindowService windowService)
         {
@@ -124,6 +126,23 @@ namespace WMM.WPF.Categories
             Areas = new ObservableCollection<string>(_repository.GetAreas().OrderBy(x => x));
             AreaForNewCategory = NewArea;
             NewArea = "";
+        }
+
+        public AsyncRelayCommand<CategoryViewModel> DeleteCategiryCommand => _deleteCategiryCommand ?? (_deleteCategiryCommand = new AsyncRelayCommand<CategoryViewModel>(DeleteCategory));
+
+        private async Task DeleteCategory(CategoryViewModel category)
+        {
+            var transactions = await _repository.GetTransactions(new SearchConfiguration { CategoryName = category.Name});
+
+            if (transactions.Any())
+            {
+                var fallback = "Abzahlung";
+                // get fallback
+
+                await _repository.DeleteCategory(category.Name);
+            }
+
+            await _repository.DeleteCategory(category.Name);
         }
     }
 }

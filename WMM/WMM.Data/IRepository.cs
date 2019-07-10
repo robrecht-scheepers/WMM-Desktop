@@ -56,6 +56,8 @@ namespace WMM.Data
 
         Task EditCategory(string oldCategory, string newArea, string newCategory, ForecastType newForecastType);
 
+        Task DeleteCategory(string category, string fallback = null);
+
         event EventHandler CategoriesUpdated;
     }
 }

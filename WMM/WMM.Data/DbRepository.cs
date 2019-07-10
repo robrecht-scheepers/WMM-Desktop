@@ -741,6 +741,40 @@ namespace WMM.Data
             OnCategoresUpdated();
         }
 
+        public async Task DeleteCategory(string category, string fallback = null)
+        {
+            using (var dbConnection = GetConnection())
+            {
+                using (var dbCommand = new SQLiteCommand(dbConnection))
+                {
+                    string commandText = "BEGIN TRANSACTION; ";
+
+                    var transactions = await GetTransactions(new SearchConfiguration { CategoryName = category });
+
+                    if (transactions.Any())
+                    {
+                        if (string.IsNullOrEmpty(fallback))
+                            throw new Exception("Cannot delete category with transactions assigned, without fallback category");
+
+                        commandText += "UPDATE Transactions " +
+                                       "SET Category = (SELECT Id FROM Categories WHERE Name = @fallback) " +
+                                       "WHERE Category = (SELECT Id FROM Categories WHERE Name = @category); ";
+                        dbCommand.Parameters.AddWithValue("@fallback", fallback);
+                    }
+
+                    commandText+= "DELETE FROM Categories WHERE Name = @category; " +
+                                  "COMMIT;";
+                    dbCommand.Parameters.AddWithValue("@category", category);
+                    dbCommand.CommandText = commandText;
+                    dbConnection.Open();
+                    await dbCommand.ExecuteNonQueryAsync();
+                }
+            }
+
+            await LoadAreasAndCategories();
+            OnCategoresUpdated();
+        }
+
         public event EventHandler CategoriesUpdated;
 
         private void OnCategoresUpdated()
