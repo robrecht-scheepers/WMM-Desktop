@@ -27,7 +27,7 @@ namespace WMM.Data
             set
             {
                 _dateFrom = value;
-                Parameters |= ; SearchParameter.Date
+                Parameters |= SearchParameter.Date;
             }
         }
 
