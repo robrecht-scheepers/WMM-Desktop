@@ -108,7 +108,6 @@ namespace WMM.WPF.Transactions
 
             if (DateFrom.HasValue)
             {
-                searchConfiguration.Parameters |= SearchParameter.Date;
                 searchConfiguration.DateFrom = DateFrom.Value;
                 searchConfiguration.DateTo = DateTo ?? DateFrom.Value;
             }
@@ -117,19 +116,16 @@ namespace WMM.WPF.Transactions
             {
                 if (SelectedAreaCategoryItem.IsArea)
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Area;
                     searchConfiguration.Area = SelectedAreaCategoryItem.Name;
                 }
                 else
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Category;
                     searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(Comments))
             {
-                searchConfiguration.Parameters |= SearchParameter.Comments;
                 searchConfiguration.Comments = Comments;
             }
 
@@ -137,14 +133,12 @@ namespace WMM.WPF.Transactions
             {
                 if (Amount.HasValue)
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Amount;
                     searchConfiguration.Amount = SelectedSign == "+"
                         ? Amount.Value
                         : -1.0 * Amount.Value;
                 }
                 else
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Direction;
                     searchConfiguration.TransactionDirectionPositive = (SelectedSign == "+");
                 }
             }
