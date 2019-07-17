@@ -213,4 +213,7 @@
   <data name="Warning" xml:space="preserve">
     <value>Warning</value>
   </data>
+  <data name="SelectFallbackCategory" xml:space="preserve">
+    <value>There are transactions linked to the category you are deleting. Please select the category these transactions should be assigned to.</value>
+  </data>
 </root>

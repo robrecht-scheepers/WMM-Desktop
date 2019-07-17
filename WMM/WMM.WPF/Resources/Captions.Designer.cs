@@ -313,6 +313,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are transactions linked to the category you are deleting. Please select the category these transactions should be assigned to..
+        /// </summary>
+        public static string SelectFallbackCategory {
+            get {
+                return ResourceManager.GetString("SelectFallbackCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage monthly transactons for  {0} .
         /// </summary>
         public static string TitleRecurringMonth {
