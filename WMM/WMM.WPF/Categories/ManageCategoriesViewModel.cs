@@ -136,6 +136,8 @@ namespace WMM.WPF.Categories
 
             if (transactions.Any())
             {
+                _windowService
+
                 var fallback = "Abzahlung";
                 // get fallback
 
