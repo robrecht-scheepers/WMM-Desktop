@@ -139,9 +139,10 @@ namespace WMM.WPF.Categories
                 var selectFallbackViewModel = new SelectDeleteCategoryFallbackViewModel(Categories, category);
                 _windowService.OpenDialogWindow(selectFallbackViewModel);
 
-                var fallback = selectFallbackViewModel.SelectedFallbackCategory;
-                // get fallback
+                if(!selectFallbackViewModel.Confirmed || selectFallbackViewModel.SelectedFallbackCategory == null)
+                    return;
 
+                var fallback = selectFallbackViewModel.SelectedFallbackCategory;
                 await _repository.DeleteCategory(category.Name, fallback.Name);
             }
             else

@@ -106,6 +106,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         public static string Category {
@@ -268,6 +277,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overview.
         /// </summary>
         public static string Overview {
@@ -313,7 +331,7 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There are transactions linked to the category you are deleting. Please select the category these transactions should be assigned to..
+        ///   Looks up a localized string similar to There are transactions linked to the category you are deleting. Please select the category these transactions should be assigned to instead..
         /// </summary>
         public static string SelectFallbackCategory {
             get {

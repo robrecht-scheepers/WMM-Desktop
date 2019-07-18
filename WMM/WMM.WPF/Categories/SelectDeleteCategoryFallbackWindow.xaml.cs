@@ -23,5 +23,15 @@ namespace WMM.WPF.Categories
         {
             InitializeComponent();
         }
+
+        private void Button_OnClick(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            
+            btn?.Command.Execute(null);
+            this.Close();
+        }
+
+
     }
 }

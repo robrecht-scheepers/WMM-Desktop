@@ -5,18 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF.Categories"
         xmlns:res="clr-namespace:WMM.WPF.Resources"
+        xmlns:controls="clr-namespace:WMM.WPF.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:SelectDeleteCategoryFallbackViewModel}"
-        Title="SelectDeleteCategoryFallbackWindow" Height="450" Width="800">
+        WindowStyle="None"
+        Background="{StaticResource SCB1}"
+        ResizeMode="NoResize"
+        Title="SelectDeleteCategoryFallbackWindow" Height="200" Width="400">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="{x:Static res:Captions.SelectFallbackCategory}" TextWrapping="Wrap"/>
+        <Border Grid.Row="0" Grid.RowSpan="3" BorderBrush="{StaticResource SCB5}" BorderThickness="1"/>
 
-        <ComboBox Grid.Row="1" ItemsSource="{Binding Categories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedFallbackCategory, Mode=TwoWay}" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="0" Text="{x:Static res:Captions.SelectFallbackCategory}" TextWrapping="Wrap" Foreground="{StaticResource SCB5}"/>
+
+        <ComboBox Grid.Row="1" ItemsSource="{Binding Categories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedFallbackCategory, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <controls:TextButton Text="{x:Static res:Captions.Ok}" Command="{Binding ConfirmCommand}" Click="Button_OnClick" Foreground="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}" />
+            <controls:TextButton Text="{x:Static res:Captions.Cancel}" Command="{Binding CancelCommand}" Click="Button_OnClick" Foreground="{StaticResource SCB5}" Margin="{StaticResource CommonMargin}" />
+        </StackPanel>
 
     </Grid>
 </Window>
