@@ -41,7 +41,6 @@ namespace WMM.WPF.Transactions
 
             await Repository.DeleteTransaction(transaction);
             Transactions.Remove(transaction);
-            RaiseTransactionModified(transaction);
         }
 
         public RelayCommand<Transaction> EditTransactionCommand =>
@@ -55,8 +54,6 @@ namespace WMM.WPF.Transactions
                 var index = Transactions.IndexOf(args.OldTransaction);
                 Transactions.Remove(args.OldTransaction);
                 Transactions.Insert(index, args.NewTransaction);
-                RaiseTransactionModified(args.OldTransaction);
-                RaiseTransactionModified(args.NewTransaction);
             };
             WindowService.OpenDialogWindow(editTransactionViewModel);
         }
@@ -68,20 +65,7 @@ namespace WMM.WPF.Transactions
         {
             RaiseUseAsTemplateRequested(transaction);
         }
-
-
-        public event TransactionEventHandler TransactionModified;
-        protected virtual void RaiseTransactionModified(Transaction transaction)
-        {
-            TransactionModified?.Invoke(this, new TransactionEventArgs(transaction));
-        }
-
-        public event EventHandler MultipleTransactionsModified;
-        protected virtual void RaiseMultipleTransactionsModified()
-        {
-            MultipleTransactionsModified?.Invoke(this, EventArgs.Empty);
-        }
-
+        
         public event TransactionEventHandler UseAsTemplateRequested;
 
         private void RaiseUseAsTemplateRequested(Transaction transaction)

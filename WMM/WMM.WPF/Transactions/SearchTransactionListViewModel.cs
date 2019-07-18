@@ -42,6 +42,9 @@ namespace WMM.WPF.Transactions
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
+            Repository.TransactionUpdated += (s, a) => CalculateBalance();
+            Repository.TransactionAdded += (s, a) => CalculateBalance();
+            Repository.TransactionDeleted += (s, a) => CalculateBalance();
         }
 
         public void Initialize()
@@ -215,18 +218,6 @@ namespace WMM.WPF.Transactions
             {
                 WindowService.ShowMessage(string.Format(Captions.ExcelError, e.Message),Captions.Error);
             }
-        }
-
-        protected override void RaiseTransactionModified(Transaction transaction)
-        {
-            base.RaiseTransactionModified(transaction);
-            CalculateBalance();
-        }
-
-        protected override void RaiseMultipleTransactionsModified()
-        {
-            base.RaiseMultipleTransactionsModified();
-            CalculateBalance();
         }
     }
 }

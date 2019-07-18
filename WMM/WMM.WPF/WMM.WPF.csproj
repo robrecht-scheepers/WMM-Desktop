@@ -122,7 +122,6 @@
     <Compile Include="Transactions\SearchTransactionsListView.xaml.cs">
       <DependentUpon>SearchTransactionsListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Transactions\TransactionEventArgs.cs" />
     <Compile Include="Transactions\TransactionListView.xaml.cs">
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>

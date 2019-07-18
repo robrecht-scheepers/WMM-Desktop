@@ -94,8 +94,6 @@ namespace WMM.WPF.Transactions
             else
                 Transactions.Insert(0,transaction);
 
-            RaiseTransactionModified(transaction);
-
             NewTransactionAmount = 0.00;
             NewTransactionComment = "";
         }

@@ -1,9 +1,8 @@
 ﻿using System;
-using WMM.Data;
 
-namespace WMM.WPF.Transactions
+namespace WMM.Data
 {
-    public class TransactionEventArgs
+    public class TransactionEventArgs : EventArgs
     {
         public TransactionEventArgs(Transaction transaction)
         {
@@ -13,7 +12,7 @@ namespace WMM.WPF.Transactions
         public Transaction Transaction { get; }
     }
 
-    public class TransactionUpdateEventArgs
+    public class TransactionUpdateEventArgs : EventArgs
     {
         public TransactionUpdateEventArgs(Transaction oldTransaction, Transaction newTransaction)
         {

@@ -16,6 +16,11 @@ namespace WMM.Data
 
         Task DeleteTransaction(Transaction transaction);
 
+        event TransactionEventHandler TransactionAdded;
+        event TransactionEventHandler TransactionDeleted;
+        event TransactionUpdateEventHandler TransactionUpdated;
+        event EventHandler TransactionBulkUpdated;
+
         Task<IEnumerable<Transaction>> GetTransactions();
 
         Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Category category);

@@ -83,6 +83,11 @@ namespace WMM.Data
         #endregion
 
         #region transactions
+        public event TransactionEventHandler TransactionAdded;
+        public event TransactionEventHandler TransactionDeleted;
+        public event TransactionUpdateEventHandler TransactionUpdated;
+        public event EventHandler TransactionBulkUpdated;
+
         public async Task<Transaction> AddTransaction(DateTime date, Category category, double amount, string comments, bool recurring)
         {
             var id = Guid.NewGuid();
@@ -111,12 +116,16 @@ namespace WMM.Data
                     lines = await command.ExecuteNonQueryAsync();
                 }
             }
-            
-            return lines == 0
-                ? null
-                : await GetTransaction(id);
-        }
 
+            if (lines == 0)
+                return null;
+            
+            var newTransaction = await GetTransaction(id);
+            TransactionAdded?.Invoke(this, new TransactionEventArgs(newTransaction));
+
+            return newTransaction;
+        }
+        
         public async Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, Category newCategory, double newAmount,
             string newComments)
         {
@@ -139,7 +148,10 @@ namespace WMM.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            return await GetTransaction(transaction.Id);
+            var updatedTransaction = await GetTransaction(transaction.Id);
+            TransactionUpdated?.Invoke(this, new TransactionUpdateEventArgs(transaction, updatedTransaction));
+
+            return updatedTransaction;
         }
 
         public async Task<Transaction> UpdateTransaction(Transaction transaction, Category newCategory, double newAmount, string newComments)
@@ -162,7 +174,10 @@ namespace WMM.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            return await GetTransaction(transaction.Id);
+            var updatedTransaction = await GetTransaction(transaction.Id);
+            TransactionUpdated?.Invoke(this, new TransactionUpdateEventArgs(transaction, updatedTransaction));
+
+            return updatedTransaction;
         }
 
         public async Task DeleteTransaction(Transaction transaction)
@@ -178,6 +193,8 @@ namespace WMM.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
+
+            TransactionDeleted?.Invoke(this, new TransactionEventArgs(transaction));
         }
 
         private async Task<Transaction> GetTransaction(Guid id)
@@ -743,6 +760,7 @@ namespace WMM.Data
 
         public async Task DeleteCategory(string category, string fallback = null)
         {
+            bool transactionsUpdated = false;
             using (var dbConnection = GetConnection())
             {
                 using (var dbCommand = new SQLiteCommand(dbConnection))
@@ -755,6 +773,7 @@ namespace WMM.Data
                                        "SET Category = (SELECT Id FROM Categories WHERE Name = @fallback) " +
                                        "WHERE Category = (SELECT Id FROM Categories WHERE Name = @category); ";
                         dbCommand.Parameters.AddWithValue("@fallback", fallback);
+                        transactionsUpdated = true;
                     }
 
                     commandText+= "DELETE FROM Categories WHERE Name = @category; " +
@@ -768,6 +787,8 @@ namespace WMM.Data
 
             await LoadAreasAndCategories();
             OnCategoresUpdated();
+            if(transactionsUpdated)
+                TransactionBulkUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler CategoriesUpdated;
