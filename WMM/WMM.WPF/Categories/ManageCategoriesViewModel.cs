@@ -38,6 +38,7 @@ namespace WMM.WPF.Categories
             var categories = _repository.GetCategories();
             Areas = new ObservableCollection<string>(_repository.GetAreas().OrderBy(x => x));
             
+            Categories.Clear();
             foreach (var area in Areas)
             {
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
@@ -100,7 +101,7 @@ namespace WMM.WPF.Categories
                 return;
             }
             
-            Categories.Add(new CategoryViewModel(Areas, _repository, AreaForNewCategory, NewCategory, _windowService));
+            Initialize();
             NewCategory = "";
         }
 
@@ -128,7 +129,7 @@ namespace WMM.WPF.Categories
             NewArea = "";
         }
 
-        public AsyncRelayCommand<CategoryViewModel> DeleteCategiryCommand => _deleteCategiryCommand ?? (_deleteCategiryCommand = new AsyncRelayCommand<CategoryViewModel>(DeleteCategory));
+        public AsyncRelayCommand<CategoryViewModel> DeleteCategoryCommand => _deleteCategiryCommand ?? (_deleteCategiryCommand = new AsyncRelayCommand<CategoryViewModel>(DeleteCategory));
 
         private async Task DeleteCategory(CategoryViewModel category)
         {
@@ -149,6 +150,8 @@ namespace WMM.WPF.Categories
             {
                 await _repository.DeleteCategory(category.Name);
             }
+
+            Initialize();
         }
     }
 }

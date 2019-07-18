@@ -54,7 +54,7 @@
                         <DataTemplate DataType="{x:Type local:CategoryViewModel}">
                             <StackPanel Orientation="Horizontal">
                                 <controls:ImageButton 
-                                    Command="{Binding ElementName=ManageCategriesWindow, Path=DataContext.DeleteCategiryCommand}" 
+                                    Command="{Binding ElementName=ManageCategriesWindow, Path=DataContext.DeleteCategoryCommand}" 
                                     CommandParameter="{Binding}"
                                     ImageSource="/Resources/ic_delete.png" Style="{StaticResource DataGridButtonStyle}" />
                             </StackPanel>
