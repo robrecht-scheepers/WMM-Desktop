@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WMM.WPF.Categories"
         xmlns:res="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:SelectDeleteCategoryFallbackViewModel}"
         Title="SelectDeleteCategoryFallbackWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -13,10 +14,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="{x:Static res:Captions.SelectFallbackCategory}"/>
+        <TextBlock Grid.Row="0" Text="{x:Static res:Captions.SelectFallbackCategory}" TextWrapping="Wrap"/>
 
-
-
+        <ComboBox Grid.Row="1" ItemsSource="{Binding Categories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedFallbackCategory, Mode=TwoWay}" HorizontalAlignment="Left" />
 
     </Grid>
 </Window>

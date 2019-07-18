@@ -136,15 +136,18 @@ namespace WMM.WPF.Categories
 
             if (transactions.Any())
             {
-                _windowService
+                var selectFallbackViewModel = new SelectDeleteCategoryFallbackViewModel(Categories, category);
+                _windowService.OpenDialogWindow(selectFallbackViewModel);
 
-                var fallback = "Abzahlung";
+                var fallback = selectFallbackViewModel.SelectedFallbackCategory;
                 // get fallback
 
+                await _repository.DeleteCategory(category.Name, fallback.Name);
+            }
+            else
+            {
                 await _repository.DeleteCategory(category.Name);
             }
-
-            await _repository.DeleteCategory(category.Name);
         }
     }
 }

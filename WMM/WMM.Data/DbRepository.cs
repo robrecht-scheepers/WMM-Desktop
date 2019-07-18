@@ -749,13 +749,8 @@ namespace WMM.Data
                 {
                     string commandText = "BEGIN TRANSACTION; ";
 
-                    var transactions = await GetTransactions(new SearchConfiguration { CategoryName = category });
-
-                    if (transactions.Any())
+                    if (!string.IsNullOrEmpty(fallback))
                     {
-                        if (string.IsNullOrEmpty(fallback))
-                            throw new Exception("Cannot delete category with transactions assigned, without fallback category");
-
                         commandText += "UPDATE Transactions " +
                                        "SET Category = (SELECT Id FROM Categories WHERE Name = @fallback) " +
                                        "WHERE Category = (SELECT Id FROM Categories WHERE Name = @category); ";
