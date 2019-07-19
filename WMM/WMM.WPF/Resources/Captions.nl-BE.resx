@@ -208,9 +208,21 @@
     <value>Vaste kost</value>
   </data>
   <data name="ResetAllFields" xml:space="preserve">
-    <value>All zoekvelden leegmaken</value>
+    <value>Alle zoekvelden leegmaken</value>
   </data>
   <data name="Warning" xml:space="preserve">
     <value>Waarschuwing</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ConfirmDeleteCategory" xml:space="preserve">
+    <value>Bent u zeker dat u deze categorie wilt verwijderen? Dit kan niet ongedaan gemaakt worden.</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="SelectFallbackCategory" xml:space="preserve">
+    <value>Er zijn al transacties geboekt voor de categorie die u wil verwijderen. Kies een nieuwe categorie voor deze transacties. </value>
   </data>
 </root>

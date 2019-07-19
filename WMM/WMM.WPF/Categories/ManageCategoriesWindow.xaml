@@ -7,6 +7,7 @@
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:res="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
+        Name="ManageCategriesWindow"
         d:DataContext="{d:DesignInstance local:ManageCategoriesViewModel}"
         Title="Kategorien Verwalten" Height="450" Width="800">
     <Grid>
@@ -48,6 +49,18 @@
                 <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" />
                 <DataGridTextColumn Header="Kategorie" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Forecast" Binding="{Binding ForecastType}" />
+                <DataGridTemplateColumn Width="SizeToCells">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:CategoryViewModel}">
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ImageButton 
+                                    Command="{Binding ElementName=ManageCategriesWindow, Path=DataContext.DeleteCategoryCommand}" 
+                                    CommandParameter="{Binding}"
+                                    ImageSource="/Resources/ic_delete.png" Style="{StaticResource DataGridButtonStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate DataType="local:CategoryViewModel">
