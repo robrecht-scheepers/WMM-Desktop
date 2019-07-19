@@ -222,4 +222,7 @@
   <data name="SelectFallbackCategory" xml:space="preserve">
     <value>Für die Kategorie die Sie löschen möchten, sind bereits Transaktionen gebucht. Bitte wählen Sie eine neue Kategorie für diese Transaktionen.</value>
   </data>
+  <data name="ConfirmDeleteCategory" xml:space="preserve">
+    <value>Möchten sie die ausgewählte Kategorie löschen? Diese Aktion kann nicht Rückgängig gemacht werden.</value>
+  </data>
 </root>

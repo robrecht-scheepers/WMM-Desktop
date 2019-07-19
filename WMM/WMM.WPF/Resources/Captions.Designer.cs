@@ -133,6 +133,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this category? This action cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteCategory {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this transaction? This action cannot be undone..
         /// </summary>
         public static string ConfirmDeleteTransaction {

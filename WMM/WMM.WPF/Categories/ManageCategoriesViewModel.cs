@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Categories
 {
@@ -148,6 +149,8 @@ namespace WMM.WPF.Categories
             }
             else
             {
+                if (!_windowService.AskConfirmation(Captions.ConfirmDeleteCategory))
+                    return;
                 await _repository.DeleteCategory(category.Name);
             }
 

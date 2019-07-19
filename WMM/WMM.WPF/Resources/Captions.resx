@@ -219,6 +219,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="ConfirmDeleteCategory" xml:space="preserve">
+    <value>Are you sure you want to delete this category? This action cannot be undone.</value>
+  </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
   </data>
