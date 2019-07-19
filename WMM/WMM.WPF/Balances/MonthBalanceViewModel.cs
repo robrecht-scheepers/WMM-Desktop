@@ -44,12 +44,7 @@ namespace WMM.WPF.Balances
         public async Task Initialize()
         {
             await LoadAllBalances();
-
             await RecurringTransactionsViewModel.Initialize();
-            RecurringTransactionsViewModel.TransactionModified += 
-                async (sender, args) => await RecalculateBalances(args.Transaction.Date, args.Transaction.Category);
-            RecurringTransactionsViewModel.MultipleTransactionsModified += 
-                async (sender, args) => await LoadAllBalances();
         }
 
         private async Task LoadAllBalances()
@@ -84,11 +79,13 @@ namespace WMM.WPF.Balances
             }
         }
 
-        public async Task RecalculateBalances(DateTime date, Category category)
+        public async Task RecalculateBalances()
         {
-            if(date < Month.FirstDayOfMonth() || date > Month.LastDayOfMonth()) return;
+            await LoadAllBalances();
+        }
 
-            // recalculate total balance for this month
+        public async Task RecalculateBalances(Category category)
+        {
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
 
             var area = category.Area;

@@ -106,6 +106,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         public static string Category {
@@ -120,6 +129,15 @@ namespace WMM.WPF.Resources {
         public static string Comment {
             get {
                 return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this category? This action cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteCategory {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteCategory", resourceCulture);
             }
         }
         
@@ -268,6 +286,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overview.
         /// </summary>
         public static string Overview {
@@ -309,6 +336,15 @@ namespace WMM.WPF.Resources {
         public static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are transactions linked to the category you are deleting. Please select the category these transactions should be assigned to instead..
+        /// </summary>
+        public static string SelectFallbackCategory {
+            get {
+                return ResourceManager.GetString("SelectFallbackCategory", resourceCulture);
             }
         }
         

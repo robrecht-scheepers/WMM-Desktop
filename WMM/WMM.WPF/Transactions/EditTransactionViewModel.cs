@@ -84,13 +84,7 @@ namespace WMM.WPF.Transactions
             var newTransaction = _editDate
                 ? await _repository.UpdateTransaction(_transaction, Date, Category, SignedAmount, Comments)
                 : await _repository.UpdateTransaction(_transaction, Category, SignedAmount, Comments);
-            RaiseTransactionUpdated(_transaction, newTransaction);
         }
-
-        public event TransactionUpdateEventHandler TransactionChanged;
-        private void RaiseTransactionUpdated(Transaction oldTransaction, Transaction newTransaction)
-        {
-            TransactionChanged?.Invoke(this, new TransactionUpdateEventArgs(oldTransaction, newTransaction));
-        }
+        
     }
 }

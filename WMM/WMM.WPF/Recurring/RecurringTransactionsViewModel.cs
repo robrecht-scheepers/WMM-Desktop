@@ -128,13 +128,12 @@ namespace WMM.WPF.Recurring
         {
             var amount = SelectedSign == "-" ? NewAmount * -1.0 : NewAmount;
 
-            var transaction = ManageTemplates
-                ? await Repository.AddRecurringTemplate(NewCategory, amount, NewComments)
-                : await Repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, NewComments, true);
+            if (ManageTemplates)
+                await Repository.AddRecurringTemplate(NewCategory, amount, NewComments);
+            else
+                await Repository.AddTransaction(_month.FirstDayOfMonth(), NewCategory, amount, NewComments, true);
 
             await GetItems();
-
-            RaiseTransactionModified(transaction);
 
             NewAmount = 0.0;
             NewComments = "";
@@ -151,12 +150,6 @@ namespace WMM.WPF.Recurring
         {
             await Repository.ApplyRecurringTemplates(_month);
             await GetItems();
-            RaiseMultipleTransactionsModified();
-        }
-
-        protected override void RaiseTransactionModified(Transaction transaction)
-        {
-            base.RaiseTransactionModified(transaction);
             CalculateBalance();
         }
     }
