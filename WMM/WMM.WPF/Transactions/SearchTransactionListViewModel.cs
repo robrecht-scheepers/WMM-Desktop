@@ -42,9 +42,6 @@ namespace WMM.WPF.Transactions
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
-            Repository.TransactionUpdated += (s, a) => CalculateBalance();
-            Repository.TransactionAdded += (s, a) => CalculateBalance();
-            Repository.TransactionDeleted += (s, a) => CalculateBalance();
         }
 
         public void Initialize()
@@ -198,6 +195,18 @@ namespace WMM.WPF.Transactions
             Balance = new Balance(
                 Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
                 Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
+        }
+
+        protected override void RepositoryOnTransactionUpdated(object sender, TransactionUpdateEventArgs args)
+        {
+            base.RepositoryOnTransactionUpdated(sender, args);
+            CalculateBalance();
+        }
+
+        protected override void RepositoryOnTransactionDeleted(object sender, TransactionEventArgs args)
+        {
+            base.RepositoryOnTransactionDeleted(sender, args);
+            CalculateBalance();
         }
 
         public RelayCommand ExcelExportCommand =>

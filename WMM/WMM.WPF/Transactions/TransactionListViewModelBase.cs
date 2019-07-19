@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
@@ -23,6 +24,10 @@ namespace WMM.WPF.Transactions
             WindowService = windowService;
             ShowDate = showDate;
             Transactions = new ObservableCollection<Transaction>();
+
+            Repository.TransactionDeleted += RepositoryOnTransactionDeleted;
+            Repository.TransactionUpdated += RepositoryOnTransactionUpdated;
+            Repository.TransactionAdded += RepositoryOnTransactionAdded;
         }
 
         public bool ShowDate { get; }
@@ -38,9 +43,7 @@ namespace WMM.WPF.Transactions
         {
             if(!WindowService.AskConfirmation(Captions.ConfirmDeleteTransaction))
                 return;
-
             await Repository.DeleteTransaction(transaction);
-            Transactions.Remove(transaction);
         }
 
         public RelayCommand<Transaction> EditTransactionCommand =>
@@ -49,28 +52,42 @@ namespace WMM.WPF.Transactions
         private void EditTransaction(Transaction transaction)
         {
             var editTransactionViewModel = new EditTransactionViewModel(transaction, Repository, ShowDate);
-            editTransactionViewModel.TransactionChanged += (sender, args) =>
-            {
-                var index = Transactions.IndexOf(args.OldTransaction);
-                Transactions.Remove(args.OldTransaction);
-                Transactions.Insert(index, args.NewTransaction);
-            };
             WindowService.OpenDialogWindow(editTransactionViewModel);
         }
 
         public RelayCommand<Transaction> UseAsTemplateCommand =>
             _useAsTemplateCommand ?? (_useAsTemplateCommand = new RelayCommand<Transaction>(UseTransactionAsTemplate));
-
         private void UseTransactionAsTemplate(Transaction transaction)
         {
-            RaiseUseAsTemplateRequested(transaction);
+            UseAsTemplateRequested?.Invoke(this, new TransactionEventArgs(transaction));
+
         }
-        
         public event TransactionEventHandler UseAsTemplateRequested;
 
-        private void RaiseUseAsTemplateRequested(Transaction transaction)
+        
+        protected virtual void RepositoryOnTransactionAdded(object sender, TransactionEventArgs args)
         {
-            UseAsTemplateRequested?.Invoke(this, new TransactionEventArgs(transaction));
+            
+        }
+
+        protected virtual void RepositoryOnTransactionUpdated(object sender, TransactionUpdateEventArgs args)
+        {
+            var transaction = Transactions.FirstOrDefault(x => x.Id == args.OldTransaction.Id);
+            if (transaction == null)
+                return;
+
+            var index = Transactions.IndexOf(transaction);
+            Transactions.Remove(transaction);
+            Transactions.Insert(index, args.NewTransaction);
+        }
+
+        protected virtual void RepositoryOnTransactionDeleted(object sender, TransactionEventArgs args)
+        {
+            var transaction = Transactions.FirstOrDefault(x => x.Id == args.Transaction.Id);
+            if (transaction == null)
+                return;
+
+            Transactions.Remove(transaction);
         }
     }
 }
