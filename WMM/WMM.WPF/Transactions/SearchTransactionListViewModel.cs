@@ -38,9 +38,11 @@ namespace WMM.WPF.Transactions
         private RelayCommand _resetCommand;
         private Balance _balance;
         private RelayCommand _excelExportCommand;
+        private string _selectedRecurringOption;
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
+            InitializeRecurringOptionList();
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
         }
 
@@ -100,6 +102,14 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _areaCategoryList, value);
         }
 
+        public Dictionary<string, bool?> RecurringOptionList { get; set; }
+
+        public string SelectedRecurringOption
+        {
+            get => _selectedRecurringOption;
+            set => SetValue(ref _selectedRecurringOption, value);
+        }
+
         public AsyncRelayCommand SearchCommand => _searchCommand ?? (_searchCommand = new AsyncRelayCommand(Search));
 
         private async Task Search()
@@ -143,6 +153,11 @@ namespace WMM.WPF.Transactions
                 }
             }
 
+            if (RecurringOptionList[SelectedRecurringOption].HasValue)
+            {
+                searchConfiguration.Recurring = RecurringOptionList[SelectedRecurringOption].Value;
+            }
+
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderByDescending(x => x.Date));
             CalculateBalance();
         }
@@ -156,6 +171,7 @@ namespace WMM.WPF.Transactions
             SelectedSign = "";
             Amount = null;
             Comments = "";
+            ResetRecurringOption();
 
             Transactions.Clear();
             CalculateBalance();
@@ -166,17 +182,33 @@ namespace WMM.WPF.Transactions
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
                 new AreaCategorySelectionItem("", true),
-                new AreaCategorySelectionItem("--- Bereich ---", true, false)
+                new AreaCategorySelectionItem($"--- {Captions.Area} ---", true, false)
             };
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(area, true));
             }
-            AreaCategoryList.Add(new AreaCategorySelectionItem("--- Kategorie ---",false,false));
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Category} ---", false,false));
             foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
             }
+        }
+
+        private void InitializeRecurringOptionList()
+        {
+            RecurringOptionList = new Dictionary<string, bool?>
+            {
+                {Captions.All, null},
+                {Captions.OnlyRecurring, true},
+                {Captions.NoRecurring, false}
+            };
+            ResetRecurringOption();
+        }
+
+        private void ResetRecurringOption()
+        {
+            SelectedRecurringOption = RecurringOptionList.First(x => x.Value == null).Key;
         }
 
         public async Task SearchForDatesAndCategory(DateTime dateFrom, DateTime dateTo, string category)
