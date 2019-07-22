@@ -30,8 +30,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <DatePicker Grid.Row="0" Grid.Column="0" SelectedDate="{Binding DateFrom, Mode=TwoWay}" />
-            <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding DateTo, Mode=TwoWay}" />
+            <!-- <DatePicker Grid.Row="0" Grid.Column="0" SelectedDate="{Binding DateFrom, Mode=TwoWay}" />
+            <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding DateTo, Mode=TwoWay}" /> -->
+            <controls:PeriodSelector Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
+                                     DateFrom="{Binding DateFrom, Mode=TwoWay}" DateUntil="{Binding DateTo, Mode=TwoWay}"/>
             <ComboBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding AreaCategoryList}" 
                       SelectedItem="{Binding SelectedAreaCategoryItem, Mode=TwoWay}" DisplayMemberPath="Name">
                 <ComboBox.ItemContainerStyle>
