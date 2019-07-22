@@ -49,7 +49,6 @@ namespace WMM.WPF.Transactions
         public void Initialize()
         {
             InitializeAreaCategoryList();
-            SelectedRecurringOption = RecurringOptionList.First(x => x.Value == null).Key;
             SelectedSign = "";
         }
 
@@ -172,7 +171,7 @@ namespace WMM.WPF.Transactions
             SelectedSign = "";
             Amount = null;
             Comments = "";
-            
+            ResetRecurringOption();
 
             Transactions.Clear();
             CalculateBalance();
@@ -183,13 +182,13 @@ namespace WMM.WPF.Transactions
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
                 new AreaCategorySelectionItem("", true),
-                new AreaCategorySelectionItem("--- Bereich ---", true, false)
+                new AreaCategorySelectionItem("--- " + Captions.Area +" ---", true, false)
             };
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(area, true));
             }
-            AreaCategoryList.Add(new AreaCategorySelectionItem("--- Kategorie ---",false,false));
+            AreaCategoryList.Add(new AreaCategorySelectionItem("--- " + Captions.Category + " ---", false,false));
             foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
@@ -204,6 +203,12 @@ namespace WMM.WPF.Transactions
                 {Captions.OnlyRecurring, true},
                 {Captions.NoRecurring, false}
             };
+            ResetRecurringOption();
+        }
+
+        private void ResetRecurringOption()
+        {
+            SelectedRecurringOption = RecurringOptionList.First(x => x.Value == null).Key;
         }
 
         public async Task SearchForDatesAndCategory(DateTime dateFrom, DateTime dateTo, string category)
