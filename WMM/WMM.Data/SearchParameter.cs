@@ -13,6 +13,7 @@ namespace WMM.Data
         Category = 4,
         Comments = 8,
         Amount = 16,
-        Direction = 32
+        Direction = 32,
+        Recurring = 64
     }
 }

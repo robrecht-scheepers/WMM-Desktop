@@ -9,7 +9,7 @@
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
-        Title="{Binding AppTitle}" 
+        Title="{x:Static resources:Captions.AppTitle}" 
         WindowState="Maximized"
         Background="{StaticResource SCB1}"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
@@ -73,6 +73,8 @@
 
         <transactions:SearchTransactionsListView Grid.Row="1" Grid.Column="2" DataContext="{Binding SearchTransactions}" />
 
-        <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
+        <Grid Name="StatusBar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{StaticResource SCB5}">
+            <TextBlock FontSize="{StaticResource SmallFontSize}" Foreground="{StaticResource SCB3}" Text="{Binding AppVersion}" Margin="3" />
+        </Grid>
     </Grid>
 </Window>

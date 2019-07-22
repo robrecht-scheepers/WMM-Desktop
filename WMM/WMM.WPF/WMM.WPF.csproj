@@ -68,6 +68,9 @@
     <Compile Include="Categories\SelectDeleteCategoryFallbackWindow.xaml.cs">
       <DependentUpon>SelectDeleteCategoryFallbackWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PeriodSelector.xaml.cs">
+      <DependentUpon>PeriodSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
     <Compile Include="Forecast\ForecastLineGroup.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
@@ -127,6 +130,10 @@
     </Compile>
     <Compile Include="Transactions\TransactionListViewModelBase.cs" />
     <Page Include="Categories\SelectDeleteCategoryFallbackWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PeriodSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

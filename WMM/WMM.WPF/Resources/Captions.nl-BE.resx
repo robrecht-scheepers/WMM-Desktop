@@ -124,7 +124,7 @@
     <value>Ontwerp uitvoeren</value>
   </data>
   <data name="AppTitle" xml:space="preserve">
-    <value>Huishoudsboek</value>
+    <value>Huishoudsboekje</value>
   </data>
   <data name="Area" xml:space="preserve">
     <value>Rubriek</value>
@@ -224,5 +224,38 @@
   </data>
   <data name="SelectFallbackCategory" xml:space="preserve">
     <value>Er zijn al transacties geboekt voor de categorie die u wil verwijderen. Kies een nieuwe categorie voor deze transacties. </value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Alles tonen</value>
+  </data>
+  <data name="LastMonth" xml:space="preserve">
+    <value>Vorige maand</value>
+  </data>
+  <data name="LastWeek" xml:space="preserve">
+    <value>Vorige week</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>Vorig jaar</value>
+  </data>
+  <data name="NoRecurring" xml:space="preserve">
+    <value>Geen vaste kosten</value>
+  </data>
+  <data name="OnlyRecurring" xml:space="preserve">
+    <value>Enkel vaste kosten</value>
+  </data>
+  <data name="ThisMonth" xml:space="preserve">
+    <value>Deze maand</value>
+  </data>
+  <data name="ThisWeek" xml:space="preserve">
+    <value>Deze week</value>
+  </data>
+  <data name="ThisYear" xml:space="preserve">
+    <value>Dit jaar</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Vandaag</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Gisteren</value>
   </data>
 </root>

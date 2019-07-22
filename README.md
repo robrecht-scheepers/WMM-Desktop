@@ -1,5 +1,5 @@
 # WheresMyMoney
 
-A household economy app that allows keeping track of all expenses.
+A household economy application that allows keeping track of all expenses.
 
-Tech Stack: Xamarin.Android, SQLite
+Tech Stack: .NET, C#, WPF, MVVM, SQLite

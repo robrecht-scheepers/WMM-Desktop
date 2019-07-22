@@ -70,6 +70,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {
@@ -268,6 +277,33 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last month.
+        /// </summary>
+        public static string LastMonth {
+            get {
+                return ResourceManager.GetString("LastMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last week.
+        /// </summary>
+        public static string LastWeek {
+            get {
+                return ResourceManager.GetString("LastWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last year.
+        /// </summary>
+        public static string LastYear {
+            get {
+                return ResourceManager.GetString("LastYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New area.
         /// </summary>
         public static string NewArea {
@@ -286,11 +322,29 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No recurring.
+        /// </summary>
+        public static string NoRecurring {
+            get {
+                return ResourceManager.GetString("NoRecurring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only recurring.
+        /// </summary>
+        public static string OnlyRecurring {
+            get {
+                return ResourceManager.GetString("OnlyRecurring", resourceCulture);
             }
         }
         
@@ -349,11 +403,47 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This month.
+        /// </summary>
+        public static string ThisMonth {
+            get {
+                return ResourceManager.GetString("ThisMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This week.
+        /// </summary>
+        public static string ThisWeek {
+            get {
+                return ResourceManager.GetString("ThisWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This year.
+        /// </summary>
+        public static string ThisYear {
+            get {
+                return ResourceManager.GetString("ThisYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage monthly transactons for  {0} .
         /// </summary>
         public static string TitleRecurringMonth {
             get {
                 return ResourceManager.GetString("TitleRecurringMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        public static string Today {
+            get {
+                return ResourceManager.GetString("Today", resourceCulture);
             }
         }
         
@@ -381,6 +471,15 @@ namespace WMM.WPF.Resources {
         public static string Warning {
             get {
                 return ResourceManager.GetString("Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yesterday.
+        /// </summary>
+        public static string Yesterday {
+            get {
+                return ResourceManager.GetString("Yesterday", resourceCulture);
             }
         }
     }

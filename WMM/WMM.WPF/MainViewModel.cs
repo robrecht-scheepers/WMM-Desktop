@@ -11,6 +11,7 @@ using WMM.WPF.Forecast;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
+using WMM.WPF.Resources;
 using WMM.WPF.Transactions;
 
 namespace WMM.WPF
@@ -73,7 +74,7 @@ namespace WMM.WPF
             
         }
 
-        public string AppTitle => $"Haushaltsbuch - {Assembly.GetExecutingAssembly().GetName().Version}";
+        public string AppVersion => $"v{Assembly.GetExecutingAssembly().GetName().Version}";
         
         public ObservableCollection<MonthBalanceViewModel> MonthBalanceViewModels { get; }
 
