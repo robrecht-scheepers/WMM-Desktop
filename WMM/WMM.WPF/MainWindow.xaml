@@ -50,7 +50,7 @@
             </StackPanel>
         </Grid>
         <Grid Name="BalanceOverview" Grid.Row="1" Grid.Column="1" Margin="{StaticResource CommonMarginBottom}">
-            <ListView ItemsSource="{Binding MonthBalanceViewModels}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
+            <ListView ItemsSource="{Binding MonthBalanceViewModels}" Background="{StaticResource SCB3}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
