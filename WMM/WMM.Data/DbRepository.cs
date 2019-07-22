@@ -263,6 +263,12 @@ namespace WMM.Data
                         command.Parameters.AddWithValue("@amountMax", searchConfiguration.Amount + 0.001);
                     }
 
+                    if (searchConfiguration.Parameters.HasFlag(SearchParameter.Recurring))
+                    {
+                        commandTextBuilder.AppendLine(" AND t.Recurring = @recurring");
+                        command.Parameters.AddWithValue("@recurring", searchConfiguration.Recurring);
+                    }
+
                     command.CommandText = commandTextBuilder.ToString();
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())

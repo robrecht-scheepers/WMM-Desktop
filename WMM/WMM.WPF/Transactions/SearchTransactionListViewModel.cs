@@ -38,15 +38,18 @@ namespace WMM.WPF.Transactions
         private RelayCommand _resetCommand;
         private Balance _balance;
         private RelayCommand _excelExportCommand;
+        private string _selectedRecurringOption;
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
+            InitializeRecurringOptionList();
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
         }
 
         public void Initialize()
         {
             InitializeAreaCategoryList();
+            SelectedRecurringOption = RecurringOptionList.First(x => x.Value == null).Key;
             SelectedSign = "";
         }
 
@@ -100,6 +103,14 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _areaCategoryList, value);
         }
 
+        public Dictionary<string, bool?> RecurringOptionList { get; set; }
+
+        public string SelectedRecurringOption
+        {
+            get => _selectedRecurringOption;
+            set => SetValue(ref _selectedRecurringOption, value);
+        }
+
         public AsyncRelayCommand SearchCommand => _searchCommand ?? (_searchCommand = new AsyncRelayCommand(Search));
 
         private async Task Search()
@@ -143,6 +154,11 @@ namespace WMM.WPF.Transactions
                 }
             }
 
+            if (RecurringOptionList[SelectedRecurringOption].HasValue)
+            {
+                searchConfiguration.Recurring = RecurringOptionList[SelectedRecurringOption].Value;
+            }
+
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderByDescending(x => x.Date));
             CalculateBalance();
         }
@@ -156,6 +172,7 @@ namespace WMM.WPF.Transactions
             SelectedSign = "";
             Amount = null;
             Comments = "";
+            
 
             Transactions.Clear();
             CalculateBalance();
@@ -177,6 +194,16 @@ namespace WMM.WPF.Transactions
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
             }
+        }
+
+        private void InitializeRecurringOptionList()
+        {
+            RecurringOptionList = new Dictionary<string, bool?>
+            {
+                {Captions.All, null},
+                {Captions.OnlyRecurring, true},
+                {Captions.NoRecurring, false}
+            };
         }
 
         public async Task SearchForDatesAndCategory(DateTime dateFrom, DateTime dateTo, string category)

@@ -225,6 +225,9 @@
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
   <data name="LastMonth" xml:space="preserve">
     <value>Last month</value>
   </data>
@@ -233,6 +236,12 @@
   </data>
   <data name="LastYear" xml:space="preserve">
     <value>Last year</value>
+  </data>
+  <data name="NoRecurring" xml:space="preserve">
+    <value>No recurring</value>
+  </data>
+  <data name="OnlyRecurring" xml:space="preserve">
+    <value>Only recurring</value>
   </data>
   <data name="ThisMonth" xml:space="preserve">
     <value>This month</value>

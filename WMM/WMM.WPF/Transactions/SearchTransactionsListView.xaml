@@ -21,7 +21,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -30,9 +29,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <!-- <DatePicker Grid.Row="0" Grid.Column="0" SelectedDate="{Binding DateFrom, Mode=TwoWay}" />
-            <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding DateTo, Mode=TwoWay}" /> -->
-            <controls:PeriodSelector Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
+            <controls:PeriodSelector Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
                                      DateFrom="{Binding DateFrom, Mode=TwoWay}" DateUntil="{Binding DateTo, Mode=TwoWay}"/>
             <ComboBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding AreaCategoryList}" 
                       SelectedItem="{Binding SelectedAreaCategoryItem, Mode=TwoWay}" DisplayMemberPath="Name">
@@ -46,13 +43,22 @@
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
-            <ComboBox Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
-            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" >
-                <i:Interaction.Behaviors>
-                    <controls:SelectAllOnFocusBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Comments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="32">
+
+            <Grid Grid.Row="1" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+                <TextBox Grid.Column="1" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" >
+                    <i:Interaction.Behaviors>
+                        <controls:SelectAllOnFocusBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
+            </Grid>
+
+            <ComboBox Grid.Row="2" Grid.Column="0" ItemsSource="{Binding RecurringOptionList.Keys}" SelectedItem="{Binding SelectedRecurringOption, Mode=TwoWay}" />
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Comments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="32">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
                 </TextBox.InputBindings>
@@ -61,8 +67,8 @@
                 </i:Interaction.Behaviors>
             </TextBox>
 
-            <controls:ImageButton Grid.Row="2" Grid.Column="4" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="{x:Static resources:Captions.Search}" />
-            <controls:ImageButton Grid.Row="0" Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="{x:Static resources:Captions.ResetAllFields}" />
+            <controls:ImageButton Grid.Row="2" Grid.Column="3" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="{x:Static resources:Captions.Search}" />
+            <controls:ImageButton Grid.Row="0" Grid.Column="3" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="{x:Static resources:Captions.ResetAllFields}" />
 
         </Grid>
 

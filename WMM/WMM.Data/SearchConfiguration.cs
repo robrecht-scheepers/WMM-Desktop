@@ -13,6 +13,8 @@ namespace WMM.Data
         private string _comments;
         private double _amount;
         private bool _transactionDirectionPositive;
+        private bool _recurring;
+
 
         public SearchConfiguration()
         {
@@ -88,6 +90,16 @@ namespace WMM.Data
             {
                 _transactionDirectionPositive = value;
                 Parameters |= SearchParameter.Direction;
+            }
+        }
+
+        public bool Recurring
+        {
+            get => _recurring;
+            set
+            {
+                _recurring = value;
+                Parameters |= SearchParameter.Recurring;
             }
         }
     }

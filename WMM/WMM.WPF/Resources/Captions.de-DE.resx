@@ -225,6 +225,9 @@
   <data name="ConfirmDeleteCategory" xml:space="preserve">
     <value>Möchten sie die ausgewählte Kategorie löschen? Diese Aktion kann nicht Rückgängig gemacht werden.</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>Alles zeigen</value>
+  </data>
   <data name="LastMonth" xml:space="preserve">
     <value>Letzter Monat</value>
   </data>
@@ -233,6 +236,12 @@
   </data>
   <data name="LastYear" xml:space="preserve">
     <value>Letztes Jahr</value>
+  </data>
+  <data name="NoRecurring" xml:space="preserve">
+    <value>Keine Fixkosten zeigen</value>
+  </data>
+  <data name="OnlyRecurring" xml:space="preserve">
+    <value>Nur Fixkosten zeigen</value>
   </data>
   <data name="ThisMonth" xml:space="preserve">
     <value>Dieser Monat</value>

@@ -225,6 +225,9 @@
   <data name="SelectFallbackCategory" xml:space="preserve">
     <value>Er zijn al transacties geboekt voor de categorie die u wil verwijderen. Kies een nieuwe categorie voor deze transacties. </value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>Alles tonen</value>
+  </data>
   <data name="LastMonth" xml:space="preserve">
     <value>Vorige maand</value>
   </data>
@@ -233,6 +236,12 @@
   </data>
   <data name="LastYear" xml:space="preserve">
     <value>Vorig jaar</value>
+  </data>
+  <data name="NoRecurring" xml:space="preserve">
+    <value>Geen vaste kosten</value>
+  </data>
+  <data name="OnlyRecurring" xml:space="preserve">
+    <value>Enkel vaste kosten</value>
   </data>
   <data name="ThisMonth" xml:space="preserve">
     <value>Deze maand</value>
