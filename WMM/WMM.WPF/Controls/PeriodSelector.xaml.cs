@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WMM.WPF.Helpers;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Controls
 {
@@ -72,15 +73,17 @@ namespace WMM.WPF.Controls
         {
             _shortcuts = new Dictionary<string, Tuple<DateTime, DateTime>>()
             {
-                {"Today", Tuple.Create(DateTime.Now, DateTime.Now) },
-                {"Yesterday", Tuple.Create(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1)) },
-                {"This week", Tuple.Create(DateTime.Now.FirstDayOfWeek(), DateTime.Now.LastDayOfWeek()) },
-                {"Last week",
+                {Captions.Today, Tuple.Create(DateTime.Now, DateTime.Now) },
+                {Captions.Yesterday, Tuple.Create(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1)) },
+                {Captions.ThisWeek, Tuple.Create(DateTime.Now.FirstDayOfWeek(), DateTime.Now.LastDayOfWeek()) },
+                {Captions.LastWeek,
                     Tuple.Create(DateTime.Now.AddDays(-7).FirstDayOfWeek(), DateTime.Now.AddDays(-7).LastDayOfWeek()) },
-                {"This month",
-                    Tuple.Create(DateTime.Now.FirstDayOfMonth(), DateTime.Now.LastDayOfMonth()) },
-                {"Last Month",
-                    Tuple.Create(DateTime.Now.PreviousMonth().FirstDayOfMonth(), DateTime.Now.PreviousMonth().LastDayOfMonth()) }
+                {Captions.ThisMonth, Tuple.Create(DateTime.Now.FirstDayOfMonth(), DateTime.Now.LastDayOfMonth()) },
+                {Captions.LastMonth,
+                    Tuple.Create(DateTime.Now.PreviousMonth().FirstDayOfMonth(), DateTime.Now.PreviousMonth().LastDayOfMonth()) },
+                {Captions.ThisYear, Tuple.Create(DateTime.Now.FirstDayOfYear(), DateTime.Now.LastDayOfYear())  },
+                {Captions.LastYear,
+                    Tuple.Create(DateTime.Now.AddYears(-1).FirstDayOfYear(), DateTime.Now.AddYears(-1).LastDayOfYear()) }
             };
 
             //ShortcutSelection.Items.Add("");

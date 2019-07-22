@@ -225,4 +225,28 @@
   <data name="ConfirmDeleteCategory" xml:space="preserve">
     <value>Möchten sie die ausgewählte Kategorie löschen? Diese Aktion kann nicht Rückgängig gemacht werden.</value>
   </data>
+  <data name="LastMonth" xml:space="preserve">
+    <value>Letzter Monat</value>
+  </data>
+  <data name="LastWeek" xml:space="preserve">
+    <value>Letzte Woche</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>Letztes Jahr</value>
+  </data>
+  <data name="ThisMonth" xml:space="preserve">
+    <value>Dieser Monat</value>
+  </data>
+  <data name="ThisWeek" xml:space="preserve">
+    <value>Diese Woche</value>
+  </data>
+  <data name="ThisYear" xml:space="preserve">
+    <value>Dieses Jahr</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Heute</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Gestern</value>
+  </data>
 </root>
