@@ -49,7 +49,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" />
+                <ComboBox Grid.Column="0" HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding SelectedSign, Mode=TwoWay}" MinWidth="50" />
                 <TextBox Grid.Column="1" Text="{Binding Path=Amount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch" >
                     <i:Interaction.Behaviors>
                         <controls:SelectAllOnFocusBehavior />
@@ -67,9 +67,15 @@
                 </i:Interaction.Behaviors>
             </TextBox>
 
-            <controls:ImageButton Grid.Row="2" Grid.Column="3" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="{x:Static resources:Captions.Search}" />
-            <controls:ImageButton Grid.Row="0" Grid.Column="3" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="{x:Static resources:Captions.ResetAllFields}" />
-
+            <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <controls:ImageButton Grid.Row="0" Command="{Binding ResetCommand}" ImageSource="/Resources/ic_cancel.png" ToolTip="{x:Static resources:Captions.ResetAllFields}" />
+                <controls:ImageButton Grid.Row="1" Command="{Binding SearchCommand}" ImageSource="/Resources/ic_confirm.png" ToolTip="{x:Static resources:Captions.Search}" />
+             </Grid>
+            
         </Grid>
 
         <local:TransactionListView Grid.Row="1" DataContext="{Binding}"/>
