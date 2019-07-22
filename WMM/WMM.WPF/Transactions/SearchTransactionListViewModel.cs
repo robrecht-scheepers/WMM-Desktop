@@ -182,13 +182,13 @@ namespace WMM.WPF.Transactions
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
                 new AreaCategorySelectionItem("", true),
-                new AreaCategorySelectionItem("--- " + Captions.Area +" ---", true, false)
+                new AreaCategorySelectionItem($"--- {Captions.Area} ---", true, false)
             };
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(area, true));
             }
-            AreaCategoryList.Add(new AreaCategorySelectionItem("--- " + Captions.Category + " ---", false,false));
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Category} ---", false,false));
             foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
