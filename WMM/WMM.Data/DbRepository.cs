@@ -231,9 +231,9 @@ namespace WMM.Data
                 {
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Date))
                     {
-                        commandTextBuilder.AppendLine(" AND t.Date >= @dateFrom AND t.Date <= @dateTo");
-                        command.Parameters.AddWithValue("@dateFrom", searchConfiguration.DateFrom);
-                        command.Parameters.AddWithValue("@dateTo", searchConfiguration.DateTo);
+                        commandTextBuilder.AppendLine(" AND t.Date > @dateFrom AND t.Date < @dateTo");
+                        command.Parameters.AddWithValue("@dateFrom", searchConfiguration.DateFrom.Date.AddSeconds(-1));
+                        command.Parameters.AddWithValue("@dateTo", searchConfiguration.DateTo.AddDays(1).Date);
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Area))
                     {
