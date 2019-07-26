@@ -33,13 +33,15 @@ namespace WMM.WPF.Categories
             EditedName = name;
         }
 
-        public CategoryViewModel(Category category, ObservableCollection<string> areas, IRepository repository, IWindowService windowService)
+        public CategoryViewModel(Category category, ObservableCollection<string> areas,
+            ObservableCollection<ForecastTypeSelectionItem> forecastTypes, IRepository repository,
+            IWindowService windowService)
         {
             _repository = repository;
             _windowService = windowService;
 
             Areas = areas;
-            ForecastTypes = new ObservableCollection<ForecastType>{ForecastType.Exception, ForecastType.Monthly, ForecastType.Daily};
+            ForecastTypes = forecastTypes;
 
             Area = category.Area;
             Name = category.Name;
@@ -88,7 +90,7 @@ namespace WMM.WPF.Categories
 
         public ObservableCollection<string> Areas { get; }
 
-        public ObservableCollection<ForecastType> ForecastTypes { get; }
+        public ObservableCollection<ForecastTypeSelectionItem> ForecastTypes { get; }
 
         public AsyncRelayCommand EditCategoryCommand => _editCategoryCommand ?? (_editCategoryCommand = new AsyncRelayCommand(EditCategory, CanExecuteEditCategory));
 

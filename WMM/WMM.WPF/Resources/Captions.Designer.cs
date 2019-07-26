@@ -268,6 +268,42 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Daily.
+        /// </summary>
+        public static string ForecastTypeDaily {
+            get {
+                return ResourceManager.GetString("ForecastTypeDaily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception.
+        /// </summary>
+        public static string ForecastTypeException {
+            get {
+                return ResourceManager.GetString("ForecastTypeException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monthly.
+        /// </summary>
+        public static string ForecastTypeMonthly {
+            get {
+                return ResourceManager.GetString("ForecastTypeMonthly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recurring.
+        /// </summary>
+        public static string ForecastTypeRecurring {
+            get {
+                return ResourceManager.GetString("ForecastTypeRecurring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string General {
