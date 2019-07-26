@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using WMM.Data;
 using WMM.WPF.Helpers;
 
@@ -35,22 +36,25 @@ namespace WMM.WPF.Forecast
             return (actual, forecast);
         }
 
-        public static double CalculateGenericMonthForecast(Category category, List<Transaction> history)
+        public static double CalculateGenericMonthForecast(Category category, List<Transaction> history, IEnumerable<Transaction> templates)
         {
+            // generic forecast assumes all recurring templates apply
+            var recurring = templates.Where(x => x.Category == category).Select(x => x.Amount).Sum();
+
             if (!history.Any(x => x.Category == category))
-                return 0.0;
+                return recurring;
 
             double forecast;
             switch (category.ForecastType)
             {
                 case ForecastType.Exception:
-                    forecast = 0.0; // no forecast
+                    forecast = recurring; // no forecast
                     break;
                 case ForecastType.Monthly:
-                    forecast = CalculateMonthlyMean(category, history, DateTime.Now);
-                    break;
                 case ForecastType.Daily:
-                    forecast = CalculateMonthlyMean(category, history, DateTime.Now);
+                    var mean = CalculateMonthlyMean(category, history, DateTime.Now);
+                    forecast = Math.Abs(recurring) > Math.Abs(mean)
+                        ? recurring : mean;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
