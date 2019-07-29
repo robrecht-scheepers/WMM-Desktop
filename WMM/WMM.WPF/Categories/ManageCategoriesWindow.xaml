@@ -48,7 +48,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" />
                 <DataGridTextColumn Header="Kategorie" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Forecast" Binding="{Binding ForecastType}" />
+                <DataGridTextColumn Header="Forecast" Binding="{Binding ForecastTypeCaption}" />
                 <DataGridTemplateColumn Width="SizeToCells">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type local:CategoryViewModel}">

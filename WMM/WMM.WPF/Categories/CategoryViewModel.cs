@@ -23,6 +23,7 @@ namespace WMM.WPF.Categories
         private AsyncRelayCommand _editCategoryCommand;
         private RelayCommand _resetCommand;
         private ForecastType _editedForecastType;
+        private string _forecastTypeCaption;
 
         public CategoryViewModel(ObservableCollection<string> areas, IRepository repository, string area, string name, IWindowService windowService)
         {
@@ -46,6 +47,7 @@ namespace WMM.WPF.Categories
             Area = category.Area;
             Name = category.Name;
             ForecastType = category.ForecastType;
+            UpdateForecastTypeCaption();
 
             EditedArea = Area;
             EditedName = Name;
@@ -67,7 +69,18 @@ namespace WMM.WPF.Categories
         public ForecastType ForecastType
         {
             get => _forecastType;
-            private set => SetValue(ref _forecastType, value);
+            private set => SetValue(ref _forecastType, value, UpdateForecastTypeCaption);
+        }
+
+        private void UpdateForecastTypeCaption()
+        {
+            ForecastTypeCaption = ForecastTypes.First(x => x.ForecastType == ForecastType).Caption;
+        }
+
+        public string ForecastTypeCaption
+        {
+            get => _forecastTypeCaption;
+            set => SetValue(ref _forecastTypeCaption, value);
         }
 
         public string EditedArea
