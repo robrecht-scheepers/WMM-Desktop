@@ -23,7 +23,7 @@ namespace WMM.WPF.Categories
         private string _newArea;
         private ObservableCollection<string> _areas;
         private ForecastType _newForecastType;
-        private AsyncRelayCommand<CategoryViewModel> _deleteCategiryCommand;
+        private AsyncRelayCommand<CategoryViewModel> _deleteCategoryCommand;
 
         public ManageCategoriesViewModel(IRepository repository, IWindowService windowService)
         {
@@ -31,7 +31,13 @@ namespace WMM.WPF.Categories
             _windowService = windowService;
             Areas = new ObservableCollection<string>();
             Categories = new ObservableCollection<CategoryViewModel>();
-            ForecastTypes = new ObservableCollection<ForecastType> { ForecastType.Exception, ForecastType.Monthly, ForecastType.Daily };
+            ForecastTypes = new ObservableCollection<ForecastTypeSelectionItem>
+            {
+                new ForecastTypeSelectionItem(ForecastType.Exception, Captions.ForecastTypeException),
+                new ForecastTypeSelectionItem(ForecastType.Monthly, Captions.ForecastTypeMonthly),
+                new ForecastTypeSelectionItem(ForecastType.Daily, Captions.ForecastTypeDaily),
+                new ForecastTypeSelectionItem(ForecastType.Recurring, Captions.ForecastTypeRecurring),
+            };
         }
 
         public void Initialize()
@@ -44,7 +50,7 @@ namespace WMM.WPF.Categories
             {
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
-                    Categories.Add(new CategoryViewModel(category, Areas, _repository, _windowService));
+                    Categories.Add(new CategoryViewModel(category, Areas, ForecastTypes, _repository, _windowService));
                 }
             }
         }
@@ -57,7 +63,7 @@ namespace WMM.WPF.Categories
 
         public ObservableCollection<CategoryViewModel> Categories { get; }
 
-        public ObservableCollection<ForecastType> ForecastTypes { get; }
+        public ObservableCollection<ForecastTypeSelectionItem> ForecastTypes { get; }
 
         public string AreaForNewCategory
         {
@@ -130,7 +136,7 @@ namespace WMM.WPF.Categories
             NewArea = "";
         }
 
-        public AsyncRelayCommand<CategoryViewModel> DeleteCategoryCommand => _deleteCategiryCommand ?? (_deleteCategiryCommand = new AsyncRelayCommand<CategoryViewModel>(DeleteCategory));
+        public AsyncRelayCommand<CategoryViewModel> DeleteCategoryCommand => _deleteCategoryCommand ?? (_deleteCategoryCommand = new AsyncRelayCommand<CategoryViewModel>(DeleteCategory));
 
         private async Task DeleteCategory(CategoryViewModel category)
         {

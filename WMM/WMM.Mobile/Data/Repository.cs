@@ -62,12 +62,12 @@ namespace WMM.Mobile.Data
             }
         }
 
-        public async Task AddTransaction(DateTime date, string category, double amount, string empty)
+        public  Task AddTransaction(DateTime date, string category, double amount, string empty)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactions()
+        public  Task<IEnumerable<Transaction>> GetTransactions()
         {
             throw new NotImplementedException();
         }

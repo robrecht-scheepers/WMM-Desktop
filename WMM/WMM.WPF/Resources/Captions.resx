@@ -258,4 +258,16 @@
   <data name="Yesterday" xml:space="preserve">
     <value>Yesterday</value>
   </data>
+  <data name="ForecastTypeDaily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="ForecastTypeException" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="ForecastTypeMonthly" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
+  <data name="ForecastTypeRecurring" xml:space="preserve">
+    <value>Recurring</value>
+  </data>
 </root>

@@ -19,6 +19,7 @@ namespace WMM.WPF.Forecast
             switch (category.ForecastType)
             {
                 case ForecastType.Exception:
+                case ForecastType.Recurring:
                     forecast = actual; // no forecast
                     break;
                 case ForecastType.Monthly:
@@ -48,6 +49,7 @@ namespace WMM.WPF.Forecast
             switch (category.ForecastType)
             {
                 case ForecastType.Exception:
+                case ForecastType.Recurring:
                     forecast = recurring; // no forecast
                     break;
                 case ForecastType.Monthly:
