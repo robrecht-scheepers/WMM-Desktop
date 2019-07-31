@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WMM.Data", "WMM.Data\WMM.Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMM.WPF", "WMM.WPF\WMM.WPF.csproj", "{DE7B0004-AC66-4081-BFB7-F0D4BEB9F4F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMM.Mobile", "WMM.Mobile\WMM.Mobile.csproj", "{3BC0AC7E-3B3B-4D3F-9CC0-B2BDECC460A6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,8 +21,6 @@ Global
 		{DE7B0004-AC66-4081-BFB7-F0D4BEB9F4F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE7B0004-AC66-4081-BFB7-F0D4BEB9F4F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE7B0004-AC66-4081-BFB7-F0D4BEB9F4F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3BC0AC7E-3B3B-4D3F-9CC0-B2BDECC460A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BC0AC7E-3B3B-4D3F-9CC0-B2BDECC460A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
