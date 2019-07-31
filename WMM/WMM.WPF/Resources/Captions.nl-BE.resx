@@ -270,4 +270,7 @@
   <data name="ForecastTypeRecurring" xml:space="preserve">
     <value>Vaste kost</value>
   </data>
+  <data name="CategoryType" xml:space="preserve">
+    <value>Categorie type</value>
+  </data>
 </root>

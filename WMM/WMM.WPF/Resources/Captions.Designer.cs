@@ -133,6 +133,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category type.
+        /// </summary>
+        public static string CategoryType {
+            get {
+                return ResourceManager.GetString("CategoryType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string Comment {
