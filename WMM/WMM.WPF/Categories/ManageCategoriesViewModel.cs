@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Forecast;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Resources;
@@ -33,10 +34,10 @@ namespace WMM.WPF.Categories
             Categories = new ObservableCollection<CategoryViewModel>();
             ForecastTypes = new ObservableCollection<ForecastTypeSelectionItem>
             {
-                new ForecastTypeSelectionItem(ForecastType.Exception, Captions.ForecastTypeException),
-                new ForecastTypeSelectionItem(ForecastType.Monthly, Captions.ForecastTypeMonthly),
-                new ForecastTypeSelectionItem(ForecastType.Daily, Captions.ForecastTypeDaily),
-                new ForecastTypeSelectionItem(ForecastType.Recurring, Captions.ForecastTypeRecurring),
+                new ForecastTypeSelectionItem(ForecastType.Exception, ForecastType.Exception.ToCaption()),
+                new ForecastTypeSelectionItem(ForecastType.Monthly, ForecastType.Monthly.ToCaption()),
+                new ForecastTypeSelectionItem(ForecastType.Daily, ForecastType.Daily.ToCaption()),
+                new ForecastTypeSelectionItem(ForecastType.Recurring, ForecastType.Recurring.ToCaption()),
             };
         }
 

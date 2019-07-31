@@ -75,6 +75,7 @@
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
     <Compile Include="Forecast\ForecastLineGroup.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
+    <Compile Include="Forecast\ForecastTypeExtensions.cs" />
     <Compile Include="Forecast\ForecastViewModel.cs" />
     <Compile Include="Forecast\ForecastWindow.xaml.cs">
       <DependentUpon>ForecastWindow.xaml</DependentUpon>
