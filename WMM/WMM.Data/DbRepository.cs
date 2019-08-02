@@ -269,6 +269,12 @@ namespace WMM.Data
                         command.Parameters.AddWithValue("@recurring", searchConfiguration.Recurring);
                     }
 
+                    if (searchConfiguration.Parameters.HasFlag(SearchParameter.CategoryType))
+                    {
+                        commandTextBuilder.AppendLine(" AND c.ForecastType = @categoryType");
+                        command.Parameters.AddWithValue("@categoryType", searchConfiguration.CategoryType);
+                    }
+
                     command.CommandText = commandTextBuilder.ToString();
                     dbConnection.Open();
                     using (var reader = await command.ExecuteReaderAsync())

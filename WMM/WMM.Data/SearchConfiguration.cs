@@ -14,7 +14,7 @@ namespace WMM.Data
         private double _amount;
         private bool _transactionDirectionPositive;
         private bool _recurring;
-
+        private ForecastType _categoryType;
 
         public SearchConfiguration()
         {
@@ -100,6 +100,16 @@ namespace WMM.Data
             {
                 _recurring = value;
                 Parameters |= SearchParameter.Recurring;
+            }
+        }
+
+        public ForecastType CategoryType
+        {
+            get => _categoryType;
+            set
+            {
+                _categoryType = value;
+                Parameters |= SearchParameter.CategoryType;
             }
         }
     }
