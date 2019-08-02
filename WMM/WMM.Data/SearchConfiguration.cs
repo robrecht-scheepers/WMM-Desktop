@@ -14,7 +14,7 @@ namespace WMM.Data
         private double _amount;
         private bool _transactionDirectionPositive;
         private bool _recurring;
-        private ForecastType _categoryType;
+        private CategoryType _categoryType;
 
         public SearchConfiguration()
         {
@@ -103,7 +103,7 @@ namespace WMM.Data
             }
         }
 
-        public ForecastType CategoryType
+        public CategoryType CategoryType
         {
             get => _categoryType;
             set

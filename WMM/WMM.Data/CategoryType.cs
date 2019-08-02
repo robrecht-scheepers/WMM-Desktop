@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WMM.Data
 {
-    public enum ForecastType
+    public enum CategoryType
     {
         Exception = 0,  // exceptional expenses, not forcastable
         Monthly = 1,    // to be forcasted by a monthly mean value

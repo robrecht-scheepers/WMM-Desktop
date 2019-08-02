@@ -15,15 +15,15 @@ namespace WMM.WPF.Categories
     {
         private string _area;
         private string _name;
-        private ForecastType _forecastType;
+        private CategoryType _categoryType;
         private string _editedArea;
         private string _editedName;
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private AsyncRelayCommand _editCategoryCommand;
         private RelayCommand _resetCommand;
-        private ForecastType _editedForecastType;
-        private string _forecastTypeCaption;
+        private CategoryType _editedCategoryType;
+        private string _categoryTypeCaption;
 
         public CategoryViewModel(ObservableCollection<string> areas, IRepository repository, string area, string name, IWindowService windowService)
         {
@@ -35,23 +35,23 @@ namespace WMM.WPF.Categories
         }
 
         public CategoryViewModel(Category category, ObservableCollection<string> areas,
-            ObservableCollection<ForecastTypeSelectionItem> forecastTypes, IRepository repository,
+            ObservableCollection<CategoryTypeSelectionItem> categoryTypes, IRepository repository,
             IWindowService windowService)
         {
             _repository = repository;
             _windowService = windowService;
 
             Areas = areas;
-            ForecastTypes = forecastTypes;
+            CategoryTypes = categoryTypes;
 
             Area = category.Area;
             Name = category.Name;
-            ForecastType = category.ForecastType;
-            UpdateForecastTypeCaption();
+            CategoryType = category.CategoryType;
+            UpdateCategoryTypeCaption();
 
             EditedArea = Area;
             EditedName = Name;
-            EditedForecastType = ForecastType;
+            EditedCategoryType = CategoryType;
         }
 
         public string Area
@@ -66,21 +66,21 @@ namespace WMM.WPF.Categories
             private set => SetValue(ref _name, value);
         }
 
-        public ForecastType ForecastType
+        public CategoryType CategoryType
         {
-            get => _forecastType;
-            private set => SetValue(ref _forecastType, value, UpdateForecastTypeCaption);
+            get => _categoryType;
+            private set => SetValue(ref _categoryType, value, UpdateCategoryTypeCaption);
         }
 
-        private void UpdateForecastTypeCaption()
+        private void UpdateCategoryTypeCaption()
         {
-            ForecastTypeCaption = ForecastTypes.First(x => x.ForecastType == ForecastType).Caption;
+            CategoryTypeCaption = CategoryTypes.First(x => x.CategoryType == CategoryType).Caption;
         }
 
-        public string ForecastTypeCaption
+        public string CategoryTypeCaption
         {
-            get => _forecastTypeCaption;
-            set => SetValue(ref _forecastTypeCaption, value);
+            get => _categoryTypeCaption;
+            set => SetValue(ref _categoryTypeCaption, value);
         }
 
         public string EditedArea
@@ -95,15 +95,15 @@ namespace WMM.WPF.Categories
             set => SetValue(ref _editedName, value);
         }
 
-        public ForecastType EditedForecastType
+        public CategoryType EditedCategoryType
         {
-            get => _editedForecastType;
-            set => SetValue(ref _editedForecastType, value);
+            get => _editedCategoryType;
+            set => SetValue(ref _editedCategoryType, value);
         }
 
         public ObservableCollection<string> Areas { get; }
 
-        public ObservableCollection<ForecastTypeSelectionItem> ForecastTypes { get; }
+        public ObservableCollection<CategoryTypeSelectionItem> CategoryTypes { get; }
 
         public AsyncRelayCommand EditCategoryCommand => _editCategoryCommand ?? (_editCategoryCommand = new AsyncRelayCommand(EditCategory, CanExecuteEditCategory));
 
@@ -111,14 +111,14 @@ namespace WMM.WPF.Categories
         {
             return !string.IsNullOrEmpty(EditedArea)
                     && !string.IsNullOrEmpty(EditedName)  
-                    && (EditedArea != Area || EditedName != Name || EditedForecastType != ForecastType);
+                    && (EditedArea != Area || EditedName != Name || EditedCategoryType != CategoryType);
         }
 
         private async Task EditCategory()
         {
             try
             {
-                await _repository.EditCategory(Name, EditedArea, EditedName, EditedForecastType);
+                await _repository.EditCategory(Name, EditedArea, EditedName, EditedCategoryType);
             }
             catch (Exception e)
             {
@@ -127,7 +127,7 @@ namespace WMM.WPF.Categories
             
             Name = EditedName;
             Area = EditedArea;
-            ForecastType = EditedForecastType;
+            CategoryType = EditedCategoryType;
         }
 
         public RelayCommand ResetCommand => _resetCommand ?? (_resetCommand = new RelayCommand(Reset));
@@ -136,7 +136,7 @@ namespace WMM.WPF.Categories
         {
             EditedName = Name;
             EditedArea = Area;
-            EditedForecastType = ForecastType;
+            EditedCategoryType = CategoryType;
         }
     }
 }

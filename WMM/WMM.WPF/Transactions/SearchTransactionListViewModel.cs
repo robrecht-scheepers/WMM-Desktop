@@ -38,7 +38,7 @@ namespace WMM.WPF.Transactions
         private double? _amount;
         private string _comments;
         private string _selectedSign;
-        private IEnumerable<ForecastTypeSelectionItem> _categoryTypeList;
+        private IEnumerable<CategoryTypeSelectionItem> _categoryTypeList;
         private ObservableCollection<AreaCategorySelectionItem> _areaCategoryList;
         private AreaCategorySelectionItem _selectedAreaCategoryItem;
         private AsyncRelayCommand _searchCommand;
@@ -49,7 +49,7 @@ namespace WMM.WPF.Transactions
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
-            _categoryTypeList = ForecastTypeSelectionItem.GetList();
+            _categoryTypeList = CategoryTypeSelectionItem.GetList();
             InitializeRecurringOptionList();
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
         }
@@ -142,7 +142,7 @@ namespace WMM.WPF.Transactions
                         break;
                     case AreaCategorySelectionType.CategoryType:
                         searchConfiguration.CategoryType =
-                            _categoryTypeList.First(x => x.Caption == SelectedAreaCategoryItem.Name).ForecastType;
+                            _categoryTypeList.First(x => x.Caption == SelectedAreaCategoryItem.Name).CategoryType;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -200,9 +200,9 @@ namespace WMM.WPF.Transactions
             };
 
             AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.CategoryType} ---", AreaCategorySelectionType.CategoryType, false));
-            foreach (var forecastTypeSelectionItem in _categoryTypeList)
+            foreach (var categoryTypeSelectionItem in _categoryTypeList)
             {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(forecastTypeSelectionItem.Caption, AreaCategorySelectionType.CategoryType));
+                AreaCategoryList.Add(new AreaCategorySelectionItem(categoryTypeSelectionItem.Caption, AreaCategorySelectionType.CategoryType));
             }
             AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Area} ---", AreaCategorySelectionType.Area, false));
             foreach (var area in Repository.GetAreas().OrderBy(x => x))

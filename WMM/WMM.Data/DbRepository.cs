@@ -688,10 +688,10 @@ namespace WMM.Data
                     {
                         var area = reader.GetString(0);
                         var category = reader.GetStringNullSafe(1);
-                        var forecastType = (ForecastType)reader.GetInt32NullSafe(2);
+                        var categoryType = (CategoryType)reader.GetInt32NullSafe(2);
 
-                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && forecastType >= 0)
-                            categories.Add(new Category(area,category,forecastType));
+                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && categoryType >= 0)
+                            categories.Add(new Category(area,category,categoryType));
 
                         if (!string.IsNullOrEmpty(area))
                         {
@@ -724,11 +724,11 @@ namespace WMM.Data
             OnCategoresUpdated();
         }
 
-        public async Task AddCategory(string area, string category, ForecastType forecastType)
+        public async Task AddCategory(string area, string category, CategoryType categoryType)
         {
             const string commandText =
                 "INSERT INTO Categories (Id,Area,Name,ForecastType) " +
-                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category, @forecastType);";
+                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category, @categoryType);";
             using (var dbConnection = GetConnection())
             {
                 using (var dbCommand = new SQLiteCommand(dbConnection) { CommandText = commandText })
@@ -736,7 +736,7 @@ namespace WMM.Data
                     dbCommand.Parameters.AddWithValue("@id", Guid.NewGuid());
                     dbCommand.Parameters.AddWithValue("@area", area);
                     dbCommand.Parameters.AddWithValue("@category", category);
-                    dbCommand.Parameters.AddWithValue("@forecastType", forecastType);
+                    dbCommand.Parameters.AddWithValue("@categoryType", categoryType);
                     dbConnection.Open();
                     await dbCommand.ExecuteNonQueryAsync();
                 }
@@ -747,11 +747,11 @@ namespace WMM.Data
         }
 
         public async Task EditCategory(string oldCategory, string newArea, string newCategory,
-            ForecastType newForecastType)
+            CategoryType newCategoryType)
         {
             const string commandText =
                 "UPDATE Categories " +
-                "SET Name = @newName, ForecastType = @newForecastType, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
+                "SET Name = @newName, ForecastType = @newCategoryType, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
                 "WHERE Name = @oldName;";
             using (var dbConnection = GetConnection())
             {
@@ -760,7 +760,7 @@ namespace WMM.Data
                     dbCommand.Parameters.AddWithValue("@oldName", oldCategory);
                     dbCommand.Parameters.AddWithValue("@newArea", newArea);
                     dbCommand.Parameters.AddWithValue("@newName", newCategory);
-                    dbCommand.Parameters.AddWithValue("@newForecastType", newForecastType);
+                    dbCommand.Parameters.AddWithValue("@newCategoryType", newCategoryType);
                     dbConnection.Open();
                     await dbCommand.ExecuteNonQueryAsync();
                 }

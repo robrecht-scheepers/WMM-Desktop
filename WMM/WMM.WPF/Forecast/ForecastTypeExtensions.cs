@@ -10,20 +10,20 @@ namespace WMM.WPF.Forecast
 {
     public static class ForecastTypeExtensions
     {
-        public static string ToCaption(this ForecastType forecastType)
+        public static string ToCaption(this CategoryType categoryType)
         {
-            switch (forecastType)
+            switch (categoryType)
             {
-                case ForecastType.Exception:
+                case CategoryType.Exception:
                     return Captions.ForecastTypeException;
-                case ForecastType.Monthly:
+                case CategoryType.Monthly:
                     return Captions.ForecastTypeMonthly;
-                case ForecastType.Daily:
+                case CategoryType.Daily:
                     return Captions.ForecastTypeDaily;
-                case ForecastType.Recurring:
+                case CategoryType.Recurring:
                     return Captions.ForecastTypeRecurring;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(forecastType), forecastType, null);
+                    throw new ArgumentOutOfRangeException(nameof(categoryType), categoryType, null);
             }
         }
     }

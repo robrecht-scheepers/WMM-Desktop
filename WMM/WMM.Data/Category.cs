@@ -6,16 +6,16 @@ namespace WMM.Data
 {
     public class Category
     {
-        public Category(string area, string name, ForecastType forecastType)
+        public Category(string area, string name, CategoryType categoryType)
         {
             Area = area;
             Name = name;
-            ForecastType = forecastType;
+            CategoryType = categoryType;
         }
 
         public string Area { get; }
         public string Name { get; }
-        public ForecastType ForecastType { get; }
+        public CategoryType CategoryType { get; }
 
         public override string ToString()
         {

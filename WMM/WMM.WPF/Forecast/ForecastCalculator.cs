@@ -16,18 +16,18 @@ namespace WMM.WPF.Forecast
 
             var actual = CalculateActualTotal(category, history, date);
             double forecast;
-            switch (category.ForecastType)
+            switch (category.CategoryType)
             {
-                case ForecastType.Exception:
-                case ForecastType.Recurring:
+                case CategoryType.Exception:
+                case CategoryType.Recurring:
                     forecast = actual; // no forecast
                     break;
-                case ForecastType.Monthly:
+                case CategoryType.Monthly:
                     var mean = CalculateMonthlyMean(category, history, date);
                     forecast =  Math.Abs(actual) > Math.Abs(mean)
                            ? actual : mean;
                     break;
-                case ForecastType.Daily:
+                case CategoryType.Daily:
                     forecast = CalculateDailyForecast(category, history, date);
                     break;
                 default:
@@ -46,14 +46,14 @@ namespace WMM.WPF.Forecast
                 return recurring;
 
             double forecast;
-            switch (category.ForecastType)
+            switch (category.CategoryType)
             {
-                case ForecastType.Exception:
-                case ForecastType.Recurring:
+                case CategoryType.Exception:
+                case CategoryType.Recurring:
                     forecast = recurring; // no forecast
                     break;
-                case ForecastType.Monthly:
-                case ForecastType.Daily:
+                case CategoryType.Monthly:
+                case CategoryType.Daily:
                     var mean = CalculateMonthlyMean(category, history, DateTime.Now);
                     forecast = Math.Abs(recurring) > Math.Abs(mean)
                         ? recurring : mean;
