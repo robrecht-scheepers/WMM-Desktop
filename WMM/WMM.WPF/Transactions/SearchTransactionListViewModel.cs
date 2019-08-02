@@ -38,6 +38,7 @@ namespace WMM.WPF.Transactions
         private double? _amount;
         private string _comments;
         private string _selectedSign;
+        private IEnumerable<ForecastTypeSelectionItem> _categoryTypeList;
         private ObservableCollection<AreaCategorySelectionItem> _areaCategoryList;
         private AreaCategorySelectionItem _selectedAreaCategoryItem;
         private AsyncRelayCommand _searchCommand;
@@ -48,6 +49,7 @@ namespace WMM.WPF.Transactions
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
+            _categoryTypeList = ForecastTypeSelectionItem.GetList();
             InitializeRecurringOptionList();
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
         }
@@ -139,6 +141,8 @@ namespace WMM.WPF.Transactions
                         searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
                         break;
                     case AreaCategorySelectionType.CategoryType:
+                        searchConfiguration.CategoryType =
+                            _categoryTypeList.First(x => x.Caption == SelectedAreaCategoryItem.Name).ForecastType;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -196,7 +200,7 @@ namespace WMM.WPF.Transactions
             };
 
             AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.CategoryType} ---", AreaCategorySelectionType.CategoryType, false));
-            foreach (var forecastTypeSelectionItem in ForecastTypeSelectionItem.GetList())
+            foreach (var forecastTypeSelectionItem in _categoryTypeList)
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(forecastTypeSelectionItem.Caption, AreaCategorySelectionType.CategoryType));
             }
