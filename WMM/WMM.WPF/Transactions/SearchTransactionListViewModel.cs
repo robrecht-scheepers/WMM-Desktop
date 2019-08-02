@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Categories;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Resources;
@@ -28,6 +29,8 @@ namespace WMM.WPF.Transactions
                 Name = name;
                 IsSelectable = isSelectable;
             }
+
+            public static AreaCategorySelectionItem Empty => new AreaCategorySelectionItem("", AreaCategorySelectionType.Area);
         }
 
         private DateTime? _dateFrom;
@@ -189,9 +192,15 @@ namespace WMM.WPF.Transactions
         {
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
-                new AreaCategorySelectionItem("", AreaCategorySelectionType.Area),
-                new AreaCategorySelectionItem($"--- {Captions.Area} ---", AreaCategorySelectionType.Area, false)
+                AreaCategorySelectionItem.Empty
             };
+
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.CategoryType} ---", AreaCategorySelectionType.CategoryType, false));
+            foreach (var forecastTypeSelectionItem in ForecastTypeSelectionItem.GetList())
+            {
+                AreaCategoryList.Add(new AreaCategorySelectionItem(forecastTypeSelectionItem.Caption, AreaCategorySelectionType.CategoryType));
+            }
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Area} ---", AreaCategorySelectionType.Area, false));
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
                 AreaCategoryList.Add(new AreaCategorySelectionItem(area, AreaCategorySelectionType.Area));
