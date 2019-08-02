@@ -13,15 +13,18 @@ namespace WMM.WPF.Transactions
 {
     public class SearchTransactionListViewModel : TransactionListViewModelBase
     {
+        public enum AreaCategorySelectionType { Area, Category, CategoryType}
+
         public class AreaCategorySelectionItem
         {
-            public bool IsArea { get; set; }
+            //public bool IsArea { get; set; }
+            public AreaCategorySelectionType SelectionType { get; set; }
             public string Name { get; set; }
             public bool IsSelectable { get; set; }
 
-            public AreaCategorySelectionItem(string name, bool isArea, bool isSelectable = true)
+            public AreaCategorySelectionItem(string name, AreaCategorySelectionType selectionType, bool isSelectable = true)
             {
-                IsArea = isArea;
+                SelectionType = selectionType;
                 Name = name;
                 IsSelectable = isSelectable;
             }
@@ -124,13 +127,18 @@ namespace WMM.WPF.Transactions
 
             if (!string.IsNullOrWhiteSpace(SelectedAreaCategoryItem?.Name))
             {
-                if (SelectedAreaCategoryItem.IsArea)
+                switch (SelectedAreaCategoryItem.SelectionType)
                 {
-                    searchConfiguration.Area = SelectedAreaCategoryItem.Name;
-                }
-                else
-                {
-                    searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
+                    case AreaCategorySelectionType.Area:
+                        searchConfiguration.Area = SelectedAreaCategoryItem.Name;
+                        break;
+                    case AreaCategorySelectionType.Category:
+                        searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
+                        break;
+                    case AreaCategorySelectionType.CategoryType:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -181,17 +189,17 @@ namespace WMM.WPF.Transactions
         {
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
-                new AreaCategorySelectionItem("", true),
-                new AreaCategorySelectionItem($"--- {Captions.Area} ---", true, false)
+                new AreaCategorySelectionItem("", AreaCategorySelectionType.Area),
+                new AreaCategorySelectionItem($"--- {Captions.Area} ---", AreaCategorySelectionType.Area, false)
             };
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(area, true));
+                AreaCategoryList.Add(new AreaCategorySelectionItem(area, AreaCategorySelectionType.Area));
             }
-            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Category} ---", false,false));
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Category} ---", AreaCategorySelectionType.Category,false));
             foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
             {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
+                AreaCategoryList.Add(new AreaCategorySelectionItem(category,AreaCategorySelectionType.Category));
             }
         }
 
@@ -217,7 +225,8 @@ namespace WMM.WPF.Transactions
 
             DateFrom = dateFrom;
             DateTo = dateTo;
-            SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(x => !x.IsArea && x.IsSelectable && x.Name == category);
+            SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(
+                x => x.SelectionType == AreaCategorySelectionType.Category && x.IsSelectable && x.Name == category);
 
             await Search();
         }
