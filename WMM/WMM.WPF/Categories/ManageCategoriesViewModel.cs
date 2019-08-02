@@ -23,7 +23,7 @@ namespace WMM.WPF.Categories
         private AsyncRelayCommand _addNewAreaCommand;
         private string _newArea;
         private ObservableCollection<string> _areas;
-        private ForecastType _newForecastType;
+        private CategoryType _newCategoryType;
         private AsyncRelayCommand<CategoryViewModel> _deleteCategoryCommand;
 
         public ManageCategoriesViewModel(IRepository repository, IWindowService windowService)
@@ -32,13 +32,7 @@ namespace WMM.WPF.Categories
             _windowService = windowService;
             Areas = new ObservableCollection<string>();
             Categories = new ObservableCollection<CategoryViewModel>();
-            ForecastTypes = new ObservableCollection<ForecastTypeSelectionItem>
-            {
-                new ForecastTypeSelectionItem(ForecastType.Exception, ForecastType.Exception.ToCaption()),
-                new ForecastTypeSelectionItem(ForecastType.Monthly, ForecastType.Monthly.ToCaption()),
-                new ForecastTypeSelectionItem(ForecastType.Daily, ForecastType.Daily.ToCaption()),
-                new ForecastTypeSelectionItem(ForecastType.Recurring, ForecastType.Recurring.ToCaption()),
-            };
+            CategoryTypes = new ObservableCollection<CategoryTypeSelectionItem>(CategoryTypeSelectionItem.GetList());
         }
 
         public void Initialize()
@@ -51,7 +45,7 @@ namespace WMM.WPF.Categories
             {
                 foreach (var category in categories.Where(x => x.Area == area).OrderBy(x => x.Name))
                 {
-                    Categories.Add(new CategoryViewModel(category, Areas, ForecastTypes, _repository, _windowService));
+                    Categories.Add(new CategoryViewModel(category, Areas, CategoryTypes, _repository, _windowService));
                 }
             }
         }
@@ -64,7 +58,7 @@ namespace WMM.WPF.Categories
 
         public ObservableCollection<CategoryViewModel> Categories { get; }
 
-        public ObservableCollection<ForecastTypeSelectionItem> ForecastTypes { get; }
+        public ObservableCollection<CategoryTypeSelectionItem> CategoryTypes { get; }
 
         public string AreaForNewCategory
         {
@@ -84,10 +78,10 @@ namespace WMM.WPF.Categories
             set => SetValue(ref _newArea, value);
         }
 
-        public ForecastType NewForecastType
+        public CategoryType NewCategoryType
         {
-            get => _newForecastType;
-            set => SetValue(ref _newForecastType, value);
+            get => _newCategoryType;
+            set => SetValue(ref _newCategoryType, value);
         }
 
         public AsyncRelayCommand AddNewCategoryCommand => _addNewCategoryCommand ?? (_addNewCategoryCommand = new AsyncRelayCommand(AddNewCategory, CanExecuteAddNewCategory));
@@ -101,7 +95,7 @@ namespace WMM.WPF.Categories
         {
             try
             {
-                await _repository.AddCategory(AreaForNewCategory, NewCategory, NewForecastType);
+                await _repository.AddCategory(AreaForNewCategory, NewCategory, NewCategoryType);
             }
             catch (Exception e)
             {

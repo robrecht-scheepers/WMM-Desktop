@@ -25,7 +25,7 @@ namespace WMM.WPF.Helpers
             var data = new List<object[]> { new object[] {Captions.Date, Captions.Area, Captions.Category, Captions.Amount, Captions.Comment, Captions.Recurring, Captions.CategoryType} };
             foreach (var t in transactions)
             {
-                data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring, t.Category.ForecastType.ToCaption()});
+                data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring, t.Category.CategoryType.ToCaption()});
             }
 
             for(var i = 0; i < data.Count; i++)

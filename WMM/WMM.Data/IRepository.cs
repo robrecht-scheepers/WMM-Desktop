@@ -57,9 +57,9 @@ namespace WMM.Data
 
         Task AddArea(string area);
 
-        Task AddCategory(string area, string category, ForecastType forecastType);
+        Task AddCategory(string area, string category, CategoryType categoryType);
 
-        Task EditCategory(string oldCategory, string newArea, string newCategory, ForecastType newForecastType);
+        Task EditCategory(string oldCategory, string newArea, string newCategory, CategoryType newCategoryType);
 
         Task DeleteCategory(string category, string fallback = null);
 
