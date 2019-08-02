@@ -32,13 +32,7 @@ namespace WMM.WPF.Categories
             _windowService = windowService;
             Areas = new ObservableCollection<string>();
             Categories = new ObservableCollection<CategoryViewModel>();
-            ForecastTypes = new ObservableCollection<ForecastTypeSelectionItem>
-            {
-                new ForecastTypeSelectionItem(ForecastType.Exception, ForecastType.Exception.ToCaption()),
-                new ForecastTypeSelectionItem(ForecastType.Monthly, ForecastType.Monthly.ToCaption()),
-                new ForecastTypeSelectionItem(ForecastType.Daily, ForecastType.Daily.ToCaption()),
-                new ForecastTypeSelectionItem(ForecastType.Recurring, ForecastType.Recurring.ToCaption()),
-            };
+            ForecastTypes = new ObservableCollection<ForecastTypeSelectionItem>(ForecastTypeSelectionItem.GetList());
         }
 
         public void Initialize()
