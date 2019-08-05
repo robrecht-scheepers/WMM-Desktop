@@ -12,8 +12,13 @@ namespace WMM.WPF.Helpers
     {
         public static void OpenInExcel(IEnumerable<Transaction> transactions)
         {
+            var dateCaption = Captions.Date;
+            var areaCaption = Captions.Area;
+            var categoryCaption = Captions.Category;
+            var amountCaption = Captions.Amount;
+
             // check if Excel is installed
-            if(Type.GetTypeFromProgID("Excel.Application") == null)
+            if (Type.GetTypeFromProgID("Excel.Application") == null)
                 throw new Exception(Captions.ExcelNotInstalled);
 
             var app = new Application();
@@ -22,7 +27,7 @@ namespace WMM.WPF.Helpers
             dataSheet.Name = "Data";
 
             // write the data
-            var data = new List<object[]> { new object[] {Captions.Date, Captions.Area, Captions.Category, Captions.Amount, Captions.Comment, Captions.Recurring, Captions.CategoryType} };
+            var data = new List<object[]> { new object[] {dateCaption, areaCaption, categoryCaption, amountCaption, Captions.Comment, Captions.Recurring, Captions.CategoryType} };
             foreach (var t in transactions)
             {
                 data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring, t.Category.CategoryType.ToCaption()});
@@ -39,21 +44,27 @@ namespace WMM.WPF.Helpers
             table.Range.EntireColumn.AutoFit();
             table.ListColumns[4].Range.NumberFormat = "0.00";
 
-            //// create a pivot table
-            //Worksheet pivotSheet = workBook.Sheets[2];
-            //pivotSheet.Name = "Pivot";
-            //var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
-            //var pivotTable = cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
+            // create a pivot table
+            Worksheet pivotSheet = workBook.Sheets[2];
+            pivotSheet.Name = "Pivot";
+            var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
+            var pivotTable = cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
 
             //pivotTable.SmallGrid = false;
             //pivotTable.ShowTableStyleRowStripes = true;
             //pivotTable.TableStyle2 = "PivotStyleLight1";
 
-            //// configure pivotTable
-            //var datum = pivotTable.PivotFields("Datum");
-            //datum.Orientation = XlPivotFieldOrientation.xlColumnField;
-            ////datum.DataRange.Group(Missing.Value, Missing.Value, Missing.Value,
-            ////    new[] {false, false, false, false, true, false, true});
+            // configure pivotTable
+            var datum = pivotTable.PivotFields(dateCaption);
+            datum.Orientation = XlPivotFieldOrientation.xlColumnField;
+            //datum.DataRange.Group(Missing.Value, Missing.Value, Missing.Value,
+            //    new[] {false, false, false, false, true, false, true});
+
+            var area = pivotTable.PivotFields(areaCaption);
+            area.Orientation = XlPivotFieldOrientation.xlRowField;
+
+            var amount = pivotTable.PivotFields(amountCaption);
+            amount.Orientation = XlPivotFieldOrientation.xlDataField;
 
             app.Visible = true;
 
