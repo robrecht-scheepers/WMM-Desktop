@@ -1,10 +1,13 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using WMM.Data;
 using WMM.WPF.Forecast;
 using WMM.WPF.Resources;
+using ListObject = Microsoft.Office.Interop.Excel.ListObject;
 
 namespace WMM.WPF.Helpers
 {
@@ -22,49 +25,58 @@ namespace WMM.WPF.Helpers
                 throw new Exception(Captions.ExcelNotInstalled);
 
             var app = new Application();
-            var workBook = app.Workbooks.Add();
-            Worksheet dataSheet = workBook.Sheets[1];
-            dataSheet.Name = "Data";
+            var workBook = app.Workbooks.Add(@"c:\TEMP\WMM\Excel\WMM_file.xlsx");
+            var dataSheet = workBook.Worksheets["Data"];
+            ListObject dataTable = null;
+            Range tableRange = null;
+            foreach (ListObject table in dataSheet.ListObjects)
+            {
+                dataTable = table;
+                tableRange = table.Range;
+                break;
+            }
+            if(tableRange == null)
+                return; // TODO: better handling?
 
             // write the data
-            var data = new List<object[]> { new object[] {dateCaption, areaCaption, categoryCaption, amountCaption, Captions.Comment, Captions.Recurring, Captions.CategoryType} };
+            var data = new List<object[]>();// { new object[] { dateCaption, areaCaption, categoryCaption, amountCaption, Captions.Comment, Captions.Recurring, Captions.CategoryType } };
             foreach (var t in transactions)
             {
-                data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring, t.Category.CategoryType.ToCaption()});
+                data.Add(new object[] { t.Date, t.Category.Area, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring, t.Category.CategoryType.ToCaption() });
             }
+            for (var i = 0; i < data.Count; i++)
+                for (var j = 0; j < data[0].Length; j++)
+                {
+                    dataSheet.Cells[i + 2, j + 1] = data[i][j];
+                }
 
-            for(var i = 0; i < data.Count; i++)
-            for(var j = 0; j < data[0].Length; j++)
-            {
-                dataSheet.Cells[i + 1, j + 1] = data[i][j];
-            }
 
-            // create and format an excel table
-            var table = dataSheet.ListObjects.Add(); 
-            table.Range.EntireColumn.AutoFit();
-            table.ListColumns[4].Range.NumberFormat = "0.00";
+            tableRange.EntireColumn.AutoFit();
+            dataTable.ListColumns[4].Range.Style = "Currency";
 
-            // create a pivot table
-            Worksheet pivotSheet = workBook.Sheets[2];
-            pivotSheet.Name = "Pivot";
-            var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
-            var pivotTable = cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
+            //// create a pivot table
+            //Worksheet pivotSheet = workBook.Sheets[2];
+            //pivotSheet.Name = "Pivot";
+            //var cache = workBook.PivotCaches().Add(XlPivotTableSourceType.xlDatabase, table.Range);
+            //var pivotTable = cache.CreatePivotTable(pivotSheet.Range["A1"], "Pivot name");
 
-            //pivotTable.SmallGrid = false;
-            //pivotTable.ShowTableStyleRowStripes = true;
-            //pivotTable.TableStyle2 = "PivotStyleLight1";
+            ////pivotTable.SmallGrid = false;
+            ////pivotTable.ShowTableStyleRowStripes = true;
+            ////pivotTable.TableStyle2 = "PivotStyleLight1";
 
-            // configure pivotTable
-            var datum = pivotTable.PivotFields(dateCaption);
-            datum.Orientation = XlPivotFieldOrientation.xlColumnField;
-            //datum.DataRange.Group(Missing.Value, Missing.Value, Missing.Value,
+            //// configure pivotTable
+            //var date = pivotTable.PivotFields(dateCaption);
+            //date.Orientation = XlPivotFieldOrientation.xlColumnField;
+            //var dateRange = (Range)date.DataRange;
+            //dateRange.Name = "DateRange";
+            //dateRange.Group(Missing.Value, Missing.Value, Missing.Value,
             //    new[] {false, false, false, false, true, false, true});
 
-            var area = pivotTable.PivotFields(areaCaption);
-            area.Orientation = XlPivotFieldOrientation.xlRowField;
+            //var area = pivotTable.PivotFields(areaCaption);
+            //area.Orientation = XlPivotFieldOrientation.xlRowField;
 
-            var amount = pivotTable.PivotFields(amountCaption);
-            amount.Orientation = XlPivotFieldOrientation.xlDataField;
+            //var amount = pivotTable.PivotFields(amountCaption);
+            //amount.Orientation = XlPivotFieldOrientation.xlDataField;
 
             app.Visible = true;
 
