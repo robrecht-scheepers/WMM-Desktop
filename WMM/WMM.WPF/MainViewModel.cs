@@ -11,6 +11,7 @@ using WMM.WPF.Forecast;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
+using WMM.WPF.Resources;
 using WMM.WPF.Transactions;
 
 namespace WMM.WPF
@@ -30,15 +31,16 @@ namespace WMM.WPF
             _windowService = windowService;
             MonthBalanceViewModels = new ObservableCollection<MonthBalanceViewModel>();
 
+            _repository.TransactionAdded += async (s, a) => { await OnTransactionAddedDeleted(a.Transaction); };
+            _repository.TransactionDeleted += async (s, a) => { await OnTransactionAddedDeleted(a.Transaction); };
+            _repository.TransactionUpdated += async (s, a) => { await OnTransactionModified(a.OldTransaction, a.NewTransaction); };
+            _repository.TransactionBulkUpdated += async (s, a) => { await OnTransactionBulkModified(); };
+
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
-            AddTransactionsViewModel.TransactionModified += 
-                async (s, a) => { await OnTransactionModified(a.Transaction); };
             AddTransactionsViewModel.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
 
             SearchTransactions = new SearchTransactionListViewModel(_repository, _windowService);
-            SearchTransactions.TransactionModified +=
-                async (s, a) => { await OnTransactionModified(a.Transaction); };
             SearchTransactions.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
         }
@@ -72,7 +74,7 @@ namespace WMM.WPF
             
         }
 
-        public string AppTitle => $"Haushaltsbuch - {Assembly.GetExecutingAssembly().GetName().Version}";
+        public string AppVersion => $"v{Assembly.GetExecutingAssembly().GetName().Version}";
         
         public ObservableCollection<MonthBalanceViewModel> MonthBalanceViewModels { get; }
 
@@ -92,13 +94,31 @@ namespace WMM.WPF
             _windowService.OpenDialogWindow(RecurringTransactionsViewModel);
         }
 
-        private async Task OnTransactionModified(Transaction transaction)
+        private async Task OnTransactionModified(Transaction transactionOld, Transaction transactionNew)
         {
-            var newTransaction = transaction;
-            var month = newTransaction.Date.FirstDayOfMonth();
+            var monthViewModelOld = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == transactionOld.Date.FirstDayOfMonth());
+            var monthViewModelNew = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == transactionNew.Date.FirstDayOfMonth());
+
+            if (monthViewModelOld != null)
+                await monthViewModelOld.RecalculateBalances(transactionOld.Category);
+            if(monthViewModelNew != null)
+                await monthViewModelNew.RecalculateBalances(transactionNew.Category);
+        }
+
+        private async Task OnTransactionAddedDeleted(Transaction transaction)
+        {
+            var month = transaction.Date.FirstDayOfMonth();
             var monthViewModel = MonthBalanceViewModels.FirstOrDefault(x => x.Month.FirstDayOfMonth() == month);
-            if(monthViewModel != null)
-                await monthViewModel.RecalculateBalances(newTransaction.Date, newTransaction.Category);
+            if (monthViewModel != null)
+                await monthViewModel.RecalculateBalances(transaction.Category);
+        }
+
+        private async Task OnTransactionBulkModified()
+        {
+            foreach (var monthBalanceViewModel in MonthBalanceViewModels)
+            {
+                await monthBalanceViewModel.RecalculateBalances();
+            }
         }
 
         public RelayCommand ShowManageCategoriesCommand => _showManageCategoriesCommand ?? (_showManageCategoriesCommand = new RelayCommand(ShowManageCategories));

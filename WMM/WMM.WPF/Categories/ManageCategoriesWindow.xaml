@@ -7,6 +7,7 @@
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:res="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
+        Name="ManageCategriesWindow"
         d:DataContext="{d:DesignInstance local:ManageCategoriesViewModel}"
         Title="Kategorien Verwalten" Height="450" Width="800">
     <Grid>
@@ -37,7 +38,7 @@
             <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static res:Captions.NewCategory}" Foreground="White" />
             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Areas}" SelectedItem="{Binding AreaForNewCategory, Mode=TwoWay}"/>
             <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding NewCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <ComboBox Grid.Row="1" Grid.Column="3" ItemsSource="{Binding ForecastTypes}" SelectedItem="{Binding NewForecastType, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="1" Grid.Column="3" ItemsSource="{Binding CategoryTypes}" DisplayMemberPath="Caption" SelectedValuePath="CategoryType" SelectedValue="{Binding NewCategoryType, Mode=TwoWay}"/>
             <controls:ImageButton Grid.Row="1" Grid.Column="4" Command="{Binding AddNewCategoryCommand}" ImageSource="/Resources/ic_add.png"/>
 
             
@@ -47,7 +48,19 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" />
                 <DataGridTextColumn Header="Kategorie" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Forecast" Binding="{Binding ForecastType}" />
+                <DataGridTextColumn Header="Forecast" Binding="{Binding CategoryTypeCaption}" />
+                <DataGridTemplateColumn Width="SizeToCells">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:CategoryViewModel}">
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ImageButton 
+                                    Command="{Binding ElementName=ManageCategriesWindow, Path=DataContext.DeleteCategoryCommand}" 
+                                    CommandParameter="{Binding}"
+                                    ImageSource="/Resources/ic_delete.png" Style="{StaticResource DataGridButtonStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate DataType="local:CategoryViewModel">
@@ -61,7 +74,7 @@
                         </Grid.ColumnDefinitions>
                         <ComboBox Grid.Column="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding EditedArea, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Grid.Column="1" Text="{Binding EditedName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding ForecastTypes}" SelectedItem="{Binding EditedForecastType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding CategoryTypes}" DisplayMemberPath="Caption" SelectedValuePath="CategoryType" SelectedValue="{Binding EditedCategoryType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <controls:ImageButton Grid.Column="3" Command="{Binding EditCategoryCommand}" ImageSource="/resources/ic_confirm.png"/>
                         <controls:ImageButton Grid.Column="4" Command="{Binding ResetCommand}" ImageSource="/resources/ic_cancel.png"/>
                     </Grid>

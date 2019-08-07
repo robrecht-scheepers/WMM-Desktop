@@ -83,6 +83,11 @@ namespace WMM.Data
         #endregion
 
         #region transactions
+        public event TransactionEventHandler TransactionAdded;
+        public event TransactionEventHandler TransactionDeleted;
+        public event TransactionUpdateEventHandler TransactionUpdated;
+        public event EventHandler TransactionBulkUpdated;
+
         public async Task<Transaction> AddTransaction(DateTime date, Category category, double amount, string comments, bool recurring)
         {
             var id = Guid.NewGuid();
@@ -111,12 +116,16 @@ namespace WMM.Data
                     lines = await command.ExecuteNonQueryAsync();
                 }
             }
-            
-            return lines == 0
-                ? null
-                : await GetTransaction(id);
-        }
 
+            if (lines == 0)
+                return null;
+            
+            var newTransaction = await GetTransaction(id);
+            TransactionAdded?.Invoke(this, new TransactionEventArgs(newTransaction));
+
+            return newTransaction;
+        }
+        
         public async Task<Transaction> UpdateTransaction(Transaction transaction, DateTime newDate, Category newCategory, double newAmount,
             string newComments)
         {
@@ -139,7 +148,10 @@ namespace WMM.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            return await GetTransaction(transaction.Id);
+            var updatedTransaction = await GetTransaction(transaction.Id);
+            TransactionUpdated?.Invoke(this, new TransactionUpdateEventArgs(transaction, updatedTransaction));
+
+            return updatedTransaction;
         }
 
         public async Task<Transaction> UpdateTransaction(Transaction transaction, Category newCategory, double newAmount, string newComments)
@@ -162,7 +174,10 @@ namespace WMM.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            return await GetTransaction(transaction.Id);
+            var updatedTransaction = await GetTransaction(transaction.Id);
+            TransactionUpdated?.Invoke(this, new TransactionUpdateEventArgs(transaction, updatedTransaction));
+
+            return updatedTransaction;
         }
 
         public async Task DeleteTransaction(Transaction transaction)
@@ -178,6 +193,8 @@ namespace WMM.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
+
+            TransactionDeleted?.Invoke(this, new TransactionEventArgs(transaction));
         }
 
         private async Task<Transaction> GetTransaction(Guid id)
@@ -214,9 +231,9 @@ namespace WMM.Data
                 {
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Date))
                     {
-                        commandTextBuilder.AppendLine(" AND t.Date >= @dateFrom AND t.Date <= @dateTo");
-                        command.Parameters.AddWithValue("@dateFrom", searchConfiguration.DateFrom);
-                        command.Parameters.AddWithValue("@dateTo", searchConfiguration.DateTo);
+                        commandTextBuilder.AppendLine(" AND t.Date > @dateFrom AND t.Date < @dateTo");
+                        command.Parameters.AddWithValue("@dateFrom", searchConfiguration.DateFrom.Date.AddSeconds(-1));
+                        command.Parameters.AddWithValue("@dateTo", searchConfiguration.DateTo.AddDays(1).Date);
                     }
                     if (searchConfiguration.Parameters.HasFlag(SearchParameter.Area))
                     {
@@ -244,6 +261,18 @@ namespace WMM.Data
                         commandTextBuilder.AppendLine(" AND t.Amount BETWEEN @amountMin AND @amountMax");
                         command.Parameters.AddWithValue("@amountMin", searchConfiguration.Amount - 0.001);
                         command.Parameters.AddWithValue("@amountMax", searchConfiguration.Amount + 0.001);
+                    }
+
+                    if (searchConfiguration.Parameters.HasFlag(SearchParameter.Recurring))
+                    {
+                        commandTextBuilder.AppendLine(" AND t.Recurring = @recurring");
+                        command.Parameters.AddWithValue("@recurring", searchConfiguration.Recurring);
+                    }
+
+                    if (searchConfiguration.Parameters.HasFlag(SearchParameter.CategoryType))
+                    {
+                        commandTextBuilder.AppendLine(" AND c.ForecastType = @categoryType");
+                        command.Parameters.AddWithValue("@categoryType", searchConfiguration.CategoryType);
                     }
 
                     command.CommandText = commandTextBuilder.ToString();
@@ -659,10 +688,10 @@ namespace WMM.Data
                     {
                         var area = reader.GetString(0);
                         var category = reader.GetStringNullSafe(1);
-                        var forecastType = (ForecastType)reader.GetInt32NullSafe(2);
+                        var categoryType = (CategoryType)reader.GetInt32NullSafe(2);
 
-                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && forecastType >= 0)
-                            categories.Add(new Category(area,category,forecastType));
+                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && categoryType >= 0)
+                            categories.Add(new Category(area,category,categoryType));
 
                         if (!string.IsNullOrEmpty(area))
                         {
@@ -695,11 +724,11 @@ namespace WMM.Data
             OnCategoresUpdated();
         }
 
-        public async Task AddCategory(string area, string category, ForecastType forecastType)
+        public async Task AddCategory(string area, string category, CategoryType categoryType)
         {
             const string commandText =
                 "INSERT INTO Categories (Id,Area,Name,ForecastType) " +
-                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category, @forecastType);";
+                "VALUES (@id,(SELECT Id FROM Areas WHERE Name = @area), @category, @categoryType);";
             using (var dbConnection = GetConnection())
             {
                 using (var dbCommand = new SQLiteCommand(dbConnection) { CommandText = commandText })
@@ -707,7 +736,7 @@ namespace WMM.Data
                     dbCommand.Parameters.AddWithValue("@id", Guid.NewGuid());
                     dbCommand.Parameters.AddWithValue("@area", area);
                     dbCommand.Parameters.AddWithValue("@category", category);
-                    dbCommand.Parameters.AddWithValue("@forecastType", forecastType);
+                    dbCommand.Parameters.AddWithValue("@categoryType", categoryType);
                     dbConnection.Open();
                     await dbCommand.ExecuteNonQueryAsync();
                 }
@@ -718,11 +747,11 @@ namespace WMM.Data
         }
 
         public async Task EditCategory(string oldCategory, string newArea, string newCategory,
-            ForecastType newForecastType)
+            CategoryType newCategoryType)
         {
             const string commandText =
                 "UPDATE Categories " +
-                "SET Name = @newName, ForecastType = @newForecastType, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
+                "SET Name = @newName, ForecastType = @newCategoryType, Area = (SELECT Id FROM Areas WHERE Name = @newArea) " +
                 "WHERE Name = @oldName;";
             using (var dbConnection = GetConnection())
             {
@@ -731,7 +760,7 @@ namespace WMM.Data
                     dbCommand.Parameters.AddWithValue("@oldName", oldCategory);
                     dbCommand.Parameters.AddWithValue("@newArea", newArea);
                     dbCommand.Parameters.AddWithValue("@newName", newCategory);
-                    dbCommand.Parameters.AddWithValue("@newForecastType", newForecastType);
+                    dbCommand.Parameters.AddWithValue("@newCategoryType", newCategoryType);
                     dbConnection.Open();
                     await dbCommand.ExecuteNonQueryAsync();
                 }
@@ -739,6 +768,39 @@ namespace WMM.Data
 
             await LoadAreasAndCategories();
             OnCategoresUpdated();
+        }
+
+        public async Task DeleteCategory(string category, string fallback = null)
+        {
+            bool transactionsUpdated = false;
+            using (var dbConnection = GetConnection())
+            {
+                using (var dbCommand = new SQLiteCommand(dbConnection))
+                {
+                    string commandText = "BEGIN TRANSACTION; ";
+
+                    if (!string.IsNullOrEmpty(fallback))
+                    {
+                        commandText += "UPDATE Transactions " +
+                                       "SET Category = (SELECT Id FROM Categories WHERE Name = @fallback) " +
+                                       "WHERE Category = (SELECT Id FROM Categories WHERE Name = @category); ";
+                        dbCommand.Parameters.AddWithValue("@fallback", fallback);
+                        transactionsUpdated = true;
+                    }
+
+                    commandText+= "DELETE FROM Categories WHERE Name = @category; " +
+                                  "COMMIT;";
+                    dbCommand.Parameters.AddWithValue("@category", category);
+                    dbCommand.CommandText = commandText;
+                    dbConnection.Open();
+                    await dbCommand.ExecuteNonQueryAsync();
+                }
+            }
+
+            await LoadAreasAndCategories();
+            OnCategoresUpdated();
+            if(transactionsUpdated)
+                TransactionBulkUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler CategoriesUpdated;

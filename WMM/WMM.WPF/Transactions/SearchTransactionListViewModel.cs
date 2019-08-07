@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Categories;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Resources;
@@ -13,18 +14,23 @@ namespace WMM.WPF.Transactions
 {
     public class SearchTransactionListViewModel : TransactionListViewModelBase
     {
+        public enum AreaCategorySelectionType { Area, Category, CategoryType}
+
         public class AreaCategorySelectionItem
         {
-            public bool IsArea { get; set; }
+            //public bool IsArea { get; set; }
+            public AreaCategorySelectionType SelectionType { get; set; }
             public string Name { get; set; }
             public bool IsSelectable { get; set; }
 
-            public AreaCategorySelectionItem(string name, bool isArea, bool isSelectable = true)
+            public AreaCategorySelectionItem(string name, AreaCategorySelectionType selectionType, bool isSelectable = true)
             {
-                IsArea = isArea;
+                SelectionType = selectionType;
                 Name = name;
                 IsSelectable = isSelectable;
             }
+
+            public static AreaCategorySelectionItem Empty => new AreaCategorySelectionItem("", AreaCategorySelectionType.Area);
         }
 
         private DateTime? _dateFrom;
@@ -32,15 +38,19 @@ namespace WMM.WPF.Transactions
         private double? _amount;
         private string _comments;
         private string _selectedSign;
+        private IEnumerable<CategoryTypeSelectionItem> _categoryTypeList;
         private ObservableCollection<AreaCategorySelectionItem> _areaCategoryList;
         private AreaCategorySelectionItem _selectedAreaCategoryItem;
         private AsyncRelayCommand _searchCommand;
         private RelayCommand _resetCommand;
         private Balance _balance;
         private RelayCommand _excelExportCommand;
+        private string _selectedRecurringOption;
 
         public SearchTransactionListViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService, true)
         {
+            _categoryTypeList = CategoryTypeSelectionItem.GetList();
+            InitializeRecurringOptionList();
             Repository.CategoriesUpdated += (s, a) => InitializeAreaCategoryList();
         }
 
@@ -100,6 +110,14 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _areaCategoryList, value);
         }
 
+        public Dictionary<string, bool?> RecurringOptionList { get; set; }
+
+        public string SelectedRecurringOption
+        {
+            get => _selectedRecurringOption;
+            set => SetValue(ref _selectedRecurringOption, value);
+        }
+
         public AsyncRelayCommand SearchCommand => _searchCommand ?? (_searchCommand = new AsyncRelayCommand(Search));
 
         private async Task Search()
@@ -108,28 +126,31 @@ namespace WMM.WPF.Transactions
 
             if (DateFrom.HasValue)
             {
-                searchConfiguration.Parameters |= SearchParameter.Date;
                 searchConfiguration.DateFrom = DateFrom.Value;
                 searchConfiguration.DateTo = DateTo ?? DateFrom.Value;
             }
 
             if (!string.IsNullOrWhiteSpace(SelectedAreaCategoryItem?.Name))
             {
-                if (SelectedAreaCategoryItem.IsArea)
+                switch (SelectedAreaCategoryItem.SelectionType)
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Area;
-                    searchConfiguration.Area = SelectedAreaCategoryItem.Name;
-                }
-                else
-                {
-                    searchConfiguration.Parameters |= SearchParameter.Category;
-                    searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
+                    case AreaCategorySelectionType.Area:
+                        searchConfiguration.Area = SelectedAreaCategoryItem.Name;
+                        break;
+                    case AreaCategorySelectionType.Category:
+                        searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
+                        break;
+                    case AreaCategorySelectionType.CategoryType:
+                        searchConfiguration.CategoryType =
+                            _categoryTypeList.First(x => x.Caption == SelectedAreaCategoryItem.Name).CategoryType;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(Comments))
             {
-                searchConfiguration.Parameters |= SearchParameter.Comments;
                 searchConfiguration.Comments = Comments;
             }
 
@@ -137,16 +158,19 @@ namespace WMM.WPF.Transactions
             {
                 if (Amount.HasValue)
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Amount;
                     searchConfiguration.Amount = SelectedSign == "+"
                         ? Amount.Value
                         : -1.0 * Amount.Value;
                 }
                 else
                 {
-                    searchConfiguration.Parameters |= SearchParameter.Direction;
                     searchConfiguration.TransactionDirectionPositive = (SelectedSign == "+");
                 }
+            }
+
+            if (RecurringOptionList[SelectedRecurringOption].HasValue)
+            {
+                searchConfiguration.Recurring = RecurringOptionList[SelectedRecurringOption].Value;
             }
 
             Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderByDescending(x => x.Date));
@@ -162,6 +186,7 @@ namespace WMM.WPF.Transactions
             SelectedSign = "";
             Amount = null;
             Comments = "";
+            ResetRecurringOption();
 
             Transactions.Clear();
             CalculateBalance();
@@ -171,18 +196,40 @@ namespace WMM.WPF.Transactions
         {
             AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
             {
-                new AreaCategorySelectionItem("", true),
-                new AreaCategorySelectionItem("--- Bereich ---", true, false)
+                AreaCategorySelectionItem.Empty
             };
+
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.CategoryType} ---", AreaCategorySelectionType.CategoryType, false));
+            foreach (var categoryTypeSelectionItem in _categoryTypeList)
+            {
+                AreaCategoryList.Add(new AreaCategorySelectionItem(categoryTypeSelectionItem.Caption, AreaCategorySelectionType.CategoryType));
+            }
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Area} ---", AreaCategorySelectionType.Area, false));
             foreach (var area in Repository.GetAreas().OrderBy(x => x))
             {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(area, true));
+                AreaCategoryList.Add(new AreaCategorySelectionItem(area, AreaCategorySelectionType.Area));
             }
-            AreaCategoryList.Add(new AreaCategorySelectionItem("--- Kategorie ---",false,false));
+            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Category} ---", AreaCategorySelectionType.Category,false));
             foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
             {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(category,false));
+                AreaCategoryList.Add(new AreaCategorySelectionItem(category,AreaCategorySelectionType.Category));
             }
+        }
+
+        private void InitializeRecurringOptionList()
+        {
+            RecurringOptionList = new Dictionary<string, bool?>
+            {
+                {Captions.All, null},
+                {Captions.OnlyRecurring, true},
+                {Captions.NoRecurring, false}
+            };
+            ResetRecurringOption();
+        }
+
+        private void ResetRecurringOption()
+        {
+            SelectedRecurringOption = RecurringOptionList.First(x => x.Value == null).Key;
         }
 
         public async Task SearchForDatesAndCategory(DateTime dateFrom, DateTime dateTo, string category)
@@ -191,7 +238,8 @@ namespace WMM.WPF.Transactions
 
             DateFrom = dateFrom;
             DateTo = dateTo;
-            SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(x => !x.IsArea && x.IsSelectable && x.Name == category);
+            SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(
+                x => x.SelectionType == AreaCategorySelectionType.Category && x.IsSelectable && x.Name == category);
 
             await Search();
         }
@@ -201,6 +249,18 @@ namespace WMM.WPF.Transactions
             Balance = new Balance(
                 Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
                 Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
+        }
+
+        protected override void RepositoryOnTransactionUpdated(object sender, TransactionUpdateEventArgs args)
+        {
+            base.RepositoryOnTransactionUpdated(sender, args);
+            CalculateBalance();
+        }
+
+        protected override void RepositoryOnTransactionDeleted(object sender, TransactionEventArgs args)
+        {
+            base.RepositoryOnTransactionDeleted(sender, args);
+            CalculateBalance();
         }
 
         public RelayCommand ExcelExportCommand =>
@@ -221,18 +281,6 @@ namespace WMM.WPF.Transactions
             {
                 WindowService.ShowMessage(string.Format(Captions.ExcelError, e.Message),Captions.Error);
             }
-        }
-
-        protected override void RaiseTransactionModified(Transaction transaction)
-        {
-            base.RaiseTransactionModified(transaction);
-            CalculateBalance();
-        }
-
-        protected override void RaiseMultipleTransactionsModified()
-        {
-            base.RaiseMultipleTransactionsModified();
-            CalculateBalance();
         }
     }
 }

@@ -16,6 +16,11 @@ namespace WMM.Data
 
         Task DeleteTransaction(Transaction transaction);
 
+        event TransactionEventHandler TransactionAdded;
+        event TransactionEventHandler TransactionDeleted;
+        event TransactionUpdateEventHandler TransactionUpdated;
+        event EventHandler TransactionBulkUpdated;
+
         Task<IEnumerable<Transaction>> GetTransactions();
 
         Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Category category);
@@ -52,9 +57,11 @@ namespace WMM.Data
 
         Task AddArea(string area);
 
-        Task AddCategory(string area, string category, ForecastType forecastType);
+        Task AddCategory(string area, string category, CategoryType categoryType);
 
-        Task EditCategory(string oldCategory, string newArea, string newCategory, ForecastType newForecastType);
+        Task EditCategory(string oldCategory, string newArea, string newCategory, CategoryType newCategoryType);
+
+        Task DeleteCategory(string category, string fallback = null);
 
         event EventHandler CategoriesUpdated;
     }

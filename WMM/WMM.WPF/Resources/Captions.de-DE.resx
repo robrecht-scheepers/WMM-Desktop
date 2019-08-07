@@ -213,4 +213,64 @@
   <data name="Warning" xml:space="preserve">
     <value>Achtung</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="SelectFallbackCategory" xml:space="preserve">
+    <value>Für die Kategorie die Sie löschen möchten, sind bereits Transaktionen gebucht. Bitte wählen Sie eine neue Kategorie für diese Transaktionen.</value>
+  </data>
+  <data name="ConfirmDeleteCategory" xml:space="preserve">
+    <value>Möchten sie die ausgewählte Kategorie löschen? Diese Aktion kann nicht Rückgängig gemacht werden.</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Alles zeigen</value>
+  </data>
+  <data name="LastMonth" xml:space="preserve">
+    <value>Letzter Monat</value>
+  </data>
+  <data name="LastWeek" xml:space="preserve">
+    <value>Letzte Woche</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>Letztes Jahr</value>
+  </data>
+  <data name="NoRecurring" xml:space="preserve">
+    <value>Keine Fixkosten zeigen</value>
+  </data>
+  <data name="OnlyRecurring" xml:space="preserve">
+    <value>Nur Fixkosten zeigen</value>
+  </data>
+  <data name="ThisMonth" xml:space="preserve">
+    <value>Dieser Monat</value>
+  </data>
+  <data name="ThisWeek" xml:space="preserve">
+    <value>Diese Woche</value>
+  </data>
+  <data name="ThisYear" xml:space="preserve">
+    <value>Dieses Jahr</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Heute</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Gestern</value>
+  </data>
+  <data name="ForecastTypeDaily" xml:space="preserve">
+    <value>Täglich</value>
+  </data>
+  <data name="ForecastTypeException" xml:space="preserve">
+    <value>Ausnahme</value>
+  </data>
+  <data name="ForecastTypeMonthly" xml:space="preserve">
+    <value>Monatlich</value>
+  </data>
+  <data name="ForecastTypeRecurring" xml:space="preserve">
+    <value>Fixkost</value>
+  </data>
+  <data name="CategoryType" xml:space="preserve">
+    <value>Kategorietyp</value>
+  </data>
 </root>

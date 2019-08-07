@@ -108,7 +108,8 @@ namespace WMM.WPF.Forecast
                         areaLinesCurrentMonth.Add(new ForecastLine{Name = category.Name, CurrentAmount = forecast.Item1, ForecastAmount = forecast.Item2});
                     }
 
-                    var genericForecast = ForecastCalculator.CalculateGenericMonthForecast(category, history);
+                    var templates = await _repository.GetRecurringTemplates();
+                    var genericForecast = ForecastCalculator.CalculateGenericMonthForecast(category, history, templates);
                     genericForecastTotal += genericForecast;
                     if (Math.Abs(genericForecast) > 0.0)
                     {

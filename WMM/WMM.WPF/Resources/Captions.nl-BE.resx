@@ -124,7 +124,7 @@
     <value>Ontwerp uitvoeren</value>
   </data>
   <data name="AppTitle" xml:space="preserve">
-    <value>Huishoudsboek</value>
+    <value>Huishoudsboekje</value>
   </data>
   <data name="Area" xml:space="preserve">
     <value>Rubriek</value>
@@ -212,5 +212,65 @@
   </data>
   <data name="Warning" xml:space="preserve">
     <value>Waarschuwing</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ConfirmDeleteCategory" xml:space="preserve">
+    <value>Bent u zeker dat u deze categorie wilt verwijderen? Dit kan niet ongedaan gemaakt worden.</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="SelectFallbackCategory" xml:space="preserve">
+    <value>Er zijn al transacties geboekt voor de categorie die u wil verwijderen. Kies een nieuwe categorie voor deze transacties. </value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Alles tonen</value>
+  </data>
+  <data name="LastMonth" xml:space="preserve">
+    <value>Vorige maand</value>
+  </data>
+  <data name="LastWeek" xml:space="preserve">
+    <value>Vorige week</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>Vorig jaar</value>
+  </data>
+  <data name="NoRecurring" xml:space="preserve">
+    <value>Geen vaste kosten</value>
+  </data>
+  <data name="OnlyRecurring" xml:space="preserve">
+    <value>Enkel vaste kosten</value>
+  </data>
+  <data name="ThisMonth" xml:space="preserve">
+    <value>Deze maand</value>
+  </data>
+  <data name="ThisWeek" xml:space="preserve">
+    <value>Deze week</value>
+  </data>
+  <data name="ThisYear" xml:space="preserve">
+    <value>Dit jaar</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Vandaag</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Gisteren</value>
+  </data>
+  <data name="ForecastTypeDaily" xml:space="preserve">
+    <value>Dagelijks</value>
+  </data>
+  <data name="ForecastTypeException" xml:space="preserve">
+    <value>Uitzondering</value>
+  </data>
+  <data name="ForecastTypeMonthly" xml:space="preserve">
+    <value>Maandelijks</value>
+  </data>
+  <data name="ForecastTypeRecurring" xml:space="preserve">
+    <value>Vaste kost</value>
+  </data>
+  <data name="CategoryType" xml:space="preserve">
+    <value>Categorie type</value>
   </data>
 </root>

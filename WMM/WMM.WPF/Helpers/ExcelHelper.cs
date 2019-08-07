@@ -22,10 +22,10 @@ namespace WMM.WPF.Helpers
             dataSheet.Name = "Data";
 
             // write the data
-            var data = new List<object[]> { new object[] {Captions.Date, Captions.Area, Captions.Category, Captions.Amount, Captions.Comment, Captions.Recurring} };
+            var data = new List<object[]> { new object[] {Captions.Date, Captions.Area, Captions.Category, Captions.Amount, Captions.Comment, Captions.Recurring, Captions.CategoryType} };
             foreach (var t in transactions)
             {
-                data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring});
+                data.Add(new object[]{t.Date, t.Category.Area, t.Category, t.Amount, t.Comments, t.Recurring, t.Category.CategoryType.ToCaption()});
             }
 
             for(var i = 0; i < data.Count; i++)
@@ -35,7 +35,7 @@ namespace WMM.WPF.Helpers
             }
 
             // create and format an excel table
-            var table = dataSheet.ListObjects.Add();
+            var table = dataSheet.ListObjects.Add(); 
             table.Range.EntireColumn.AutoFit();
             table.ListColumns[4].Range.NumberFormat = "0.00";
 

@@ -6,6 +6,16 @@ namespace WMM.Data
 {
     public class SearchConfiguration
     {
+        private DateTime _dateFrom;
+        private DateTime _dateTo;
+        private string _area;
+        private string _categoryName;
+        private string _comments;
+        private double _amount;
+        private bool _transactionDirectionPositive;
+        private bool _recurring;
+        private CategoryType _categoryType;
+
         public SearchConfiguration()
         {
             Parameters = SearchParameter.None;
@@ -13,12 +23,94 @@ namespace WMM.Data
 
         public SearchParameter Parameters { get; set; }
 
-        public DateTime DateFrom { get; set; }
-        public DateTime DateTo { get; set; }
-        public string Area { get; set; }
-        public string CategoryName { get; set; }
-        public string Comments { get; set; }
-        public double Amount { get; set; }
-        public bool TransactionDirectionPositive { get; set; }
+        public DateTime DateFrom
+        {
+            get => _dateFrom;
+            set
+            {
+                _dateFrom = value;
+                Parameters |= SearchParameter.Date;
+            }
+        }
+
+        public DateTime DateTo
+        {
+            get => _dateTo;
+            set
+            {
+                _dateTo = value;
+                Parameters |= SearchParameter.Date;
+            }
+        }
+
+        public string Area
+        {
+            get => _area;
+            set
+            {
+                _area = value;
+                Parameters |= SearchParameter.Area;
+            }
+        }
+
+        public string CategoryName
+        {
+            get => _categoryName;
+            set
+            {
+                _categoryName = value;
+                Parameters |= SearchParameter.Category;
+            }
+        }
+
+        public string Comments
+        {
+            get => _comments;
+            set
+            {
+                _comments = value;
+                Parameters |= SearchParameter.Comments;
+            }
+        }
+
+        public double Amount
+        {
+            get => _amount;
+            set
+            {
+                _amount = value;
+                Parameters |= SearchParameter.Amount;
+            }
+        }
+
+        public bool TransactionDirectionPositive
+        {
+            get => _transactionDirectionPositive;
+            set
+            {
+                _transactionDirectionPositive = value;
+                Parameters |= SearchParameter.Direction;
+            }
+        }
+
+        public bool Recurring
+        {
+            get => _recurring;
+            set
+            {
+                _recurring = value;
+                Parameters |= SearchParameter.Recurring;
+            }
+        }
+
+        public CategoryType CategoryType
+        {
+            get => _categoryType;
+            set
+            {
+                _categoryType = value;
+                Parameters |= SearchParameter.CategoryType;
+            }
+        }
     }
 }
