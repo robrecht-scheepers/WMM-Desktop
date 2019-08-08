@@ -40,5 +40,17 @@ namespace WMM.WPF.Properties {
                 return ((string)(this["Language"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExpandedMonthBalances {
+            get {
+                return ((string)(this["ExpandedMonthBalances"]));
+            }
+            set {
+                this["ExpandedMonthBalances"] = value;
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <controls:ImageToggleButton x:Name="ExpandToggleButton" Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png"/>
+        <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
                                     
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
         <controls:ImageButton Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
@@ -35,7 +35,7 @@
         <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
                   ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected" 
                   SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
-                  Visibility="{Binding ElementName=ExpandToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}">
+                  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Area}" />
                 <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" 

@@ -17,6 +17,7 @@ namespace WMM.WPF.Balances
         private Balance _totalBalance;
         private RelayCommand _showRecurringTransactionsCommand;
         private RelayCommand<string> _showDetailTransactionsCommand;
+        private bool _isExpanded;
 
         public DateTime Month { get; }
 
@@ -32,6 +33,20 @@ namespace WMM.WPF.Balances
 
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set => SetValue(ref _isExpanded, value, SaveExpandedState);
+        }
+
+        private void SaveExpandedState()
+        {
+            if(IsExpanded)
+                SettingsHelper.SaveExpandedMonth(Month);
+            else
+                SettingsHelper.SaveCollapsedMonth(Month);
+        }
+
         public MonthBalanceViewModel(DateTime date, IRepository repository, IWindowService windowService)
         {
             _repository = repository;
@@ -39,6 +54,7 @@ namespace WMM.WPF.Balances
             Month = date.FirstDayOfMonth();
             AreaBalances = new ObservableCollection<AreaBalanceViewModel>();
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService, Month);
+            _isExpanded = DateTime.Now.Date.FirstDayOfMonth() == Month || SettingsHelper.IsMonthExpanded(Month);
         }
 
         public async Task Initialize()
@@ -136,6 +152,8 @@ namespace WMM.WPF.Balances
         {
             DetailTransactionsRequested?.Invoke(this, new DetailTransactionsRequestEventArgs(dateFrom, dateTo, category));
         }
+
+
 
     }
 }
