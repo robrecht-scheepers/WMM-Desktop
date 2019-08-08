@@ -64,7 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+<<<<<<< HEAD
     <Compile Include="Controls\ImageToggleButton.cs" />
+=======
     <Compile Include="Categories\CategoryTypeSelectionItem.cs" />
     <Compile Include="Categories\SelectDeleteCategoryFallbackViewModel.cs" />
     <Compile Include="Categories\SelectDeleteCategoryFallbackWindow.xaml.cs">
@@ -73,6 +75,7 @@
     <Compile Include="Controls\PeriodSelector.xaml.cs">
       <DependentUpon>PeriodSelector.xaml</DependentUpon>
     </Compile>
+>>>>>>> master
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
     <Compile Include="Forecast\ForecastLineGroup.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
@@ -82,7 +85,6 @@
       <DependentUpon>ForecastWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ExcelHelper.cs" />
-    <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">
       <DependentUpon>Captions.nl-BE.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -133,15 +135,15 @@
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Transactions\TransactionListViewModelBase.cs" />
+<<<<<<< HEAD
     <Page Include="Controls\ImageToggleButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+=======
     <Page Include="Categories\SelectDeleteCategoryFallbackWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PeriodSelector.xaml">
+>>>>>>> master
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

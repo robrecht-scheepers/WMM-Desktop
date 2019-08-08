@@ -16,22 +16,26 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
-        <controls:ImageButton Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
+        <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
+                                    
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
+        <controls:ImageButton Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
                               ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}"/>
-        <TextBlock Grid.Row="0" Grid.Column="2" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
-        <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
-        <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
+        <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
+        <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
+        <TextBlock Grid.Row="0" Grid.Column="5" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
                        HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
+        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
                   ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected" 
-                  SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*">
+                  SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
+                  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Area}" />
                 <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" 
