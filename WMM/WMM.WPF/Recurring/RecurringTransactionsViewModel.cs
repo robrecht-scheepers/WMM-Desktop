@@ -150,6 +150,17 @@ namespace WMM.WPF.Recurring
         {
             await Repository.ApplyRecurringTemplates(_month);
             await GetItems();
+        }
+
+        protected override void RepositoryOnTransactionDeleted(object sender, TransactionEventArgs args)
+        {
+            base.RepositoryOnTransactionDeleted(sender, args);
+            CalculateBalance();
+        }
+
+        protected override void RepositoryOnTransactionUpdated(object sender, TransactionUpdateEventArgs args)
+        {
+            base.RepositoryOnTransactionUpdated(sender, args);
             CalculateBalance();
         }
     }
