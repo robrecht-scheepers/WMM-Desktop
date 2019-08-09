@@ -113,6 +113,12 @@
                 <Setter Property="Width" Value="{StaticResource GridRowHeight}"/>
                 <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
             </Style>
+            <Style TargetType="controls:ImageToggleButton" x:Key="DataGridToggleButtonStyle" BasedOn="{StaticResource {x:Type controls:ImageToggleButton}}" >
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Height" Value="{StaticResource GridRowHeight}"/>
+                <Setter Property="Width" Value="{StaticResource GridRowHeight}"/>
+                <Setter Property="HoverBackground" Value="{StaticResource SCB5}"/>
+            </Style>
             <DataGridLength x:Key="AmountColumnWidth">100</DataGridLength>
             <system:Double x:Key="AmountWidth">100</system:Double>
 

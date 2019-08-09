@@ -6,6 +6,7 @@
              xmlns:data="clr-namespace:WMM.Data;assembly=WMM.Data"
              xmlns:controls="clr-namespace:WMM.WPF.Controls"
              xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance transactions:TransactionListViewModelBase}"
              Name="TransactionListControlRoot"
@@ -13,27 +14,27 @@
     <Grid>
         <FrameworkElement x:Name="dummy" Visibility="Collapsed"/> <!-- dummy element to pass the data context for binding column visibility --> 
         <DataGrid ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
-                  HorizontalAlignment="Stretch" ColumnWidth="*" >
+                  HorizontalAlignment="Stretch" ColumnWidth="*" RowDetailsVisibilityMode="Visible" >
+            <!--
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="DetailsVisibility" Value="{Binding IsExpanded, Converter={StaticResource BoolToVisi}}" />
+                    <Setter Property="DetailsVisibility" Value="{Binding Path=DataContext.IsEditMode, Converter={StaticResource CollapseWhenFalseConverter}, Mode=OneWay}" />
                 </Style>
             </DataGrid.RowStyle>
+            -->
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Date, StringFormat='dd.MMM.yyyy'}" Width="SizeToCells"
+                <DataGridTextColumn Binding="{Binding Transaction.Date, StringFormat='dd.MMM.yyyy'}" Width="SizeToCells"
                                     Visibility="{Binding Path=DataContext.ShowDate, Source={x:Reference dummy}, Converter={StaticResource CollapseWhenFalseConverter}}"/>
-                <DataGridTextColumn Binding="{Binding Category}" Width="SizeToCells"/>
-                <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
+                <DataGridTextColumn Binding="{Binding Transaction.Category}" Width="SizeToCells"/>
+                <DataGridTextColumn Binding="{Binding Transaction.Amount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-                <DataGridTextColumn Binding="{Binding Comments}" Width="*" />
+                <DataGridTextColumn Binding="{Binding Transaction.Comments}" Width="*" />
                 <DataGridTemplateColumn Width="SizeToCells">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type data:Transaction}">
+                        <DataTemplate DataType="{x:Type transactions:TransactionViewModel}">
                             <StackPanel Orientation="Horizontal">
-                                <controls:ImageButton 
-                                    Command="{Binding ElementName=TransactionListControlRoot, Path=DataContext.EditTransactionCommand}" 
-                                    CommandParameter="{Binding}"
-                                    ImageSource="/Resources/ic_edit.png" Style="{StaticResource DataGridButtonStyle}" />
+                                <controls:ImageToggleButton IsChecked="{Binding IsEditMode, Mode=TwoWay}" 
+                                    CheckedImage="/Resources/ic_edit.png" UncheckedImage="/Resources/ic_delete.png" Style="{StaticResource DataGridToggleButtonStyle}" />
                                 <controls:ImageButton 
                                     Command="{Binding ElementName=TransactionListControlRoot, Path=DataContext.DeleteTransactionCommand}" 
                                     CommandParameter="{Binding}"
@@ -48,6 +49,35 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate DataType="transactions:TransactionViewModel">
+                    <Grid Background="{StaticResource SCB5}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <DatePicker Grid.Row="0" Grid.Column="0" SelectedDate="{Binding EditDate, Mode=TwoWay}" Visibility="{Binding DoEditDate, Converter={StaticResource CollapseWhenFalseConverter}}"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding EditCategory, Mode=TwoWay}"/>
+                        <ComboBox Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Left" ItemsSource="{Binding Signs}" SelectedItem="{Binding EditSign, Mode=TwoWay}" />
+                        <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Path=EditAmount, StringFormat=C, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                            <i:Interaction.Behaviors>
+                                <controls:SelectAllOnFocusBehavior />
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding EditComments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="32"/>
+
+                        <controls:ImageButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" Command="{Binding SaveChangesCommand}" />
+                    </Grid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
 
     </Grid>

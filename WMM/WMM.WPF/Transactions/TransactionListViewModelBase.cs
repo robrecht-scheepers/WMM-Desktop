@@ -12,11 +12,11 @@ namespace WMM.WPF.Transactions
     public class TransactionListViewModelBase : ObservableObject
     {
         private ObservableCollection<TransactionViewModel> _transactions;
-        private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
+        private AsyncRelayCommand<TransactionViewModel> _deleteTransactionCommand;
         private RelayCommand<Transaction> _editTransactionCommand;
         protected readonly IRepository Repository;
         protected readonly IWindowService WindowService;
-        private RelayCommand<Transaction> _useAsTemplateCommand;
+        private RelayCommand<TransactionViewModel> _useAsTemplateCommand;
 
         public TransactionListViewModelBase(IRepository repository, IWindowService windowService, bool showDate)
         {
@@ -38,12 +38,12 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _transactions, value);
         }
 
-        public AsyncRelayCommand<Transaction> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<Transaction>(DeleteTransaction));
-        private async Task DeleteTransaction(Transaction transaction)
+        public AsyncRelayCommand<TransactionViewModel> DeleteTransactionCommand => _deleteTransactionCommand ?? (_deleteTransactionCommand = new AsyncRelayCommand<TransactionViewModel>(DeleteTransaction));
+        private async Task DeleteTransaction(TransactionViewModel transaction)
         {
             if(!WindowService.AskConfirmation(Captions.ConfirmDeleteTransaction))
                 return;
-            await Repository.DeleteTransaction(transaction);
+            await Repository.DeleteTransaction(transaction.Transaction);
         }
 
         public RelayCommand<Transaction> EditTransactionCommand =>
@@ -55,11 +55,11 @@ namespace WMM.WPF.Transactions
             WindowService.OpenDialogWindow(editTransactionViewModel);
         }
 
-        public RelayCommand<Transaction> UseAsTemplateCommand =>
-            _useAsTemplateCommand ?? (_useAsTemplateCommand = new RelayCommand<Transaction>(UseTransactionAsTemplate));
-        private void UseTransactionAsTemplate(Transaction transaction)
+        public RelayCommand<TransactionViewModel> UseAsTemplateCommand =>
+            _useAsTemplateCommand ?? (_useAsTemplateCommand = new RelayCommand<TransactionViewModel>(UseTransactionAsTemplate));
+        private void UseTransactionAsTemplate(TransactionViewModel transaction)
         {
-            UseAsTemplateRequested?.Invoke(this, new TransactionEventArgs(transaction));
+            UseAsTemplateRequested?.Invoke(this, new TransactionEventArgs(transaction.Transaction));
 
         }
         public event TransactionEventHandler UseAsTemplateRequested;
