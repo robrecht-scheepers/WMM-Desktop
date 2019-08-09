@@ -47,7 +47,7 @@
                     <controls:SelectAllOnFocusBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Comments, Mode=TwoWay}" Height="32"/>
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Comments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="32"/>
 
             <controls:ImageButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" Command="{Binding SaveChangesCommand}" Click="ButtonBase_OnClick" ImageSource="/Resources/ic_confirm.png" />
             <controls:ImageButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="5" Click="Cancel_OnClick" ImageSource="/Resources/ic_cancel.png" />
