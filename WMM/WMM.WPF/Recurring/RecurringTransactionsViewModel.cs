@@ -110,7 +110,7 @@ namespace WMM.WPF.Recurring
             Transactions.Clear();
             foreach (var t in transactions)
             {
-                Transactions.Add(t);
+                Transactions.Add(new TransactionViewModel(t, Repository));
             }
 
             CalculateBalance();
@@ -119,8 +119,8 @@ namespace WMM.WPF.Recurring
         private void CalculateBalance()
         {
             TotalRecurringBalance = new Balance(
-                Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
-                Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
+                Transactions.Select(x => x.Transaction.Amount).Where(x => x > 0).Sum(),
+                Transactions.Select(x => x.Transaction.Amount).Where(x => x < 0).Sum());
         }
 
         public AsyncRelayCommand AddCommand => _addCommand ?? (_addCommand = new AsyncRelayCommand(Add));

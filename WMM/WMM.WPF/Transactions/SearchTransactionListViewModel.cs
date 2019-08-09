@@ -173,7 +173,8 @@ namespace WMM.WPF.Transactions
                 searchConfiguration.Recurring = RecurringOptionList[SelectedRecurringOption].Value;
             }
 
-            Transactions = new ObservableCollection<Transaction>((await Repository.GetTransactions(searchConfiguration)).OrderByDescending(x => x.Date));
+            Transactions = new ObservableCollection<TransactionViewModel>((
+                await Repository.GetTransactions(searchConfiguration)).OrderByDescending(x => x.Date).Select(x => new TransactionViewModel(x,Repository)));
             CalculateBalance();
         }
 
@@ -247,8 +248,8 @@ namespace WMM.WPF.Transactions
         public void CalculateBalance()
         {
             Balance = new Balance(
-                Transactions.Select(x => x.Amount).Where(x => x > 0).Sum(),
-                Transactions.Select(x => x.Amount).Where(x => x < 0).Sum());
+                Transactions.Select(x => x.Transaction.Amount).Where(x => x > 0).Sum(),
+                Transactions.Select(x => x.Transaction.Amount).Where(x => x < 0).Sum());
         }
 
         protected override void RepositoryOnTransactionUpdated(object sender, TransactionUpdateEventArgs args)
@@ -275,7 +276,7 @@ namespace WMM.WPF.Transactions
         {
             try
             {
-                ExcelHelper.OpenInExcel(Transactions);
+                ExcelHelper.OpenInExcel(Transactions.Select(x => x.Transaction));
             }
             catch (Exception e)
             {

@@ -114,7 +114,6 @@
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextButton.cs" />
     <Compile Include="Converters\AmountColorConverter.cs" />
-    <Compile Include="Transactions\DetailTransactionListViewModel.cs" />
     <Compile Include="Transactions\EditTransactionViewModel.cs" />
     <Compile Include="Transactions\EditTransactionWindow.xaml.cs">
       <DependentUpon>EditTransactionWindow.xaml</DependentUpon>
@@ -133,6 +132,7 @@
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Transactions\TransactionListViewModelBase.cs" />
+    <Compile Include="Transactions\TransactionViewModel.cs" />
     <Page Include="Controls\ImageToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

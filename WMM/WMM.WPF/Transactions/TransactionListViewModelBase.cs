@@ -11,7 +11,7 @@ namespace WMM.WPF.Transactions
 {
     public class TransactionListViewModelBase : ObservableObject
     {
-        private ObservableCollection<Transaction> _transactions;
+        private ObservableCollection<TransactionViewModel> _transactions;
         private AsyncRelayCommand<Transaction> _deleteTransactionCommand;
         private RelayCommand<Transaction> _editTransactionCommand;
         protected readonly IRepository Repository;
@@ -23,7 +23,7 @@ namespace WMM.WPF.Transactions
             Repository = repository;
             WindowService = windowService;
             ShowDate = showDate;
-            Transactions = new ObservableCollection<Transaction>();
+            Transactions = new ObservableCollection<TransactionViewModel>();
 
             Repository.TransactionDeleted += RepositoryOnTransactionDeleted;
             Repository.TransactionUpdated += RepositoryOnTransactionUpdated;
@@ -32,7 +32,7 @@ namespace WMM.WPF.Transactions
 
         public bool ShowDate { get; }
 
-        public ObservableCollection<Transaction> Transactions
+        public ObservableCollection<TransactionViewModel> Transactions
         {
             get => _transactions;
             set => SetValue(ref _transactions, value);
@@ -72,18 +72,18 @@ namespace WMM.WPF.Transactions
 
         protected virtual void RepositoryOnTransactionUpdated(object sender, TransactionUpdateEventArgs args)
         {
-            var transaction = Transactions.FirstOrDefault(x => x.Id == args.OldTransaction.Id);
+            var transaction = Transactions.FirstOrDefault(x => x.Transaction.Id == args.OldTransaction.Id);
             if (transaction == null)
                 return;
 
             var index = Transactions.IndexOf(transaction);
             Transactions.Remove(transaction);
-            Transactions.Insert(index, args.NewTransaction);
+            Transactions.Insert(index, new TransactionViewModel(args.NewTransaction, Repository));
         }
 
         protected virtual void RepositoryOnTransactionDeleted(object sender, TransactionEventArgs args)
         {
-            var transaction = Transactions.FirstOrDefault(x => x.Id == args.Transaction.Id);
+            var transaction = Transactions.FirstOrDefault(x => x.Transaction.Id == args.Transaction.Id);
             if (transaction == null)
                 return;
 
