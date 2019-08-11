@@ -17,14 +17,14 @@ namespace WMM.WPF.Helpers
         public static DateTime FirstDayOfWeek(this DateTime dt)
         {
             // todo: make depending on first day of week system setting. Now we assume monday being first day of week.
-            var dayOfWeek = ((int)dt.DayOfWeek - 1) % 7;    
+            var dayOfWeek = ((int)dt.DayOfWeek + 6) % 7;    
             return dt.Date.AddDays(-1 * dayOfWeek);
         }
 
         public static DateTime LastDayOfWeek(this DateTime dt)
         {
             // todo: make depending on first day of week system setting. Now we assume monday being first day of week.
-            var dayOfWeek = ((int)dt.DayOfWeek - 1) % 7;    
+            var dayOfWeek = ((int)dt.DayOfWeek + 6) % 7;    
             return dt.Date.AddDays(6 - dayOfWeek);
         }
 
