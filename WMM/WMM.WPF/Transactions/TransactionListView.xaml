@@ -20,7 +20,13 @@
                 <DataGridTextColumn Binding="{Binding Category}" Width="SizeToCells"/>
                 <DataGridTextColumn Binding="{Binding Amount, StringFormat={StaticResource AmountFormat}}" 
                                     ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-                <DataGridTextColumn Binding="{Binding Comments}" Width="*" />
+                <DataGridTemplateColumn Width="*" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type data:Transaction}">
+                            <controls:AutoTooltipTextBlock Text="{Binding Comments}" TextTrimming="CharacterEllipsis"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Width="SizeToCells">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type data:Transaction}">
