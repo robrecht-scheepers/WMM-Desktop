@@ -27,7 +27,7 @@
                                     
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
         <controls:ImageButton Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
-                              ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}"/>
+                              ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}"/>
         <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
         <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
         <TextBlock Grid.Row="0" Grid.Column="5" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
