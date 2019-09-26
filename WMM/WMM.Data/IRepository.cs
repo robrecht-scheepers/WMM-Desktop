@@ -66,10 +66,10 @@ namespace WMM.Data
         event EventHandler CategoriesUpdated;
 
         Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria,
-            List<string> areaCriteria);
+            List<string> areaCriteria, List<Category> categoryCriteria, double limit);
 
         Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria,
-            List<string> areaCriteria);
+            List<string> areaCriteria, List<Category> categoryCriteria, double limit);
 
         Task<Goal> DeleteGoal(Goal goal);
         Task<List<Goal>> GetGoals();

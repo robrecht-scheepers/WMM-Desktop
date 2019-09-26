@@ -10,6 +10,7 @@ namespace WMM.WPF.Categories
 {
     public struct CategoryTypeSelectionItem
     {
+
         public static IEnumerable<CategoryTypeSelectionItem> GetList()
         {
             return new List<CategoryTypeSelectionItem>

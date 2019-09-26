@@ -14,25 +14,6 @@ namespace WMM.WPF.Transactions
 {
     public class SearchTransactionListViewModel : TransactionListViewModelBase
     {
-        public enum AreaCategorySelectionType { Area, Category, CategoryType}
-
-        public class AreaCategorySelectionItem
-        {
-            //public bool IsArea { get; set; }
-            public AreaCategorySelectionType SelectionType { get; set; }
-            public string Name { get; set; }
-            public bool IsSelectable { get; set; }
-
-            public AreaCategorySelectionItem(string name, AreaCategorySelectionType selectionType, bool isSelectable = true)
-            {
-                SelectionType = selectionType;
-                Name = name;
-                IsSelectable = isSelectable;
-            }
-
-            public static AreaCategorySelectionItem Empty => new AreaCategorySelectionItem("", AreaCategorySelectionType.Area);
-        }
-
         private DateTime? _dateFrom;
         private DateTime? _dateTo;
         private double? _amount;
@@ -134,13 +115,13 @@ namespace WMM.WPF.Transactions
             {
                 switch (SelectedAreaCategoryItem.SelectionType)
                 {
-                    case AreaCategorySelectionType.Area:
+                    case AreaCategorySelectionItem.AreaCategorySelectionType.Area:
                         searchConfiguration.Area = SelectedAreaCategoryItem.Name;
                         break;
-                    case AreaCategorySelectionType.Category:
+                    case AreaCategorySelectionItem.AreaCategorySelectionType.Category:
                         searchConfiguration.CategoryName = SelectedAreaCategoryItem.Name;
                         break;
-                    case AreaCategorySelectionType.CategoryType:
+                    case AreaCategorySelectionItem.AreaCategorySelectionType.CategoryType:
                         searchConfiguration.CategoryType =
                             _categoryTypeList.First(x => x.Caption == SelectedAreaCategoryItem.Name).CategoryType;
                         break;
@@ -194,26 +175,7 @@ namespace WMM.WPF.Transactions
 
         private void InitializeAreaCategoryList()
         {
-            AreaCategoryList = new ObservableCollection<AreaCategorySelectionItem>
-            {
-                AreaCategorySelectionItem.Empty
-            };
-
-            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.CategoryType} ---", AreaCategorySelectionType.CategoryType, false));
-            foreach (var categoryTypeSelectionItem in _categoryTypeList)
-            {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(categoryTypeSelectionItem.Caption, AreaCategorySelectionType.CategoryType));
-            }
-            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Area} ---", AreaCategorySelectionType.Area, false));
-            foreach (var area in Repository.GetAreas().OrderBy(x => x))
-            {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(area, AreaCategorySelectionType.Area));
-            }
-            AreaCategoryList.Add(new AreaCategorySelectionItem($"--- {Captions.Category} ---", AreaCategorySelectionType.Category,false));
-            foreach (var category in Repository.GetCategoryNames().OrderBy(x => x))
-            {
-                AreaCategoryList.Add(new AreaCategorySelectionItem(category,AreaCategorySelectionType.Category));
-            }
+            AreaCategoryList = AreaCategorySelectionItem.GetList(Repository, true);
         }
 
         private void InitializeRecurringOptionList()
@@ -239,7 +201,7 @@ namespace WMM.WPF.Transactions
             DateFrom = dateFrom;
             DateTo = dateTo;
             SelectedAreaCategoryItem = AreaCategoryList.FirstOrDefault(
-                x => x.SelectionType == AreaCategorySelectionType.Category && x.IsSelectable && x.Name == category);
+                x => x.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.Category && x.IsSelectable && x.Name == category);
 
             await Search();
         }

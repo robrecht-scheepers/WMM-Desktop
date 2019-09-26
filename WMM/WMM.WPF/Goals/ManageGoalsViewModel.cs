@@ -15,37 +15,25 @@ namespace WMM.WPF.Goals
     {
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
-        private ObservableCollection<CategoryTypeSelectionItem> _categoryTypes;
-        private ObservableCollection<string> _areas;
-        private ObservableCollection<Category> _categories;
+        private readonly List<CategoryTypeSelectionItem> _categoryTypes;
+        private List<string> _areas;
+        private List<Category> _categories;
         private ObservableCollection<GoalViewModel> _goalViewModels;
+        private ObservableCollection<AreaCategoryMultiSelectionItem> _areaCategorySelectionItems;
+        private string _newGoalName;
+        private string _newGoalDescription;
+        private double _newGoalLimit;
+        private AsyncRelayCommand _addNewGoalCommand;
+
         
 
         public ManageGoalsViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
             _windowService = windowService;
-            Areas = new ObservableCollection<string>();
-            Categories = new ObservableCollection<Category>();
-            CategoryTypes = new ObservableCollection<CategoryTypeSelectionItem>(CategoryTypeSelectionItem.GetList());
-        }
-
-        public ObservableCollection<CategoryTypeSelectionItem> CategoryTypes
-        {
-            get => _categoryTypes;
-            set => SetValue(ref _categoryTypes, value);
-        }
-
-        public ObservableCollection<string> Areas
-        {
-            get => _areas;
-            set => SetValue(ref _areas, value);
-        }
-
-        public ObservableCollection<Category> Categories
-        {
-            get => _categories;
-            set => SetValue(ref _categories, value);
+            _areas = new List<string>();
+            _categories = new List<Category>();
+            _categoryTypes = new List<CategoryTypeSelectionItem>(CategoryTypeSelectionItem.GetList());
         }
 
         public ObservableCollection<GoalViewModel> GoalViewModels
@@ -54,13 +42,73 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _goalViewModels, value);
         }
 
+        public ObservableCollection<AreaCategoryMultiSelectionItem> AreaCategorySelectionItems
+        {
+            get => _areaCategorySelectionItems;
+            set => SetValue(ref _areaCategorySelectionItems, value);
+        }
+
+        public string NewGoalName
+        {
+            get => _newGoalName;
+            set => SetValue(ref _newGoalName, value);
+        }
+
+        public string NewGoalDescription
+        {
+            get => _newGoalDescription;
+            set => SetValue(ref _newGoalDescription, value);
+        }
+
+        public double NewGoalLimit
+        {
+            get => _newGoalLimit;
+            set => SetValue(ref _newGoalLimit, value);
+        }
+
         public async Task Initialize()
         {
+            _areas = _repository.GetAreas().ToList();
+            _categories = _repository.GetCategories();
+            AreaCategorySelectionItems = new ObservableCollection<AreaCategoryMultiSelectionItem>(
+                AreaCategorySelectionItem.GetList(_repository, false).Select(x => new AreaCategoryMultiSelectionItem(x)));
 
             foreach (var goal in (await _repository.GetGoals()).OrderBy(x => x.Name))
             {
-                GoalViewModels.Add(new GoalViewModel(goal, CategoryTypes, Areas, Categories, _repository, _windowService));
+                GoalViewModels.Add(new GoalViewModel(goal, _categoryTypes, _areas, _categories, AreaCategorySelectionItems, _repository, _windowService));
             }
+        }
+
+        public AsyncRelayCommand AddNewGoalCommand => _addNewGoalCommand ?? (_addNewGoalCommand = new AsyncRelayCommand(AddNewGoal));
+
+        private async Task AddNewGoal()
+        {
+            try
+            {
+                var selectedCategoryTypes = AreaCategorySelectionItems.Where(x =>
+                    x.IsSelected && x.Item.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.CategoryType)
+                    .Select(x => _categoryTypes.First(y => y.Caption == x.Item.Name).CategoryType).ToList();
+                var selectedAreas = AreaCategorySelectionItems.Where(x =>
+                        x.IsSelected && x.Item.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.Area)
+                    .Select(x => x.Item.Name).ToList();
+                var selectedCategories = AreaCategorySelectionItems.Where(x =>
+                        x.IsSelected && x.Item.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.Category)
+                    .Select(x => _categories.First(y => y.Name == x.Item.Name)).ToList();
+
+                await _repository.AddGoal(NewGoalName, NewGoalDescription, selectedCategoryTypes, selectedAreas,
+                    selectedCategories, NewGoalLimit);
+
+                await Initialize();
+            }
+            catch (Exception e)
+            {
+                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                return;
+            }
+
+            NewGoalName = "";
+            NewGoalDescription = "";
+            NewGoalLimit = 0d;
         }
     }
 }

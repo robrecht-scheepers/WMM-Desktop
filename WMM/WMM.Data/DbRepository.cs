@@ -817,6 +817,8 @@ namespace WMM.Data
 
         public event EventHandler CategoriesUpdated;
 
+        
+
         private void OnCategoresUpdated()
         {
             CategoriesUpdated?.Invoke(this, EventArgs.Empty);
@@ -857,6 +859,32 @@ namespace WMM.Data
                 }
             }
         }
+        #endregion
+
+        #region Goals
+
+        public Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria,
+            double limit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria,
+            List<Category> categoryCriteria, double limit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Goal> DeleteGoal(Goal goal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Goal>> GetGoals()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         //private void Log(string message)

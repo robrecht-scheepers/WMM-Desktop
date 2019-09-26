@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Categories\AreaCategorySelectionItem.cs" />
     <Compile Include="Controls\AutoTooltipTextBlock.cs" />
     <Compile Include="Controls\ImageToggleButton.cs" />
     <Compile Include="Categories\CategoryTypeSelectionItem.cs" />
