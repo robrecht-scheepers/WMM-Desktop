@@ -82,6 +82,8 @@
     <Compile Include="Forecast\ForecastWindow.xaml.cs">
       <DependentUpon>ForecastWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Goals\GoalViewModel.cs" />
+    <Compile Include="Goals\ManageGoalsViewModel.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">
@@ -323,5 +325,6 @@
     <Resource Include="Resources\ic_collapse.png" />
     <Resource Include="Resources\ic_expand.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

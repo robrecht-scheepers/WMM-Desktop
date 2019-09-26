@@ -64,5 +64,14 @@ namespace WMM.Data
         Task DeleteCategory(string category, string fallback = null);
 
         event EventHandler CategoriesUpdated;
+
+        Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria,
+            List<string> areaCriteria);
+
+        Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria,
+            List<string> areaCriteria);
+
+        Task<Goal> DeleteGoal(Goal goal);
+        Task<List<Goal>> GetGoals();
     }
 }
