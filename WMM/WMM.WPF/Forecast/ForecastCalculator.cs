@@ -18,9 +18,9 @@ namespace WMM.WPF.Forecast
             double forecast;
             switch (category.CategoryType)
             {
-                case CategoryType.Exception:
-                case CategoryType.Recurring:
-                    forecast = actual; // no forecast
+                case CategoryType.Exception: // exception no forecast
+                case CategoryType.Recurring: // recurring: forecast only based on recurring templates, that are already accounted for
+                    forecast = actual; 
                     break;
                 case CategoryType.Monthly:
                     var mean = CalculateMonthlyMean(category, history, date);
