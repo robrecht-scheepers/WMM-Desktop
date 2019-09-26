@@ -44,36 +44,48 @@ namespace WMM.Data
             _dbConnectionString = string.Format(ConnectionStringBase, _dbPath);
 
             if (!File.Exists(_dbPath))
+            {
                 CreateNewDatabase(_dbPath);
+            }
+            else
+            {
+                MigrateDatabase();
+            }
         }
 
         private SQLiteConnection GetConnection() => new SQLiteConnection(_dbConnectionString);
 
-        private void CreateNewDatabase(string dbPath)
+        private void RunSqlScript(string scriptFileName)
         {
-            // no need to make this method async as it is executed in the constructor before the window is visible
-            string createDbSql;
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WMM.Data.Sql.CreateDB.sql"))
+            // this method assumes tha script lies in the Sql folder
+            string sql;
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"WMM.Data.Sql.{scriptFileName}"))
             {
                 if (stream == null)
-                    throw new Exception("Embedded resource for create DB script not found");
+                    throw new Exception($"Embedded resource for script {scriptFileName} not found");
                 using (var reader = new StreamReader(stream))
                 {
-                    createDbSql = reader.ReadToEnd();
+                    sql = reader.ReadToEnd();
                 }
             }
-            if(string.IsNullOrEmpty(createDbSql))
-                throw new Exception("Created DB script is empty");
-
-            SQLiteConnection.CreateFile(dbPath);
             using (var dbConnection = GetConnection())
             {
-                var command = new SQLiteCommand(dbConnection) { CommandText = createDbSql };
+                var command = new SQLiteCommand(dbConnection) { CommandText = sql };
                 dbConnection.Open();
                 command.ExecuteNonQuery(CommandBehavior.CloseConnection);
             }
+        }
 
+        private void CreateNewDatabase(string dbPath)
+        {
+            SQLiteConnection.CreateFile(dbPath);
+            RunSqlScript("CreateDB.sql");
             SeedCategories(InitialCategories);
+        }
+
+        private void MigrateDatabase()
+        {
+            RunSqlScript("MigrateDB.sql");
         }
 
         public async Task Initialize()
