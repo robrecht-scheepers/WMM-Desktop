@@ -8,6 +8,6 @@ namespace WMM.WPF.Goals
 {
     public enum GoalStatus
     {
-        Ok, OffTrack, Failed
+        OnTrack, OffTrack, Success, Failed
     }
 }

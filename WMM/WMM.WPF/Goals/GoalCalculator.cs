@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
@@ -10,24 +11,25 @@ namespace WMM.WPF.Goals
 {
     public static class GoalCalculator
     {
-        public static double CalculateCurrentGoalAmount(List<Transaction> transactions)
+        public static GoalMonthInfo CalculateGoalMonthInfo(Goal goal, DateTime month, List<Transaction> transactions)
         {
-            return transactions.Where(x => x.Date <= DateTime.Now).Select(x => x.Amount).Sum();
+            var info = new GoalMonthInfo();
+
+            CalculateIdeal(transactions, goal, month, info);
+            CalculateActual(transactions, month, info);
+            CalculateStatus(goal, month, info);
+
+            return info;
         }
-
-        public static GetGoalStatus(Goal goal, List<Transaction> transactions)
-        {
-
-        }
-
-        public static List<DateAmountPoint> GetIdealPoints(List<Transaction> transactions, Goal goal, DateTime month)
+        
+        private static void CalculateIdeal(List<Transaction> transactions, Goal goal, DateTime month, GoalMonthInfo info)
         {
             var startAmount = transactions.Where(x => x.Recurring).Select(x => x.Amount).Sum();
             var endAmount = goal.Limit;
             var startDate = month.FirstDayOfMonth();
             var endDate = month.LastDayOfMonth();
 
-            var result = new List<DateAmountPoint>
+            var points = new List<DateAmountPoint>
             {
                 new DateAmountPoint(startDate, startAmount),
                 new DateAmountPoint(endDate, endAmount)
@@ -38,13 +40,18 @@ namespace WMM.WPF.Goals
             {
                 var slope = (endAmount - startAmount) / endDate.Subtract(startDate).Days;
                 var currentAmount = currentDate.Subtract(startDate).Days * slope;
-                result.Add(new DateAmountPoint(currentDate, currentAmount));
+                points.Add(new DateAmountPoint(currentDate, currentAmount));
+                info.CurrentIdealAmount = currentAmount;
+            }
+            else
+            {
+                info.CurrentIdealAmount = endAmount;
             }
 
-            return result;
+            info.IdealPoints = points;
         }
 
-        public static List<DateAmountPoint> GetActualPoints(List<Transaction> transactions, DateTime month)
+        private static void CalculateActual(List<Transaction> transactions, DateTime month, GoalMonthInfo info)
         {
             var points = new List<DateAmountPoint>();
             var date = month.FirstDayOfMonth();
@@ -59,7 +66,20 @@ namespace WMM.WPF.Goals
                 date = date.AddDays(1);
             }
 
-            return points;
+            info.CurrentAmount = cumulativeAmount;
+            info.ActualPoints = points;
+        }
+
+        private static void CalculateStatus(Goal goal, DateTime month, GoalMonthInfo info)
+        {
+            if (DateTime.Now.Date > month.LastDayOfMonth()) // old month
+            {
+                info.Status = info.CurrentAmount < goal.Limit ? GoalStatus.Failed : GoalStatus.Success;
+            }
+            else // current month
+            {
+                info.Status = info.CurrentAmount < info.CurrentIdealAmount ? GoalStatus.OffTrack : GoalStatus.OnTrack;
+            }
         }
     }
 }

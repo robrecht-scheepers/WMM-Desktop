@@ -319,6 +319,18 @@ namespace WMM.Data
             return await GetTransactions(config);
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Goal goal)
+        {
+            var allTransactions = await GetTransactions(dateFrom, dateTo);
+
+            var categories = new List<Category>();
+            categories.AddRange(goal.CategoryCriteria);
+            categories.AddRange(_categories.Where(x => goal.AreaCriteria.Contains(x.Area)));
+            categories.AddRange(_categories.Where(x => goal.CategoryTypeCriteria.Contains(x.CategoryType)));
+
+            return allTransactions.Where(x => categories.Contains(x.Category));
+        }
+
         public async Task<IEnumerable<Transaction>> GetTransactions()
         {
             return await GetTransactions(new SearchConfiguration());

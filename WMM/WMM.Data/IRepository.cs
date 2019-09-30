@@ -25,6 +25,8 @@ namespace WMM.Data
 
         Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Category category);
 
+        Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Goal goal);
+
         Task<IEnumerable<Transaction>> GetTransactions(SearchConfiguration searchConfiguration);
 
         Task<Transaction> AddRecurringTemplate(Category category, double amount, string comments);
