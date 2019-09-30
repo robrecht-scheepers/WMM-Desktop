@@ -14,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -32,7 +33,21 @@
         <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
         <TextBlock Grid.Row="0" Grid.Column="5" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
                        HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
+        
+        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
+                  ItemsSource="{Binding Goals}" AutoGenerateColumns="False" RowDetailsVisibilityMode="Collapsed" SelectionMode="Single"
+                  SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*" 
+                  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}"/>
+              <DataGridTextColumn Binding="{Binding Limit, StringFormat={StaticResource AmountFormat}}"
+                                  ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+                <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}"
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
                   ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected" 
                   SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
                   Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
