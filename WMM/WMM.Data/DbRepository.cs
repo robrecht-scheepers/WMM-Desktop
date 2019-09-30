@@ -880,9 +880,16 @@ namespace WMM.Data
             throw new NotImplementedException();
         }
 
-        public Task<List<Goal>> GetGoals()
+        public async Task<List<Goal>> GetGoals()
         {
-            throw new NotImplementedException();
+            const string commandText = "SELECT * FROM Goals";
+            using(var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn){CommandText = commandText})
+            {
+                conn.Open();
+                await command.ExecuteReaderAsync();
+            }
+            return new List<Goal>();
         }
 
         #endregion

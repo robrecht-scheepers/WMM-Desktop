@@ -8,6 +8,7 @@ using WMM.Data;
 using WMM.WPF.Balances;
 using WMM.WPF.Categories;
 using WMM.WPF.Forecast;
+using WMM.WPF.Goals;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
@@ -23,6 +24,7 @@ namespace WMM.WPF
         private AsyncRelayCommand _showRecurringTransactionsCommand;
         private RelayCommand _showManageCategoriesCommand;
         private AsyncRelayCommand _showForecastCommand;
+        private AsyncRelayCommand _showManageGoalsWindowCommand;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
         {
@@ -138,6 +140,15 @@ namespace WMM.WPF
             var forecastViewModel = new ForecastViewModel(_repository, _windowService);
             await forecastViewModel.Initialize();
             _windowService.OpenDialogWindow(forecastViewModel);
+        }
+
+        public AsyncRelayCommand ShowManageGoalsWindowCommand => _showManageGoalsWindowCommand ?? (_showManageGoalsWindowCommand = new AsyncRelayCommand(ShowManageGoalsWindow));
+
+        private async Task ShowManageGoalsWindow()
+        {
+            var manageGoalsViewModel = new ManageGoalsViewModel(_repository, _windowService);
+            await manageGoalsViewModel.Initialize();
+            _windowService.OpenDialogWindow(manageGoalsViewModel);
         }
     }
 }

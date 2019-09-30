@@ -5,19 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Controls;
 using WMM.WPF.Resources;
 
 namespace WMM.WPF.Categories
 {
-    public struct AreaCategoryMultiSelectionItem
+    public class AreaCategoryMultiSelectionItem : ISelectableItem
     {
         public AreaCategorySelectionItem Item { get; set; }
         public bool IsSelected { get; set; }
+        public bool IsSelectable => Item.IsSelectable;
+        public string Caption => Item.Name;
 
         public AreaCategoryMultiSelectionItem(AreaCategorySelectionItem item)
         {
             Item = item;
-            IsSelected = false;
         }
     }
 

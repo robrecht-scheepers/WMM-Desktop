@@ -72,6 +72,8 @@
     <Compile Include="Categories\SelectDeleteCategoryFallbackWindow.xaml.cs">
       <DependentUpon>SelectDeleteCategoryFallbackWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ISelectableItem.cs" />
+    <Compile Include="Controls\MultiSelectCombo.cs" />
     <Compile Include="Controls\PeriodSelector.xaml.cs">
       <DependentUpon>PeriodSelector.xaml</DependentUpon>
     </Compile>
@@ -83,8 +85,12 @@
     <Compile Include="Forecast\ForecastWindow.xaml.cs">
       <DependentUpon>ForecastWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Goals\GoalCalculator.cs" />
     <Compile Include="Goals\GoalViewModel.cs" />
     <Compile Include="Goals\ManageGoalsViewModel.cs" />
+    <Compile Include="Goals\ManageGoalsWindow.xaml.cs">
+      <DependentUpon>ManageGoalsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">
@@ -145,11 +151,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MultiSelectCombo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PeriodSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forecast\ForecastWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Goals\ManageGoalsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -326,6 +340,8 @@
     <Resource Include="Resources\ic_collapse.png" />
     <Resource Include="Resources\ic_expand.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\ic_goal.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

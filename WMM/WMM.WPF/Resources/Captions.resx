@@ -273,4 +273,7 @@
   <data name="CategoryType" xml:space="preserve">
     <value>Category type</value>
   </data>
+  <data name="ManageGoals" xml:space="preserve">
+    <value>Manage goals</value>
+  </data>
 </root>

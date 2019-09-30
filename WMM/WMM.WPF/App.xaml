@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Controls/ImageButton.xaml"/>
                 <ResourceDictionary Source="Controls/ImageToggleButton.xaml"/>
                 <ResourceDictionary Source="Controls/TextButton.xaml"/>
+                <ResourceDictionary Source="Controls/MultiSelectCombo.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="C1">#ffffff</Color>

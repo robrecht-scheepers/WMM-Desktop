@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Categories;
+using WMM.WPF.Controls;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 
@@ -19,14 +20,12 @@ namespace WMM.WPF.Goals
         private List<string> _areas;
         private List<Category> _categories;
         private ObservableCollection<GoalViewModel> _goalViewModels;
-        private ObservableCollection<AreaCategoryMultiSelectionItem> _areaCategorySelectionItems;
+        private List<ISelectableItem> _criteria;
         private string _newGoalName;
         private string _newGoalDescription;
         private double _newGoalLimit;
         private AsyncRelayCommand _addNewGoalCommand;
-
         
-
         public ManageGoalsViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
@@ -42,10 +41,10 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _goalViewModels, value);
         }
 
-        public ObservableCollection<AreaCategoryMultiSelectionItem> AreaCategorySelectionItems
+        public List<ISelectableItem> Criteria
         {
-            get => _areaCategorySelectionItems;
-            set => SetValue(ref _areaCategorySelectionItems, value);
+            get => _criteria;
+            set => SetValue(ref _criteria, value);
         }
 
         public string NewGoalName
@@ -70,12 +69,12 @@ namespace WMM.WPF.Goals
         {
             _areas = _repository.GetAreas().ToList();
             _categories = _repository.GetCategories();
-            AreaCategorySelectionItems = new ObservableCollection<AreaCategoryMultiSelectionItem>(
-                AreaCategorySelectionItem.GetList(_repository, false).Select(x => new AreaCategoryMultiSelectionItem(x)));
+            Criteria = AreaCategorySelectionItem.GetList(_repository, false)
+                .Select(x => new AreaCategoryMultiSelectionItem(x)).Cast<ISelectableItem>().ToList();
 
             foreach (var goal in (await _repository.GetGoals()).OrderBy(x => x.Name))
             {
-                GoalViewModels.Add(new GoalViewModel(goal, _categoryTypes, _areas, _categories, AreaCategorySelectionItems, _repository, _windowService));
+                GoalViewModels.Add(new GoalViewModel(goal, _categoryTypes, _areas, _categories, Criteria, _repository, _windowService));
             }
         }
 
@@ -85,13 +84,13 @@ namespace WMM.WPF.Goals
         {
             try
             {
-                var selectedCategoryTypes = AreaCategorySelectionItems.Where(x =>
+                var selectedCategoryTypes = Criteria.Cast<AreaCategoryMultiSelectionItem>().Where(x =>
                     x.IsSelected && x.Item.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.CategoryType)
                     .Select(x => _categoryTypes.First(y => y.Caption == x.Item.Name).CategoryType).ToList();
-                var selectedAreas = AreaCategorySelectionItems.Where(x =>
+                var selectedAreas = Criteria.Cast<AreaCategoryMultiSelectionItem>().Where(x =>
                         x.IsSelected && x.Item.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.Area)
                     .Select(x => x.Item.Name).ToList();
-                var selectedCategories = AreaCategorySelectionItems.Where(x =>
+                var selectedCategories = Criteria.Cast<AreaCategoryMultiSelectionItem>().Where(x =>
                         x.IsSelected && x.Item.SelectionType == AreaCategorySelectionItem.AreaCategorySelectionType.Category)
                     .Select(x => _categories.First(y => y.Name == x.Item.Name)).ToList();
 
