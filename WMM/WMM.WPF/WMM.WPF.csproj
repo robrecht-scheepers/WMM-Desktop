@@ -85,7 +85,10 @@
     <Compile Include="Forecast\ForecastWindow.xaml.cs">
       <DependentUpon>ForecastWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Goals\DateAmountPoint.cs" />
     <Compile Include="Goals\GoalCalculator.cs" />
+    <Compile Include="Goals\GoalMonthViewModel.cs" />
+    <Compile Include="Goals\GoalStatus.cs" />
     <Compile Include="Goals\GoalViewModel.cs" />
     <Compile Include="Goals\ManageGoalsViewModel.cs" />
     <Compile Include="Goals\ManageGoalsWindow.xaml.cs">

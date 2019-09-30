@@ -8,35 +8,58 @@ using WMM.WPF.Helpers;
 
 namespace WMM.WPF.Goals
 {
-    public class GoalCalculator
+    public static class GoalCalculator
     {
-        private readonly DateTime _month;
-        private readonly IRepository _repository;
-        private List<Transaction> _transactions;
-        private List<Category> _categories;
-
-        public GoalCalculator(DateTime month, IRepository repository)
+        public static double CalculateCurrentGoalAmount(List<Transaction> transactions)
         {
-            _month = month;
-            _repository = repository;
-            _categories = _repository.GetCategories();
+            return transactions.Where(x => x.Date <= DateTime.Now).Select(x => x.Amount).Sum();
         }
 
-        public async Task Initialize()
+        public static GetGoalStatus(Goal goal, List<Transaction> transactions)
         {
-            _transactions = (await _repository.GetTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth(), null))
-                .ToList();
+
         }
 
-        public double CalculateCurrentGoalAmount(Goal goal)
+        public static List<DateAmountPoint> GetIdealPoints(List<Transaction> transactions, Goal goal, DateTime month)
         {
-            var goalCategories = new List<Category>();
+            var startAmount = transactions.Where(x => x.Recurring).Select(x => x.Amount).Sum();
+            var endAmount = goal.Limit;
+            var startDate = month.FirstDayOfMonth();
+            var endDate = month.LastDayOfMonth();
 
-            goalCategories.AddRange(goal.CategoryCriteria);
-            goalCategories.AddRange(_categories.Where(x => goal.AreaCriteria.Contains(x.Area)));
-            goalCategories.AddRange(_categories.Where(x => goal.CategoryTypeCriteria.Contains(x.CategoryType)));
+            var result = new List<DateAmountPoint>
+            {
+                new DateAmountPoint(startDate, startAmount),
+                new DateAmountPoint(endDate, endAmount)
+            };
 
-            return _transactions.Where(x => goalCategories.Contains(x.Category)).Select(x => x.Amount).Sum();
+            var currentDate = DateTime.Now.Date;
+            if (currentDate < endDate)
+            {
+                var slope = (endAmount - startAmount) / endDate.Subtract(startDate).Days;
+                var currentAmount = currentDate.Subtract(startDate).Days * slope;
+                result.Add(new DateAmountPoint(currentDate, currentAmount));
+            }
+
+            return result;
+        }
+
+        public static List<DateAmountPoint> GetActualPoints(List<Transaction> transactions, DateTime month)
+        {
+            var points = new List<DateAmountPoint>();
+            var date = month.FirstDayOfMonth();
+            var lastDate = (DateTime.Now.Date < month.LastDayOfMonth()) ? DateTime.Now.Date : month.LastDayOfMonth();
+            var cumulativeAmount = 0d;
+
+            while (date <= lastDate)
+            {
+                var dayAmount = transactions.Where(x => x.Date.Date == date).Select(x => x.Amount).Sum();
+                cumulativeAmount += dayAmount;
+                points.Add(new DateAmountPoint(date, cumulativeAmount));
+                date = date.AddDays(1);
+            }
+
+            return points;
         }
     }
 }
