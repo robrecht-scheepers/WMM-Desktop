@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WMM.Data.Helpers;
 
 namespace WMM.Data
@@ -698,7 +699,7 @@ namespace WMM.Data
             var areas = new List<string>();
 
             const string commandText =
-                "SELECT a.Name AS Area, c.Name AS Category, c.ForecastType as ForecastType FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
+                "SELECT c.Id as Id, a.Name AS Area, c.Name AS Category, c.ForecastType as ForecastType FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
             var command = new SQLiteCommand() { CommandText = commandText };
             using (var dbConnection = GetConnection())
             {
@@ -710,12 +711,13 @@ namespace WMM.Data
                         return;
                     while (reader.Read())
                     {
-                        var area = reader.GetString(0);
-                        var category = reader.GetStringNullSafe(1);
-                        var categoryType = (CategoryType)reader.GetInt32NullSafe(2);
+                        var id = reader.GetGuid(0);
+                        var area = reader.GetString(1);
+                        var category = reader.GetStringNullSafe(2);
+                        var categoryType = (CategoryType)reader.GetInt32NullSafe(3);
 
                         if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && categoryType >= 0)
-                            categories.Add(new Category(area,category,categoryType));
+                            categories.Add(new Category(id, area,category,categoryType));
 
                         if (!string.IsNullOrEmpty(area))
                         {
@@ -875,34 +877,126 @@ namespace WMM.Data
 
         #region Goals
 
-        public Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria,
+        public async Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria,
             double limit)
         {
-            throw new NotImplementedException();
+            var id = Guid.NewGuid();
+            const string commandText =
+                "INSERT INTO Goals (Id, Name, Description, Limit, CategoryTypeCriteria, AreaCrieria, CategoryCriteria) " +
+                "VALUES (@id, @name, @description, @limit, @categoryTypeCriteria, @areaCrieria, @categoryCriteria)";
+            using(var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) {CommandText = commandText})
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@description", description);
+                command.Parameters.AddWithValue("@limit", limit);
+                command.Parameters.AddWithValue("@categoryTypeCriteria", JsonConvert.SerializeObject(categoryTypeCriteria));
+                command.Parameters.AddWithValue("@areaCriteria", JsonConvert.SerializeObject(areaCriteria));
+                command.Parameters.AddWithValue("@categoryCriteria", JsonConvert.SerializeObject(categoryCriteria.Select(x => x.Id).ToList()));
+
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return await GetGoal(id);
         }
 
-        public Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria,
+        public async Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria,
             List<Category> categoryCriteria, double limit)
         {
-            throw new NotImplementedException();
+            const string commandText =
+                "UPDATE Goals SET Name = @name, Description = @description, Limit = @limit, " +
+                "CategoryTypeCriteria = @categoryTypeCriteria, AreaCrieria = @areaCrieria, CategoryCriteria = @categoryCriteria " +
+                "WHERE Id = @id";
+            using (var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) { CommandText = commandText })
+            {
+                command.Parameters.AddWithValue("@id", goal.Id);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@description", description);
+                command.Parameters.AddWithValue("@limit", limit);
+                command.Parameters.AddWithValue("@categoryTypeCriteria", JsonConvert.SerializeObject(categoryTypeCriteria));
+                command.Parameters.AddWithValue("@areaCriteria", JsonConvert.SerializeObject(areaCriteria));
+                command.Parameters.AddWithValue("@categoryCriteria", JsonConvert.SerializeObject(categoryCriteria.Select(x => x.Id).ToList()));
+
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return await GetGoal(goal.Id);
         }
 
-        public Task<Goal> DeleteGoal(Goal goal)
+        public async Task DeleteGoal(Goal goal)
         {
-            throw new NotImplementedException();
+            const string commandText = "DELETE FROM Goals WHERE Id = @id";
+            using (var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) { CommandText = commandText })
+            {
+                command.Parameters.AddWithValue("@id", goal.Id);
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        public async Task<Goal> GetGoal(Guid id)
+        {
+            const string commandText =
+                "SELECT Id, Name, Description, Limit, CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
+                "WHERE Id = @id";
+            using (var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) {CommandText = commandText})
+            {
+                command.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    return (await ReadGoals(reader)).SingleOrDefault();
+                }
+            }
         }
 
         public async Task<List<Goal>> GetGoals()
         {
-            const string commandText = "SELECT * FROM Goals";
+            List<Goal> goals;
+            const string commandText =
+                "SELECT Id, Name, Description, Limit, CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
+                "FROM Goals";
             using(var conn = GetConnection())
             using (var command = new SQLiteCommand(conn){CommandText = commandText})
             {
                 conn.Open();
-                await command.ExecuteReaderAsync();
+                var reader = await command.ExecuteReaderAsync();
+                goals = await ReadGoals(reader);
             }
-            return new List<Goal>();
+
+            return goals;
         }
+
+        private async Task<List<Goal>> ReadGoals(DbDataReader reader)
+        {
+            var goals = new List<Goal>();
+            if (!reader.HasRows)
+                return goals;
+            while (await reader.ReadAsync())
+            {
+                goals.Add(new Goal(
+                    reader.GetGuid(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetDouble(4),
+                    JsonConvert.DeserializeObject<List<CategoryType>>(reader.GetString(5)),
+                    JsonConvert.DeserializeObject<List<string>>(reader.GetString(6)),
+                    JsonConvert.DeserializeObject<List<Guid>>(reader.GetString(7))
+                        .Select(x => _categories.FirstOrDefault(y => y.Id == x))
+                        .Where(x => x != null).ToList()
+                    ));
+            }
+
+            return goals;
+        }
+
+        
 
         #endregion
 

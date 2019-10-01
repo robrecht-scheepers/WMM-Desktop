@@ -6,7 +6,7 @@ namespace WMM.Data
 {
     public class Goal
     {
-        public Goal(Guid id, string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria, double limit)
+        public Goal(Guid id, string name, string description, double limit, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria)
         {
             Id = id;
             Name = name;

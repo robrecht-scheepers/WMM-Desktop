@@ -73,7 +73,7 @@ namespace WMM.Data
         Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria,
             List<string> areaCriteria, List<Category> categoryCriteria, double limit);
 
-        Task<Goal> DeleteGoal(Goal goal);
+        Task DeleteGoal(Goal goal);
         Task<List<Goal>> GetGoals();
     }
 }
