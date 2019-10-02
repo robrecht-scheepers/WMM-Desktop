@@ -33,6 +33,7 @@ namespace WMM.WPF.Goals
             _areas = new List<string>();
             _categories = new List<Category>();
             _categoryTypes = new List<CategoryTypeSelectionItem>(CategoryTypeSelectionItem.GetList());
+            GoalViewModels = new ObservableCollection<GoalViewModel>();
         }
 
         public ObservableCollection<GoalViewModel> GoalViewModels
@@ -74,7 +75,9 @@ namespace WMM.WPF.Goals
 
             foreach (var goal in (await _repository.GetGoals()).OrderBy(x => x.Name))
             {
-                GoalViewModels.Add(new GoalViewModel(goal, _categoryTypes, _areas, _categories, Criteria, _repository, _windowService));
+                var criteria = AreaCategorySelectionItem.GetList(_repository, false)
+                    .Select(x => new AreaCategoryMultiSelectionItem(x)).Cast<ISelectableItem>().ToList();
+                GoalViewModels.Add(new GoalViewModel(goal, _categoryTypes, _areas, _categories, criteria, _repository, _windowService));
             }
         }
 

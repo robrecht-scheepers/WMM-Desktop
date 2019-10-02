@@ -64,6 +64,7 @@ namespace WMM.WPF.Balances
         public async Task Initialize()
         {
             await LoadAllBalances();
+            await LoadGoals();
             await RecurringTransactionsViewModel.Initialize();
         }
 

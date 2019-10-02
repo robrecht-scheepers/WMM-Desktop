@@ -882,8 +882,8 @@ namespace WMM.Data
         {
             var id = Guid.NewGuid();
             const string commandText =
-                "INSERT INTO Goals (Id, Name, Description, Limit, CategoryTypeCriteria, AreaCrieria, CategoryCriteria) " +
-                "VALUES (@id, @name, @description, @limit, @categoryTypeCriteria, @areaCrieria, @categoryCriteria)";
+                "INSERT INTO Goals (Id, Name, Description, \"Limit\", CategoryTypeCriteria, AreaCriteria, CategoryCriteria) " +
+                "VALUES (@id, @name, @description, @limit, @categoryTypeCriteria, @areaCriteria, @categoryCriteria)";
             using(var conn = GetConnection())
             using (var command = new SQLiteCommand(conn) {CommandText = commandText})
             {
@@ -906,8 +906,8 @@ namespace WMM.Data
             List<Category> categoryCriteria, double limit)
         {
             const string commandText =
-                "UPDATE Goals SET Name = @name, Description = @description, Limit = @limit, " +
-                "CategoryTypeCriteria = @categoryTypeCriteria, AreaCrieria = @areaCrieria, CategoryCriteria = @categoryCriteria " +
+                "UPDATE Goals SET Name = @name, Description = @description, \"Limit\" = @limit, " +
+                "CategoryTypeCriteria = @categoryTypeCriteria, AreaCriteria = @areaCriteria, CategoryCriteria = @categoryCriteria " +
                 "WHERE Id = @id";
             using (var conn = GetConnection())
             using (var command = new SQLiteCommand(conn) { CommandText = commandText })
@@ -942,8 +942,8 @@ namespace WMM.Data
         public async Task<Goal> GetGoal(Guid id)
         {
             const string commandText =
-                "SELECT Id, Name, Description, Limit, CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
-                "WHERE Id = @id";
+                "SELECT Id, Name, Description, \"Limit\", CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
+                "FROM Goals WHERE Id = @id";
             using (var conn = GetConnection())
             using (var command = new SQLiteCommand(conn) {CommandText = commandText})
             {
@@ -960,7 +960,7 @@ namespace WMM.Data
         {
             List<Goal> goals;
             const string commandText =
-                "SELECT Id, Name, Description, Limit, CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
+                "SELECT Id, Name, Description, \"Limit\", CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
                 "FROM Goals";
             using(var conn = GetConnection())
             using (var command = new SQLiteCommand(conn){CommandText = commandText})
@@ -980,17 +980,17 @@ namespace WMM.Data
                 return goals;
             while (await reader.ReadAsync())
             {
-                goals.Add(new Goal(
-                    reader.GetGuid(0),
-                    reader.GetString(1),
-                    reader.GetString(2),
-                    reader.GetDouble(4),
-                    JsonConvert.DeserializeObject<List<CategoryType>>(reader.GetString(5)),
-                    JsonConvert.DeserializeObject<List<string>>(reader.GetString(6)),
-                    JsonConvert.DeserializeObject<List<Guid>>(reader.GetString(7))
-                        .Select(x => _categories.FirstOrDefault(y => y.Id == x))
-                        .Where(x => x != null).ToList()
-                    ));
+                var id = reader.GetGuid(0);
+                var name = reader.GetString(1);
+                var description = reader.GetStringNullSafe(2);
+                var limit = reader.GetDouble(3);
+                var categoryTypeCriteria = JsonConvert.DeserializeObject<List<CategoryType>>(reader.GetString(4));
+                var areaCriteria = JsonConvert.DeserializeObject<List<string>>(reader.GetString(5));
+                var categoryCriteria = JsonConvert.DeserializeObject<List<Guid>>(reader.GetString(6))
+                    .Select(x => _categories.FirstOrDefault(y => y.Id == x))
+                    .Where(x => x != null).ToList();
+
+                goals.Add(new Goal(id, name, description, limit, categoryTypeCriteria, areaCriteria, categoryCriteria));
             }
 
             return goals;
