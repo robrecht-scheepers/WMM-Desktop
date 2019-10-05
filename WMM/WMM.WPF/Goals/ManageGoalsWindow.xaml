@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WMM.WPF.Goals"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         mc:Ignorable="d"
+        Name="ThisManageGoalsWindow"
         Title="ManageGoalsWindow" Height="450" Width="800"
         d:DataContext="{d:DesignInstance local:ManageGoalsViewModel}">
     <Grid Background="{StaticResource SCB5}">
@@ -28,7 +29,43 @@
                               Command="{Binding AddNewGoalCommand}" />
         <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding NewGoalDescription}"/>
 
-        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding GoalViewModels}">
+        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding GoalViewModels}"
+                  AutoGenerateColumns="False" ColumnWidth="*">
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Binding="{Binding Name}"/>
+              <DataGridTemplateColumn Width="*" >
+                  <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate DataType="{x:Type local:GoalViewModel}">
+                          <controls:AutoTooltipTextBlock Text="{Binding Description}" TextTrimming="CharacterEllipsis"/>
+                      </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:GoalViewModel}">
+                            <controls:AutoTooltipTextBlock Text="{Binding CriteriaString}" TextTrimming="CharacterEllipsis"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Limit, StringFormat={StaticResource AmountFormat}}"
+                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+                <DataGridTemplateColumn Width="SizeToCells">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:GoalViewModel}">
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ImageButton
+                                    Command="{Binding ElementName=ThisManageGoalsWindow, Path=DataContext.DeleteGoalCommand}"
+                                    CommandParameter="{Binding}"
+                                    ImageSource="/Resources/ic_delete.png" Style="{StaticResource DataGridButtonStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+            
         </DataGrid>
 
     </Grid>

@@ -25,7 +25,8 @@ namespace WMM.WPF.Goals
         private string _newGoalDescription;
         private double _newGoalLimit;
         private AsyncRelayCommand _addNewGoalCommand;
-        
+        private AsyncRelayCommand<GoalViewModel> _deleteGoalCommand;
+
         public ManageGoalsViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
@@ -111,6 +112,22 @@ namespace WMM.WPF.Goals
             NewGoalName = "";
             NewGoalDescription = "";
             NewGoalLimit = 0d;
+        }
+
+        public AsyncRelayCommand<GoalViewModel> DeleteGoalCommand => _deleteGoalCommand ?? (_deleteGoalCommand = new AsyncRelayCommand<GoalViewModel>(DeleteGoal));
+
+        private async Task DeleteGoal(GoalViewModel goalViewModel)
+        {
+            try
+            {
+                await _repository.DeleteGoal(goalViewModel.Goal);
+                GoalViewModels.Remove(goalViewModel);
+            }
+            catch (Exception e)
+            {
+                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                return;
+            }
         }
     }
 }
