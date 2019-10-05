@@ -46,7 +46,8 @@
             
         </Grid>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Categories}" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="*" RowDetailsVisibilityMode="VisibleWhenSelected">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Categories}" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="*" 
+                  RowDetailsVisibilityMode="VisibleWhenSelected">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Bereich" Binding="{Binding Area}" />
                 <DataGridTextColumn Header="Kategorie" Binding="{Binding Name}" />

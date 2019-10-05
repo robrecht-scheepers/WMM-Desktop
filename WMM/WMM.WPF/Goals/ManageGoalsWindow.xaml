@@ -30,7 +30,8 @@
         <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding NewGoalDescription}"/>
 
         <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding GoalViewModels}"
-                  AutoGenerateColumns="False" ColumnWidth="*">
+                  AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="True" RowDetailsVisibilityMode="VisibleWhenSelected"
+                  SelectionMode="Single">
             <DataGrid.Columns>
 
                 <DataGridTextColumn Binding="{Binding Name}"/>
@@ -62,8 +63,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
             </DataGrid.Columns>
+
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate DataType="local:GoalViewModel">
+                    <local:EditGoalView DataContext="{Binding}"/>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
 
             
         </DataGrid>
