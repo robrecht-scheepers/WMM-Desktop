@@ -24,22 +24,24 @@ namespace WMM.WPF.Goals
         
         private static void CalculateIdeal(List<Transaction> transactions, Goal goal, DateTime month, GoalMonthInfo info)
         {
-            var startAmount = transactions.Where(x => x.Recurring).Select(x => x.Amount).Sum();
+            var initialAmount = transactions.Where(x => x.Recurring).Select(x => x.Amount).Sum();
             var endAmount = goal.Limit;
+
             var startDate = month.FirstDayOfMonth();
             var endDate = month.LastDayOfMonth();
+            var slope = (endAmount - initialAmount) / (endDate.Subtract(startDate).Days + 1); // +1: start amount applies at start of day 1 and not at end so day 1 counts
 
             var points = new List<DateAmountPoint>
             {
-                new DateAmountPoint(startDate, startAmount),
+                new DateAmountPoint(startDate, initialAmount + slope),
                 new DateAmountPoint(endDate, endAmount)
             };
 
             var currentDate = DateTime.Now.Date;
-            if (currentDate < endDate)
+            if (currentDate < endDate && currentDate > startDate)
             {
-                var slope = (endAmount - startAmount) / endDate.Subtract(startDate).Days;
-                var currentAmount = currentDate.Subtract(startDate).Days * slope;
+                
+                var currentAmount = (currentDate.Subtract(startDate).Days + 1) * slope;
                 points.Add(new DateAmountPoint(currentDate, currentAmount));
                 info.CurrentIdealAmount = currentAmount;
             }
