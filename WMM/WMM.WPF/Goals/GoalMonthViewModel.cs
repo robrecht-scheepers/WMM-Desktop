@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
@@ -16,9 +17,12 @@ namespace WMM.WPF.Goals
         private readonly Goal _goal;
         private double _currentAmount;
         private GoalStatus _status;
+        private List<DateAmountSeries> _chartSeries;
 
         public double Limit => _goal.Limit;
         public string Name => _goal.Name;
+
+        public string Description => _goal.Description;
         public List<Transaction> Transactions { get; private set; }
 
         public double CurrentAmount
@@ -31,6 +35,12 @@ namespace WMM.WPF.Goals
         {
             get => _status;
             set => SetValue(ref _status, value);
+        }
+
+        public List<DateAmountSeries> ChartSeries
+        {
+            get => _chartSeries;
+            set => SetValue(ref _chartSeries, value);
         }
 
         public GoalMonthViewModel(Goal goal, DateTime month, IRepository repository)
@@ -47,6 +57,19 @@ namespace WMM.WPF.Goals
 
             CurrentAmount = info.CurrentAmount;
             Status = info.Status;
+            ChartSeries = new List<DateAmountSeries>
+            {
+                new DateAmountSeries
+                {
+                    Points = info.IdealPoints,
+                    Brush = Brushes.DarkGreen
+                },
+                new DateAmountSeries
+                {
+                    Points = info.ActualPoints,
+                    Brush = Brushes.DodgerBlue
+                }
+            };
         }
 
 

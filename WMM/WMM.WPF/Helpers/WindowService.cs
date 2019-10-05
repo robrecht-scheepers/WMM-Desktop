@@ -81,6 +81,16 @@ namespace WMM.WPF.Helpers
                 };
                 window.ShowDialog();
             }
+            else if (dataContext is MonthGoalListViewModel)
+            {
+                var window = new MonthGoalDetailsWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
+            }
         }
 
         public void ShowMessage(string message, string caption)

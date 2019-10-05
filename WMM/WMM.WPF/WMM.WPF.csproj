@@ -69,6 +69,9 @@
     </ApplicationDefinition>
     <Compile Include="Categories\AreaCategorySelectionItem.cs" />
     <Compile Include="Controls\AutoTooltipTextBlock.cs" />
+    <Compile Include="Controls\DateAmountChart.xaml.cs">
+      <DependentUpon>DateAmountChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ImageToggleButton.cs" />
     <Compile Include="Categories\CategoryTypeSelectionItem.cs" />
     <Compile Include="Categories\SelectDeleteCategoryFallbackViewModel.cs" />
@@ -89,6 +92,7 @@
       <DependentUpon>ForecastWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Goals\DateAmountPoint.cs" />
+    <Compile Include="Goals\DateAmountSeries.cs" />
     <Compile Include="Goals\GoalCalculator.cs" />
     <Compile Include="Goals\GoalMonthInfo.cs" />
     <Compile Include="Goals\GoalMonthViewModel.cs" />
@@ -98,6 +102,10 @@
     <Compile Include="Goals\ManageGoalsWindow.xaml.cs">
       <DependentUpon>ManageGoalsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Goals\MonthGoalDetailsWindow.xaml.cs">
+      <DependentUpon>MonthGoalDetailsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Goals\MonthGoalListViewModel.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">
@@ -150,6 +158,10 @@
       <DependentUpon>TransactionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Transactions\TransactionListViewModelBase.cs" />
+    <Page Include="Controls\DateAmountChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ImageToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -171,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Goals\ManageGoalsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Goals\MonthGoalDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

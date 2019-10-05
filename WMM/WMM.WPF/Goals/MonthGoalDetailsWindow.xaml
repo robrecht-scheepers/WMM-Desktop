@@ -1,0 +1,35 @@
+﻿<Window x:Class="WMM.WPF.Goals.MonthGoalDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WMM.WPF.Goals"
+        xmlns:controls="clr-namespace:WMM.WPF.Controls"
+        mc:Ignorable="d"
+        Title="MonthGoalDetailsWindow" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance local:MonthGoalListViewModel}">
+    
+    <Grid>
+        <TabControl ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}">
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="local:GoalMonthViewModel">
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="local:GoalMonthViewModel">
+                    <Grid Background="{StaticResource SCB5}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="{Binding Description}"/>
+                        <controls:DateAmountChart Grid.Row="1" Series="{Binding ChartSeries}" />
+                    </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+        
+    </Grid>
+</Window>

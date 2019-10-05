@@ -1,89 +1,100 @@
 ﻿<UserControl x:Class="WMM.WPF.Balances.MonthBalanceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WMM.WPF.Balances"
              xmlns:controls="clr-namespace:WMM.WPF.Controls"
              xmlns:resources="clr-namespace:WMM.WPF.Resources"
-             mc:Ignorable="d" 
+             xmlns:goals="clr-namespace:WMM.WPF.Goals"
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance local:MonthBalanceViewModel}"
              d:DesignHeight="450" d:DesignWidth="800"
              x:Name="ControlRoot">
-    <Grid HorizontalAlignment="Stretch" Background="{StaticResource SCB5}" Name="RootGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-        <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
-                                    
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
-        <controls:ImageButton Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
-                              ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}"/>
-        <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
-        <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
-        <TextBlock Grid.Row="0" Grid.Column="5" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}" 
-                       HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
-        
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
-                  ItemsSource="{Binding Goals}" AutoGenerateColumns="False" RowDetailsVisibilityMode="Collapsed" SelectionMode="Single"
-                  SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*" 
-                  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}"/>
-              <DataGridTextColumn Binding="{Binding Limit, StringFormat={StaticResource AmountFormat}}"
-                                  ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-                <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}"
-                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-            </DataGrid.Columns>
-        </DataGrid>
-        
-        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}" 
-                  ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected" 
-                  SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
-                  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Area}" />
-                <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" 
-                                    ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-            </DataGrid.Columns>
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate DataType="local:AreaBalanceViewModel">
-                    <Grid Background="{StaticResource SCB5}" Margin="-5,0,0,0"
-                          Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" >
-                        <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0" ColumnWidth="*" HorizontalAlignment="Stretch">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="local:CategoryBalanceViewModel">
-                                            <Grid>
-                                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
-                                                <controls:ImageButton 
-                                                    Command="{Binding ElementName=ControlRoot, Path=DataContext.ShowDetailTransactionsCommand}" 
-                                                    CommandParameter="{Binding Name}"
-                                                    ImageSource="/Resources/ic_list.png"
-                                                    Style="{StaticResource DataGridButtonStyle}" HorizontalAlignment="Right"/>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}" 
-                                                    ElementStyle="{StaticResource AmountStyle}" Width="97" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
+  <Grid HorizontalAlignment="Stretch" Background="{StaticResource SCB5}" Name="RootGrid">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="4*"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="2*"/>
+      <ColumnDefinition Width="2*"/>
+      <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
+    <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
 
-        </DataGrid>
-    </Grid>
+    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
+    <controls:ImageButton Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
+                          ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}"/>
+    <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
+    <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
+    <TextBlock Grid.Row="0" Grid.Column="5" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}"
+                   HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
+
+    <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
+              ItemsSource="{Binding Goals.Goals}" AutoGenerateColumns="False" RowDetailsVisibilityMode="Collapsed" SelectionMode="Single"
+              SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
+              Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Binding="{Binding Name}"/>
+        <DataGridTextColumn Binding="{Binding Limit, StringFormat={StaticResource AmountFormat}}"
+                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+        <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}"
+                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+        <DataGridTemplateColumn Width="SizeToCells">
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate DataType="{x:Type goals:GoalMonthViewModel}">
+                    <controls:ImageButton
+                        Command="{Binding ElementName=RootGrid, Path=DataContext.Goals.ShowGoalMonthDetailsCommand}"
+                        CommandParameter="{Binding}"
+                        ImageSource="/Resources/ic_edit.png" Style="{StaticResource DataGridButtonStyle}" />
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
+              ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
+              SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
+              Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Binding="{Binding Area}" />
+        <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}"
+                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
+      </DataGrid.Columns>
+      <DataGrid.RowDetailsTemplate>
+        <DataTemplate DataType="local:AreaBalanceViewModel">
+          <Grid Background="{StaticResource SCB5}" Margin="-5,0,0,0"
+                Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" >
+            <DataGrid ItemsSource="{Binding CategoryBalances}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,0,0,0" ColumnWidth="*" HorizontalAlignment="Stretch">
+              <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="local:CategoryBalanceViewModel">
+                      <Grid>
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                        <controls:ImageButton
+                            Command="{Binding ElementName=ControlRoot, Path=DataContext.ShowDetailTransactionsCommand}"
+                            CommandParameter="{Binding Name}"
+                            ImageSource="/Resources/ic_list.png"
+                            Style="{StaticResource DataGridButtonStyle}" HorizontalAlignment="Right"/>
+                      </Grid>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Balance.Total, StringFormat={StaticResource AmountFormat}}"
+                                    ElementStyle="{StaticResource AmountStyle}" Width="97" />
+              </DataGrid.Columns>
+            </DataGrid>
+          </Grid>
+        </DataTemplate>
+      </DataGrid.RowDetailsTemplate>
+
+    </DataGrid>
+  </Grid>
 </UserControl>
