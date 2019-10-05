@@ -21,7 +21,7 @@ namespace WMM.WPF.Categories
                 new CategoryTypeSelectionItem(CategoryType.Recurring, CategoryType.Recurring.ToCaption()),
             };
         }
-
+       
         public CategoryTypeSelectionItem(CategoryType categoryType, string caption)
         {
             CategoryType = categoryType;

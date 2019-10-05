@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using WMM.Data;
+using WMM.WPF.Forecast;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 
@@ -23,6 +24,9 @@ namespace WMM.WPF.Goals
         public string Name => _goal.Name;
 
         public string Description => _goal.Description;
+
+        public string CriteriaString => CreateCriteriaString(_goal);
+
         public List<Transaction> Transactions { get; private set; }
 
         public double CurrentAmount
@@ -70,6 +74,37 @@ namespace WMM.WPF.Goals
                     Brush = Brushes.DodgerBlue
                 }
             };
+        }
+
+        private string CreateCriteriaString(Goal goal)
+        {
+            var stringBuilder = new StringBuilder();
+            var first = true;
+            foreach (var categoryType in goal.CategoryTypeCriteria)
+            {
+                if (!first)
+                    stringBuilder.Append(", ");
+                stringBuilder.Append(categoryType.ToCaption());
+                first = false;
+            }
+
+            foreach (var area in goal.AreaCriteria)
+            {
+                if (!first)
+                    stringBuilder.Append(", ");
+                stringBuilder.Append(area);
+                first = false;
+            }
+
+            foreach (var category in goal.CategoryCriteria)
+            {
+                if (!first)
+                    stringBuilder.Append(", ");
+                stringBuilder.Append(category.Name);
+                first = false;
+            }
+
+            return stringBuilder.ToString();
         }
 
 

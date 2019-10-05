@@ -7,7 +7,8 @@
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         mc:Ignorable="d"
         Title="MonthGoalDetailsWindow" Height="450" Width="800"
-        d:DataContext="{d:DesignInstance local:MonthGoalListViewModel}">
+        d:DataContext="{d:DesignInstance local:MonthGoalListViewModel}"
+        >
     
     <Grid>
         <TabControl ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}">
@@ -18,14 +19,23 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate DataType="local:GoalMonthViewModel">
-                    <Grid Background="{StaticResource SCB5}">
+                    <Grid Background="{StaticResource SCB2}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Text="{Binding Description}"/>
-                        <controls:DateAmountChart Grid.Row="1" Series="{Binding ChartSeries}" />
+                        <Grid Grid.Row="0" Background="{StaticResource SCB5}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="{Binding Description}" Foreground="{StaticResource SCB1}"/>
+                            <TextBlock Grid.Row="1" Text="{Binding CriteriaString}" Foreground="{StaticResource SCB1}"/>
+                        </Grid>
+
+                        <controls:DateAmountChart Grid.Row="1" Series="{Binding ChartSeries}" Margin="5" />
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
