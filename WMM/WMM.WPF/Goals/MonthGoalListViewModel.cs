@@ -49,7 +49,7 @@ namespace WMM.WPF.Goals
 
             SelectedGoalMonthViewModel = Goals.FirstOrDefault();
         }
-
+        
         public RelayCommand<GoalMonthViewModel> ShowGoalMonthDetailsCommand =>
             _showGoalMonthDetailsCommand ??
             (_showGoalMonthDetailsCommand = new RelayCommand<GoalMonthViewModel>(ShowGoalMonthDetails));

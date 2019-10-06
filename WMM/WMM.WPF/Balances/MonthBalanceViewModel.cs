@@ -103,10 +103,13 @@ namespace WMM.WPF.Balances
         public async Task RecalculateBalances()
         {
             await LoadAllBalances();
+            await Goals.Initialize();
         }
 
         public async Task RecalculateBalances(Category category)
         {
+            await Goals.Initialize();
+
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
 
             var area = category.Area;
