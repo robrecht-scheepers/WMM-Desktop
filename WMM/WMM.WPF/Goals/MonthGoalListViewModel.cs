@@ -32,12 +32,15 @@ namespace WMM.WPF.Goals
             _repository = repository;
             _windowService = windowService;
             Goals = new ObservableCollection<GoalMonthViewModel>();
+            _repository.GoalsUpdated += async (s, a) => await Initialize();
         }
 
         public async Task Initialize()
         {
+            Goals.Clear();
+
             var goals = await _repository.GetGoals();
-            foreach (var goal in goals)
+            foreach (var goal in goals.OrderBy(x => x.Name))
             {
                 var vm = new GoalMonthViewModel(goal, _month, _repository);
                 await vm.Initialize();

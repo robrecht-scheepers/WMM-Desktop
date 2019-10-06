@@ -877,6 +877,8 @@ namespace WMM.Data
 
         #region Goals
 
+        public event EventHandler GoalsUpdated;
+
         public async Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria,
             double limit)
         {
@@ -898,6 +900,8 @@ namespace WMM.Data
                 conn.Open();
                 await command.ExecuteNonQueryAsync();
             }
+
+            GoalsUpdated?.Invoke(this, EventArgs.Empty);
 
             return await GetGoal(id);
         }
@@ -924,6 +928,8 @@ namespace WMM.Data
                 await command.ExecuteNonQueryAsync();
             }
 
+            GoalsUpdated?.Invoke(this, EventArgs.Empty);
+
             return await GetGoal(goal.Id);
         }
 
@@ -937,6 +943,7 @@ namespace WMM.Data
                 conn.Open();
                 await command.ExecuteNonQueryAsync();
             }
+            GoalsUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task<Goal> GetGoal(Guid id)

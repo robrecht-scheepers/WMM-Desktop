@@ -35,6 +35,7 @@ namespace WMM.WPF.Goals
             _categories = new List<Category>();
             _categoryTypes = new List<CategoryTypeSelectionItem>(CategoryTypeSelectionItem.GetList());
             GoalViewModels = new ObservableCollection<GoalViewModel>();
+            _repository.GoalsUpdated += async (s, a) => await Initialize();
         }
 
         public ObservableCollection<GoalViewModel> GoalViewModels
@@ -69,6 +70,8 @@ namespace WMM.WPF.Goals
 
         public async Task Initialize()
         {
+            GoalViewModels.Clear();
+
             _areas = _repository.GetAreas().ToList();
             _categories = _repository.GetCategories();
             Criteria = AreaCategorySelectionItem.GetList(_repository, false)
@@ -100,8 +103,6 @@ namespace WMM.WPF.Goals
 
                 await _repository.AddGoal(NewGoalName, NewGoalDescription, selectedCategoryTypes, selectedAreas,
                     selectedCategories, NewGoalLimit);
-
-                await Initialize();
             }
             catch (Exception e)
             {
@@ -120,13 +121,13 @@ namespace WMM.WPF.Goals
         {
             try
             {
+                if (!_windowService.AskConfirmation("TODO: confirm message"))
+                    return;
                 await _repository.DeleteGoal(goalViewModel.Goal);
-                GoalViewModels.Remove(goalViewModel);
             }
             catch (Exception e)
             {
                 _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
-                return;
             }
         }
     }

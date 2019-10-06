@@ -75,5 +75,7 @@ namespace WMM.Data
 
         Task DeleteGoal(Goal goal);
         Task<List<Goal>> GetGoals();
+
+        event EventHandler GoalsUpdated;
     }
 }
