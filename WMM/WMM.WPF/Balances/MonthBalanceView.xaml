@@ -51,7 +51,7 @@
                     <controls:ImageButton
                         Command="{Binding ElementName=RootGrid, Path=DataContext.Goals.ShowGoalMonthDetailsCommand}"
                         CommandParameter="{Binding}"
-                        ImageSource="/Resources/ic_edit.png" Style="{StaticResource DataGridButtonStyle}" />
+                        ImageSource="/Resources/ic_details.png" Style="{StaticResource DataGridButtonStyle}" />
                 </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
