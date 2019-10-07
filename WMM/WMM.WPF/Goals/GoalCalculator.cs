@@ -41,7 +41,7 @@ namespace WMM.WPF.Goals
             if (currentDate < endDate && currentDate > startDate)
             {
                 
-                var currentAmount = (currentDate.Subtract(startDate).Days + 1) * slope;
+                var currentAmount = initialAmount + (currentDate.Subtract(startDate).Days + 1) * slope;
                 points.Add(new DateAmountPoint(currentDate, currentAmount));
                 info.CurrentIdealAmount = currentAmount;
             }

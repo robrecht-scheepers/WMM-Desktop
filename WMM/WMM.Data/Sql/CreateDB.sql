@@ -11,14 +11,16 @@ CREATE TABLE IF NOT EXISTS `Transactions` (
 	`LastUpdateAccount`	TEXT NOT NULL,
 	`Deleted`	INTEGER NOT NULL,
 	`Recurring`	INTEGER NOT NULL,
-	PRIMARY KEY(`Id`),
-	FOREIGN KEY(`Category`) REFERENCES `Categories`(`Id`)
+	FOREIGN KEY(`Category`) REFERENCES `Categories`(`Id`),
+	PRIMARY KEY(`Id`)
 );
 CREATE TABLE IF NOT EXISTS `Goals` (
 	`Id`	BLOB NOT NULL,
 	`Name`	TEXT NOT NULL UNIQUE,
 	`Description`	TEXT,
-	`Criteria`	TEXT NOT NULL,
+	`CategoryCriteria`	TEXT NOT NULL,
+	`AreaCriteria`	TEXT NOT NULL,
+	`CategoryTypeCriteria`	TEXT NOT NULL,
 	`Limit`	NUMERIC NOT NULL,
 	PRIMARY KEY(`Id`)
 );
@@ -27,8 +29,8 @@ CREATE TABLE IF NOT EXISTS `Categories` (
 	`Area`	BLOB NOT NULL,
 	`Name`	TEXT NOT NULL UNIQUE,
 	`ForecastType`	INTEGER,
-	PRIMARY KEY(`Id`),
-	FOREIGN KEY(`Area`) REFERENCES `Areas`(`Id`)
+	FOREIGN KEY(`Area`) REFERENCES `Areas`(`Id`),
+	PRIMARY KEY(`Id`)
 );
 CREATE TABLE IF NOT EXISTS `Areas` (
 	`Id`	BLOB NOT NULL,
