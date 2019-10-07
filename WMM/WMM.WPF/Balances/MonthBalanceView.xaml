@@ -15,7 +15,6 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"/>
@@ -28,37 +27,19 @@
     <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
 
     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
-    <controls:ImageButton Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
-                          ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}"/>
+    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal"  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
+        <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
+                              ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Margin="5,5,0,5"/>
+        <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowGoalMonthDetailsCommand}" ImageSource="/Resources/ic_goal.png"
+                              ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Margin="0,5,5,5" />
+    </StackPanel>
+
     <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
     <TextBlock Grid.Row="0" Grid.Column="4" DataContext="{Binding TotalBalance.Expense}" Style="{StaticResource AmountStyle}" Foreground="White" />
     <TextBlock Grid.Row="0" Grid.Column="5" DataContext="{Binding TotalBalance.Total}" Style="{StaticResource ColoredAmountStyle}"
                    HorizontalAlignment="Stretch" TextAlignment="Right" Background="{StaticResource SCB3}" />
 
     <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
-              ItemsSource="{Binding Goals.Goals}" AutoGenerateColumns="False" RowDetailsVisibilityMode="Collapsed" SelectionMode="Single"
-              SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
-              Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
-      <DataGrid.Columns>
-        <DataGridTextColumn Binding="{Binding Name}"/>
-        <DataGridTextColumn Binding="{Binding Limit, StringFormat={StaticResource AmountFormat}}"
-                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-        <DataGridTextColumn Binding="{Binding CurrentAmount, StringFormat={StaticResource AmountFormat}}"
-                            ElementStyle="{StaticResource AmountStyle}" Width="{StaticResource AmountColumnWidth}" />
-        <DataGridTemplateColumn Width="SizeToCells">
-            <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate DataType="{x:Type goals:GoalMonthViewModel}">
-                    <controls:ImageButton
-                        Command="{Binding ElementName=RootGrid, Path=DataContext.Goals.ShowGoalMonthDetailsCommand}"
-                        CommandParameter="{Binding}"
-                        ImageSource="/Resources/ic_details.png" Style="{StaticResource DataGridButtonStyle}" />
-                </DataTemplate>
-            </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-      </DataGrid.Columns>
-    </DataGrid>
-
-    <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" IsReadOnly="True" Margin="{StaticResource CommonMargin}"
               ItemsSource="{Binding AreaBalances}" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
               SelectionMode="Single" SelectionUnit="FullRow" HorizontalAlignment="Stretch" ColumnWidth="*"
               Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">

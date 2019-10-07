@@ -19,6 +19,7 @@ namespace WMM.WPF.Balances
         private RelayCommand _showRecurringTransactionsCommand;
         private RelayCommand<string> _showDetailTransactionsCommand;
         private bool _isExpanded;
+        private AsyncRelayCommand _showGoalMonthDetailsCommand;
 
         public DateTime Month { get; }
 
@@ -31,9 +32,7 @@ namespace WMM.WPF.Balances
         public string Name => Month.ToString("Y");
 
         public ObservableCollection<AreaBalanceViewModel> AreaBalances { get; }
-
-        public MonthGoalDetailsViewModel Goals { get; }
-
+        
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
         public bool IsExpanded
@@ -56,7 +55,6 @@ namespace WMM.WPF.Balances
             _windowService = windowService;
             Month = date.FirstDayOfMonth();
             AreaBalances = new ObservableCollection<AreaBalanceViewModel>();
-            Goals = new MonthGoalDetailsViewModel(Month, _repository, _windowService);
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService, Month);
             _isExpanded = DateTime.Now.Date.FirstDayOfMonth() == Month || SettingsHelper.IsMonthExpanded(Month);
         }
@@ -64,7 +62,6 @@ namespace WMM.WPF.Balances
         public async Task Initialize()
         {
             await LoadAllBalances();
-            await Goals.Initialize();
             await RecurringTransactionsViewModel.Initialize();
         }
 
@@ -103,13 +100,10 @@ namespace WMM.WPF.Balances
         public async Task RecalculateBalances()
         {
             await LoadAllBalances();
-            await Goals.Initialize();
         }
 
         public async Task RecalculateBalances(Category category)
         {
-            await Goals.Initialize();
-
             TotalBalance = await _repository.GetBalance(Month.FirstDayOfMonth(), Month.LastDayOfMonth());
 
             var area = category.Area;
@@ -159,6 +153,17 @@ namespace WMM.WPF.Balances
         private void RaiseDetailTransactionsRequested(DateTime dateFrom, DateTime dateTo, string category)
         {
             DetailTransactionsRequested?.Invoke(this, new DetailTransactionsRequestEventArgs(dateFrom, dateTo, category));
+        }
+
+        public AsyncRelayCommand ShowGoalMonthDetailsCommand =>
+            _showGoalMonthDetailsCommand ??
+            (_showGoalMonthDetailsCommand = new AsyncRelayCommand(ShowGoalMonthDetails));
+
+        private async Task ShowGoalMonthDetails()
+        {
+            var vm = new MonthGoalDetailsViewModel(Month, _repository, _windowService);
+            await vm.Initialize();
+            _windowService.OpenDialogWindow(vm);
         }
 
 

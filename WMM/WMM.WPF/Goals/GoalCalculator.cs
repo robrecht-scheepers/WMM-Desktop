@@ -29,7 +29,8 @@ namespace WMM.WPF.Goals
 
             var startDate = month.FirstDayOfMonth();
             var endDate = month.LastDayOfMonth();
-            var slope = (endAmount - initialAmount) / (endDate.Subtract(startDate).Days + 1); // +1: start amount applies at start of day 1 and not at end so day 1 counts
+            var slope = (endAmount - initialAmount) / (endDate.Subtract(startDate).Days + 1); 
+            // +1: initialAmount applies at start of day 1 (so actually at day 0)
 
             var points = new List<DateAmountPoint>
             {
@@ -40,7 +41,6 @@ namespace WMM.WPF.Goals
             var currentDate = DateTime.Now.Date;
             if (currentDate < endDate && currentDate > startDate)
             {
-                
                 var currentAmount = initialAmount + (currentDate.Subtract(startDate).Days + 1) * slope;
                 points.Add(new DateAmountPoint(currentDate, currentAmount));
                 info.CurrentIdealAmount = currentAmount;

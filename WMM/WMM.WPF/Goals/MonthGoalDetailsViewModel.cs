@@ -16,8 +16,7 @@ namespace WMM.WPF.Goals
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private GoalMonthViewModel _selectedGoalMonthViewModel;
-        private RelayCommand<GoalMonthViewModel> _showGoalMonthDetailsCommand;
-
+        
         public ObservableCollection<GoalMonthViewModel> Goals { get; }
 
         public GoalMonthViewModel SelectedGoalMonthViewModel
@@ -33,6 +32,8 @@ namespace WMM.WPF.Goals
             _windowService = windowService;
             Goals = new ObservableCollection<GoalMonthViewModel>();
             _repository.GoalsUpdated += async (s, a) => await Initialize();
+            _repository.TransactionUpdated += async (s, a) => await Initialize();
+            _repository.TransactionDeleted += async (s, a) => await Initialize();
         }
 
         public async Task Initialize()
@@ -53,14 +54,6 @@ namespace WMM.WPF.Goals
                                          Goals.FirstOrDefault();
         }
         
-        public RelayCommand<GoalMonthViewModel> ShowGoalMonthDetailsCommand =>
-            _showGoalMonthDetailsCommand ??
-            (_showGoalMonthDetailsCommand = new RelayCommand<GoalMonthViewModel>(ShowGoalMonthDetails));
-
-        private void ShowGoalMonthDetails(GoalMonthViewModel goalMonthViewModel)
-        {
-            SelectedGoalMonthViewModel = goalMonthViewModel;
-            _windowService.OpenDialogWindow(this);
-        }
+        
     }
 }
