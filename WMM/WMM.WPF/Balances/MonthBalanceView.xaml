@@ -28,10 +28,11 @@
 
     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
     <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal"  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
-        <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
+      <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowGoalMonthDetailsCommand}" ImageSource="/Resources/ic_goal.png"
+                            ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Margin="0,5,5,5" />
+      <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
                               ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Margin="5,5,0,5"/>
-        <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowGoalMonthDetailsCommand}" ImageSource="/Resources/ic_goal.png"
-                              ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Margin="0,5,5,5" />
+
     </StackPanel>
 
     <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
