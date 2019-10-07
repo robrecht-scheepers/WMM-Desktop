@@ -10,7 +10,7 @@
       <Style x:Key="YMarkerStyle" TargetType="TextBlock">
           <Setter Property="HorizontalAlignment" Value="Right"/>
           <Setter Property="VerticalAlignment" Value="Bottom"/>
-          <Setter Property="Margin" Value="5,0,6,-5"></Setter>
+          <Setter Property="Margin" Value="5,0,6,-5"/>
       </Style>
   </UserControl.Resources>
     <Grid>

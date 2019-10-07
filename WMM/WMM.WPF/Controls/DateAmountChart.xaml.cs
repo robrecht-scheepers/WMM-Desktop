@@ -16,12 +16,12 @@ namespace WMM.WPF.Controls
     {
         private const int NumberOfYSegments = 4;
 
-        private DateTime _xMin;
-        private DateTime _xMax;
+        private DateTime _dateMin;
+        private DateTime _dateMax;
         private int _amountOfDays;
         private double _dateSectionWidth;
-        private double _yMin;
-        private double _yMax;
+        private double _amountMin;
+        private double _amountMax;
         private double _canvasWidth;
         private double _canvasHeight;
 
@@ -61,32 +61,72 @@ namespace WMM.WPF.Controls
             _canvasWidth = Canvas.ActualWidth;
             _canvasHeight = Canvas.ActualHeight;
 
-            SetChartRange();
-            SetMarkers();
-            DrawAmountGridLines();
+            DrawDateAxis();
+            DrawAmountAxis();
             DrawPoints();
         }
 
-        private void SetChartRange()
+        private void DrawAmountAxis()
         {
-            // TODO: add rounding margins 
-            _xMin = Series.SelectMany(x => x.Points).Select(x => x.Date).Min();
-            _xMax = Series.SelectMany(x => x.Points).Select(x => x.Date).Max();
-            _yMin = Series.SelectMany(x => x.Points).Select(x => x.Amount).Min();
-            _yMax = Series.SelectMany(x => x.Points).Select(x => x.Amount).Max();
+            var amountMin = Series.SelectMany(x => x.Points).Select(x => x.Amount).Min();
+            var amountMax = Series.SelectMany(x => x.Points).Select(x => x.Amount).Max();
+
+            var orderOfMagnitude = Math.Round(Math.Log10(amountMax - amountMin),MidpointRounding.AwayFromZero) - 1;
+            var factor = Math.Pow(10, orderOfMagnitude);
+
+            _amountMin = Math.Floor(amountMin / factor) * factor;
+            _amountMax = (Math.Floor(amountMax / factor) + 1) * factor;
+            // increase the axis range, alternating on top and bottom, until dividable by number of segments
+            // so that we have round numbers for each marker
+            bool alternate = false; 
+            while ((_amountMax - _amountMin) / 4 % factor > 0)
+            {
+                if (alternate)
+                    _amountMin -= factor;
+                else
+                    _amountMax += factor;
+
+                alternate = !alternate;
+            }
+
+            var step = (_amountMax - _amountMin) / NumberOfYSegments;
+            MarkerY0.Text = _amountMin.ToString("C");
+            MarkerY1.Text = (_amountMin + step).ToString("C");
+            MarkerY2.Text = (_amountMin + 2 * step).ToString("C");
+            MarkerY3.Text = (_amountMin + 3 * step).ToString("C");
+            MarkerY4.Text = _amountMax.ToString("C");
+
+            for (int i = 0; i <= NumberOfYSegments; i++)
+            {
+                Canvas.Children.Add(new Line
+                {
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 1,
+                    X1 = -5,
+                    X2 = _canvasWidth,
+                    Y1 = i * (_canvasHeight / NumberOfYSegments),
+                    Y2 = i * (_canvasHeight / NumberOfYSegments)
+                });
+            }
         }
 
-        private void SetMarkers()
+
+
+        private void DrawDateAxis()
         {
+            _dateMin = Series.SelectMany(x => x.Points).Select(x => x.Date).Min();
+            _dateMax = Series.SelectMany(x => x.Points).Select(x => x.Date).Max();
+
+
             var weekendStart = 0d;
             DateLabelCanvas.Children.Clear();
-            _amountOfDays = _xMax.Subtract(_xMin).Days + 1;
+            _amountOfDays = _dateMax.Subtract(_dateMin).Days + 1;
             _dateSectionWidth = _canvasWidth / _amountOfDays;
 
             for (int i = 0; i <= _amountOfDays; i++)
             {
                 var x = i * _dateSectionWidth;
-                var date = _xMin.AddDays(i).Date;
+                var date = _dateMin.AddDays(i).Date;
                 var weekday = date.DayOfWeek;
 
                 if (weekday == DayOfWeek.Saturday)
@@ -129,29 +169,6 @@ namespace WMM.WPF.Controls
                 DateLabelCanvas.Children.Add(label);
                 Canvas.SetTop(label, 6);
                 Canvas.SetLeft(label, x);
-            }
-
-            var stepY = (_yMax - _yMin) / NumberOfYSegments;
-            MarkerY0.Text = _yMin.ToString("C");
-            MarkerY1.Text = (_yMin + stepY).ToString("C");
-            MarkerY2.Text = (_yMin + 2 * stepY).ToString("C");
-            MarkerY3.Text = (_yMin + 3 * stepY).ToString("C");
-            MarkerY4.Text = _yMax.ToString("C");
-        }
-
-        private void DrawAmountGridLines()
-        {
-            for (int i = 0; i <= NumberOfYSegments; i++)
-            {
-                Canvas.Children.Add(new Line
-                {
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1,
-                    X1 = -5,
-                    X2 = _canvasWidth,
-                    Y1 = i * (_canvasHeight / NumberOfYSegments),
-                    Y2 = i * (_canvasHeight / NumberOfYSegments)
-                });
             }
         }
 
@@ -198,8 +215,8 @@ namespace WMM.WPF.Controls
         private Point CalculateDrawPoint(DateAmountPoint point)
         {
             return new Point(
-                (point.Date.Subtract(_xMin).Days) * _dateSectionWidth + _dateSectionWidth / 2,
-                (_yMax - point.Amount) * _canvasHeight / (_yMax - _yMin)
+                (point.Date.Subtract(_dateMin).Days) * _dateSectionWidth + _dateSectionWidth / 2,
+                (_amountMax - point.Amount) * _canvasHeight / (_amountMax - _amountMin)
                 );
         }
     }
