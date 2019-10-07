@@ -81,7 +81,7 @@ namespace WMM.WPF.Helpers
                 };
                 window.ShowDialog();
             }
-            else if (dataContext is MonthGoalListViewModel)
+            else if (dataContext is MonthGoalDetailsViewModel)
             {
                 var window = new MonthGoalDetailsWindow
                 {

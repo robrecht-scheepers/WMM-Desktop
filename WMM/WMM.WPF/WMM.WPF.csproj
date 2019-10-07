@@ -109,7 +109,7 @@
     <Compile Include="Goals\MonthGoalDetailsWindow.xaml.cs">
       <DependentUpon>MonthGoalDetailsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Goals\MonthGoalListViewModel.cs" />
+    <Compile Include="Goals\MonthGoalDetailsViewModel.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">

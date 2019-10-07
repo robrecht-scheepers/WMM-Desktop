@@ -32,7 +32,7 @@ namespace WMM.WPF.Balances
 
         public ObservableCollection<AreaBalanceViewModel> AreaBalances { get; }
 
-        public MonthGoalListViewModel Goals { get; }
+        public MonthGoalDetailsViewModel Goals { get; }
 
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
@@ -56,7 +56,7 @@ namespace WMM.WPF.Balances
             _windowService = windowService;
             Month = date.FirstDayOfMonth();
             AreaBalances = new ObservableCollection<AreaBalanceViewModel>();
-            Goals = new MonthGoalListViewModel(Month, _repository, _windowService);
+            Goals = new MonthGoalDetailsViewModel(Month, _repository, _windowService);
             RecurringTransactionsViewModel = new RecurringTransactionsViewModel(_repository, _windowService, Month);
             _isExpanded = DateTime.Now.Date.FirstDayOfMonth() == Month || SettingsHelper.IsMonthExpanded(Month);
         }

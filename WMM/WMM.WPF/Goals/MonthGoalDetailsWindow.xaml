@@ -8,7 +8,7 @@
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
         Title="MonthGoalDetailsWindow" Height="600" Width="800"
-        d:DataContext="{d:DesignInstance local:MonthGoalListViewModel}"
+        d:DataContext="{d:DesignInstance local:MonthGoalDetailsViewModel}"
         >
     <Window.Resources>
         <local:GoalStatusColorConverter x:Key="StatusColorConverter" />

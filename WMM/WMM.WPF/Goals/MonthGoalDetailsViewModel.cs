@@ -10,7 +10,7 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Goals
 {
-    public class MonthGoalListViewModel : ObservableObject
+    public class MonthGoalDetailsViewModel : ObservableObject
     {
         private readonly DateTime _month;
         private readonly IRepository _repository;
@@ -26,7 +26,7 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _selectedGoalMonthViewModel, value);
         }
 
-        public MonthGoalListViewModel(DateTime month, IRepository repository, IWindowService windowService)
+        public MonthGoalDetailsViewModel(DateTime month, IRepository repository, IWindowService windowService)
         {
             _month = month;
             _repository = repository;
