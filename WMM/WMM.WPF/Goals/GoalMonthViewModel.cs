@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using WMM.Data;
 using WMM.WPF.Forecast;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Transactions;
 
 namespace WMM.WPF.Goals
 {
@@ -19,6 +21,8 @@ namespace WMM.WPF.Goals
         private double _currentAmount;
         private GoalStatus _status;
         private List<DateAmountSeries> _chartSeries;
+        private readonly IWindowService _windowService;
+        private TransactionListViewModelBase _transactions;
 
         public double Limit => _goal.Limit;
         public string Name => _goal.Name;
@@ -27,7 +31,11 @@ namespace WMM.WPF.Goals
 
         public string CriteriaString => CreateCriteriaString(_goal);
 
-        public List<Transaction> Transactions { get; private set; }
+        public TransactionListViewModelBase Transactions
+        {
+            get => _transactions;
+            set => SetValue(ref _transactions, value);
+        }
 
         public double CurrentAmount
         {
@@ -47,17 +55,23 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _chartSeries, value);
         }
 
-        public GoalMonthViewModel(Goal goal, DateTime month, IRepository repository)
+        public GoalMonthViewModel(Goal goal, DateTime month, IRepository repository, IWindowService windowService)
         {
             _month = month;
             _repository = repository;
+            _windowService = windowService;
             _goal = goal;
         }
 
         public async Task Initialize()
         {
-            Transactions = (await _repository.GetTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth(), _goal)).ToList();
-            var info = GoalCalculator.CalculateGoalMonthInfo(_goal, _month, Transactions);
+            var transactions =
+                (await _repository.GetTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth(), _goal)).OrderBy(x => x.Date).ToList();
+            Transactions = new TransactionListViewModelBase(_repository, _windowService, true)
+            {
+                Transactions = new ObservableCollection<Transaction>(transactions) 
+            }; 
+            var info = GoalCalculator.CalculateGoalMonthInfo(_goal, _month, transactions);
 
             CurrentAmount = info.CurrentAmount;
             Status = info.Status;
@@ -106,8 +120,6 @@ namespace WMM.WPF.Goals
 
             return stringBuilder.ToString();
         }
-
-
 
     }
 }

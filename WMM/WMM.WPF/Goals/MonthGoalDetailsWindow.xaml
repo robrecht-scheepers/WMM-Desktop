@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WMM.WPF.Goals"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
+        xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         mc:Ignorable="d"
-        Title="MonthGoalDetailsWindow" Height="450" Width="800"
+        Title="MonthGoalDetailsWindow" Height="600" Width="800"
         d:DataContext="{d:DesignInstance local:MonthGoalListViewModel}"
         >
     <Window.Resources>
@@ -28,6 +29,7 @@
                     <Grid Background="{StaticResource SCB2}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="2*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
@@ -42,6 +44,8 @@
                         </Grid>
 
                         <controls:DateAmountChart Grid.Row="1" Series="{Binding ChartSeries}" Margin="5" />
+
+                        <transactions:TransactionListView Grid.Row="2" DataContext="{Binding Transactions}" />
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>

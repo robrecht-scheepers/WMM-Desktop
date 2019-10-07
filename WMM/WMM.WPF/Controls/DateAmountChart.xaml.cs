@@ -96,7 +96,6 @@ namespace WMM.WPF.Controls
                     Canvas.Children.Add(weekend);
                     Canvas.SetTop(weekend, 0);
                     Canvas.SetLeft(weekend, weekendStart);
-
                 }
 
                 Canvas.Children.Add(new Line

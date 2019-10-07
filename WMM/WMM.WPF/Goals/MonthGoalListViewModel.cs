@@ -37,17 +37,20 @@ namespace WMM.WPF.Goals
 
         public async Task Initialize()
         {
+            var selectedGoal = SelectedGoalMonthViewModel;
+
             Goals.Clear();
 
             var goals = await _repository.GetGoals();
             foreach (var goal in goals.OrderBy(x => x.Name))
             {
-                var vm = new GoalMonthViewModel(goal, _month, _repository);
+                var vm = new GoalMonthViewModel(goal, _month, _repository, _windowService);
                 await vm.Initialize();
                 Goals.Add(vm);
             }
 
-            SelectedGoalMonthViewModel = Goals.FirstOrDefault();
+            SelectedGoalMonthViewModel = Goals.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
+                                         Goals.FirstOrDefault();
         }
         
         public RelayCommand<GoalMonthViewModel> ShowGoalMonthDetailsCommand =>
