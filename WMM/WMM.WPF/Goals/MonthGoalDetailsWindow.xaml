@@ -9,12 +9,18 @@
         Title="MonthGoalDetailsWindow" Height="450" Width="800"
         d:DataContext="{d:DesignInstance local:MonthGoalListViewModel}"
         >
+    <Window.Resources>
+        <local:GoalStatusColorConverter x:Key="StatusColorConverter" />
+    </Window.Resources>
     
     <Grid>
         <TabControl ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="local:GoalMonthViewModel">
-                    <TextBlock Text="{Binding Name}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Height="15" Width="15" Fill="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
