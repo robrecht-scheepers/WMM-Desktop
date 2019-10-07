@@ -28,7 +28,6 @@ namespace WMM.WPF.Controls
 
         public DateAmountChart()
         {
-            //Series = new List<DateAmountSeries>();
             InitializeComponent();
             Canvas.Loaded += (s, a) => Draw();
             Canvas.SizeChanged += (s, a) => Draw();
@@ -44,8 +43,8 @@ namespace WMM.WPF.Controls
 
         public List<DateAmountSeries> Series
         {
-            get { return (List<DateAmountSeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            get => (List<DateAmountSeries>)GetValue(SeriesProperty);
+            set => SetValue(SeriesProperty, value);
         }
 
         private void Draw()
@@ -66,57 +65,10 @@ namespace WMM.WPF.Controls
             DrawPoints();
         }
 
-        private void DrawAmountAxis()
-        {
-            var amountMin = Series.SelectMany(x => x.Points).Select(x => x.Amount).Min();
-            var amountMax = Series.SelectMany(x => x.Points).Select(x => x.Amount).Max();
-
-            var orderOfMagnitude = Math.Round(Math.Log10(amountMax - amountMin),MidpointRounding.AwayFromZero) - 1;
-            var factor = Math.Pow(10, orderOfMagnitude);
-
-            _amountMin = Math.Floor(amountMin / factor) * factor;
-            _amountMax = (Math.Floor(amountMax / factor) + 1) * factor;
-            // increase the axis range, alternating on top and bottom, until dividable by number of segments
-            // so that we have round numbers for each marker
-            bool alternate = false; 
-            while ((_amountMax - _amountMin) / 4 % factor > 0)
-            {
-                if (alternate)
-                    _amountMin -= factor;
-                else
-                    _amountMax += factor;
-
-                alternate = !alternate;
-            }
-
-            var step = (_amountMax - _amountMin) / NumberOfYSegments;
-            MarkerY0.Text = _amountMin.ToString("C");
-            MarkerY1.Text = (_amountMin + step).ToString("C");
-            MarkerY2.Text = (_amountMin + 2 * step).ToString("C");
-            MarkerY3.Text = (_amountMin + 3 * step).ToString("C");
-            MarkerY4.Text = _amountMax.ToString("C");
-
-            for (int i = 0; i <= NumberOfYSegments; i++)
-            {
-                Canvas.Children.Add(new Line
-                {
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1,
-                    X1 = -5,
-                    X2 = _canvasWidth,
-                    Y1 = i * (_canvasHeight / NumberOfYSegments),
-                    Y2 = i * (_canvasHeight / NumberOfYSegments)
-                });
-            }
-        }
-
-
-
         private void DrawDateAxis()
         {
             _dateMin = Series.SelectMany(x => x.Points).Select(x => x.Date).Min();
             _dateMax = Series.SelectMany(x => x.Points).Select(x => x.Date).Max();
-
 
             var weekendStart = 0d;
             DateLabelCanvas.Children.Clear();
@@ -144,11 +96,12 @@ namespace WMM.WPF.Controls
                     Canvas.Children.Add(weekend);
                     Canvas.SetTop(weekend, 0);
                     Canvas.SetLeft(weekend, weekendStart);
+
                 }
 
                 Canvas.Children.Add(new Line
                 {
-                    Stroke = weekday == DayOfWeek.Sunday ? Brushes.DarkGray : Brushes.LightGray,
+                    Stroke = weekday == DayOfWeek.Sunday ? Brushes.Black : Brushes.LightGray,
                     StrokeThickness = 1,
                     X1 = x,
                     X2 = x,
@@ -172,6 +125,50 @@ namespace WMM.WPF.Controls
             }
         }
 
+        private void DrawAmountAxis()
+        {
+            var amountMin = Series.SelectMany(x => x.Points).Select(x => x.Amount).Min();
+            var amountMax = Series.SelectMany(x => x.Points).Select(x => x.Amount).Max();
+
+            var orderOfMagnitude = Math.Round(Math.Log10(amountMax - amountMin),MidpointRounding.AwayFromZero) - 1;
+            var factor = Math.Pow(10, orderOfMagnitude);
+
+            _amountMin = Math.Floor(amountMin / factor) * factor;
+            _amountMax = (Math.Floor(amountMax / factor) + 1) * factor;
+            // increase the axis range, alternating on top and bottom, until it is dividable by
+            // the number of segments, so that we have round numbers for each marker
+            bool alternator = false; 
+            while ((_amountMax - _amountMin) / 4 % factor > 0)
+            {
+                if (alternator)
+                    _amountMin -= factor;
+                else
+                    _amountMax += factor;
+
+                alternator = !alternator;
+            }
+
+            var step = (_amountMax - _amountMin) / NumberOfYSegments;
+            MarkerY0.Text = _amountMin.ToString("C");
+            MarkerY1.Text = (_amountMin + step).ToString("C");
+            MarkerY2.Text = (_amountMin + 2 * step).ToString("C");
+            MarkerY3.Text = (_amountMin + 3 * step).ToString("C");
+            MarkerY4.Text = _amountMax.ToString("C");
+
+            for (int i = 0; i <= NumberOfYSegments; i++)
+            {
+                Canvas.Children.Add(new Line
+                {
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 1,
+                    X1 = -5,
+                    X2 = _canvasWidth,
+                    Y1 = i * (_canvasHeight / NumberOfYSegments),
+                    Y2 = i * (_canvasHeight / NumberOfYSegments)
+                });
+            }
+        }
+        
         private void DrawPoints()
         {
             foreach (var series in Series)
