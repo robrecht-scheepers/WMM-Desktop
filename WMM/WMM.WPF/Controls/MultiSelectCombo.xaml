@@ -20,9 +20,14 @@
                   <ListView ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" MaxHeight="200" Width="{Binding ElementName=ToggleButton, Path=ActualWidth}">
                       <ListView.ItemTemplate>
                           <DataTemplate DataType="{x:Type local:ISelectableItem}">
-                              <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding IsSelectable}">
-                                  <TextBlock Text="{Binding Caption}" VerticalAlignment="Center"/>
-                              </CheckBox>
+                            <Grid>
+                                <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding IsSelectable}" HorizontalAlignment="Stretch"
+                                          Visibility="{Binding IsSelectable, Converter={StaticResource CollapseWhenFalseConverter}}">
+                                    <TextBlock Text="{Binding Caption}" VerticalAlignment="Center"/>
+                                </CheckBox>
+                                <TextBlock Text="{Binding Caption}" VerticalAlignment="Center" 
+                                           Visibility="{Binding IsSelectable, Converter={StaticResource CollapseWhenTrueConverter}}"/>
+                            </Grid>
                           </DataTemplate>
                       </ListView.ItemTemplate>
                   </ListView>
