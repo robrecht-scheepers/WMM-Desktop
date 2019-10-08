@@ -23,6 +23,14 @@ namespace WMM.WPF.Controls
             "DisplayText", typeof(string), typeof(MultiSelectCombo), new PropertyMetadata(default(string)));
 
 
+        public static readonly DependencyProperty DefaultTextProperty = DependencyProperty.Register(
+            "DefaultText", typeof(string), typeof(MultiSelectCombo), new PropertyMetadata(default(string)));
+
+        public string DefaultText
+        {
+            get => (string) GetValue(DefaultTextProperty);
+            set => SetValue(DefaultTextProperty, value);
+        }
 
     }
 }

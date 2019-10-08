@@ -93,9 +93,6 @@
     </Compile>
     <Compile Include="Goals\DateAmountPoint.cs" />
     <Compile Include="Goals\DateAmountSeries.cs" />
-    <Compile Include="Goals\EditGoalView.xaml.cs">
-      <DependentUpon>EditGoalView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Goals\GoalCalculator.cs" />
     <Compile Include="Goals\GoalMonthInfo.cs" />
     <Compile Include="Goals\GoalMonthViewModel.cs" />
@@ -183,10 +180,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forecast\ForecastWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Goals\EditGoalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -376,6 +369,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ic_details.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_dropdown.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,19 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WMM.WPF.Controls">
   <ControlTemplate x:Key="MultiSelectComboControlTemplate" TargetType="{x:Type local:MultiSelectCombo}">
-      <ToggleButton x:Name="ToggleButton" HorizontalAlignment="Stretch">
+      <ToggleButton x:Name="ToggleButton" Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualWidth}"
+                    HorizontalContentAlignment="Stretch">
           <Grid>
-              <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Stretch">
-                  <StackPanel Orientation="Vertical">
-                      <Grid>
-                          <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="*"/>
-                              <ColumnDefinition Width="Auto"/>
-                          </Grid.ColumnDefinitions>
-                          <TextBlock Grid.Column="0" x:Name="ButtonText" Text="TEMP" />
-                      </Grid>
-                  </StackPanel>
-              </Border>
+              <Grid>
+                  <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*"/>
+                      <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Column="0" x:Name="ButtonText" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DefaultText}" />
+                <Image Grid.Column="1" Source="/Resources/ic_dropdown.png" Stretch="Uniform" Height="10" Width="10" HorizontalAlignment="Center"/>
+              </Grid>
+              
               <Popup IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" StaysOpen="False"
                      PlacementTarget="{Binding ElementName=ToggleButton}" Placement="Bottom"
                      HorizontalOffset="0">
