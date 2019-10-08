@@ -24,7 +24,7 @@ namespace WMM.WPF.Goals
         
         private static void CalculateIdeal(List<Transaction> transactions, Goal goal, DateTime month, GoalMonthInfo info)
         {
-            var initialAmount = transactions.Where(x => x.Recurring).Select(x => x.Amount).Sum();
+            var initialAmount = transactions.Where(x => x.Recurring || x.Category.CategoryType == CategoryType.Recurring).Select(x => x.Amount).Sum();
             var endAmount = goal.Limit;
 
             var startDate = month.FirstDayOfMonth();
