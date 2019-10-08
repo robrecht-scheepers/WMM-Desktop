@@ -37,6 +37,7 @@ namespace WMM.WPF
             _repository.TransactionDeleted += async (s, a) => { await OnTransactionAddedDeleted(a.Transaction); };
             _repository.TransactionUpdated += async (s, a) => { await OnTransactionModified(a.OldTransaction, a.NewTransaction); };
             _repository.TransactionBulkUpdated += async (s, a) => { await OnTransactionBulkModified(); };
+            _repository.GoalsUpdated += async (s, a) =>  await CheckGoalsButtons();
 
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
             AddTransactionsViewModel.UseAsTemplateRequested +=
@@ -45,6 +46,8 @@ namespace WMM.WPF
             SearchTransactions = new SearchTransactionListViewModel(_repository, _windowService);
             SearchTransactions.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
+
+
         }
         
         public async Task Initialize()
@@ -73,7 +76,9 @@ namespace WMM.WPF
                     break;
                 }
             }
-            
+
+            await CheckGoalsButtons();
+
         }
 
         public string AppVersion => $"v{Assembly.GetExecutingAssembly().GetName().Version}";
@@ -149,6 +154,15 @@ namespace WMM.WPF
             var manageGoalsViewModel = new ManageGoalsViewModel(_repository, _windowService);
             await manageGoalsViewModel.Initialize();
             _windowService.OpenDialogWindow(manageGoalsViewModel);
+        }
+
+        private async Task CheckGoalsButtons()
+        {
+            var hasGoals = (await _repository.GetGoals()).Any();
+            foreach (var monthBalanceViewModel in MonthBalanceViewModels)
+            {
+                monthBalanceViewModel.ShowGoalsButton = hasGoals;
+            }
         }
     }
 }

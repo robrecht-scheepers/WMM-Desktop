@@ -20,6 +20,7 @@ namespace WMM.WPF.Balances
         private RelayCommand<string> _showDetailTransactionsCommand;
         private bool _isExpanded;
         private AsyncRelayCommand _showGoalMonthDetailsCommand;
+        private bool _showGoalsButton;
 
         public DateTime Month { get; }
 
@@ -166,7 +167,10 @@ namespace WMM.WPF.Balances
             _windowService.OpenDialogWindow(vm);
         }
 
-
-
+        public bool ShowGoalsButton
+        {
+            get => _showGoalsButton;
+            set => SetValue(ref _showGoalsButton, value);
+        }
     }
 }
