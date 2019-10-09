@@ -282,6 +282,9 @@
   <data name="Criteria" xml:space="preserve">
     <value>Criteria</value>
   </data>
+  <data name="CurrentValue" xml:space="preserve">
+    <value>Current</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>

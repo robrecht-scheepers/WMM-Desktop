@@ -205,6 +205,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string CurrentValue {
+            get {
+                return ResourceManager.GetString("CurrentValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
         public static string Date {

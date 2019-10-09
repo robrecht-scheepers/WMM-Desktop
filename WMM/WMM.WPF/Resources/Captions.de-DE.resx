@@ -300,4 +300,7 @@
   <data name="TooltipGoalMonth" xml:space="preserve">
     <value>Ziele für desen Monat prüfen</value>
   </data>
+  <data name="CurrentValue" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
 </root>

@@ -26,7 +26,7 @@
 
     <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding NewGoalName}" />
     <controls:MultiSelectCombo Grid.Row="0" Grid.Column="1" Items="{Binding Criteria}" Margin="{StaticResource CommonMargin}"
-                               DefaultText="Select goal criteria"/>
+                               DefaultText="{x:Static resources:Captions.SelectCriteria}"/>
     <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding NewGoalLimit, StringFormat=C, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
       <i:Interaction.Behaviors>
         <controls:SelectAllOnFocusBehavior />
@@ -87,7 +87,7 @@
 
             <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding EditedName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <controls:MultiSelectCombo Grid.Row="0" Grid.Column="1" Items="{Binding EditedCriteria}" 
-                                       Margin="{StaticResource CommonMargin}" DefaultText="Select goal criteria" />
+                                       Margin="{StaticResource CommonMargin}" DefaultText="{x:Static resources:Captions.SelectCriteria}" />
             <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding EditedLimit, StringFormat=C, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
               <i:Interaction.Behaviors>
                 <controls:SelectAllOnFocusBehavior />

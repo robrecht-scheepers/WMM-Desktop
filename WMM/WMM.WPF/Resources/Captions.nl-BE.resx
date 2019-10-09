@@ -283,7 +283,7 @@
     <value>Beschrijving</value>
   </data>
   <data name="Limit" xml:space="preserve">
-    <value>LImiet</value>
+    <value>Limiet</value>
   </data>
   <data name="ManageGoals" xml:space="preserve">
     <value>Doelen beheren</value>
@@ -299,5 +299,8 @@
   </data>
   <data name="TooltipGoalMonth" xml:space="preserve">
     <value>Doelen voor deze maand bekijken</value>
+  </data>
+  <data name="CurrentValue" xml:space="preserve">
+    <value>Huidige stand</value>
   </data>
 </root>
