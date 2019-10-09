@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Goals
 {
@@ -18,6 +19,7 @@ namespace WMM.WPF.Goals
         private GoalMonthViewModel _selectedGoalMonthViewModel;
         
         public ObservableCollection<GoalMonthViewModel> Goals { get; }
+        public string Title => string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
 
         public GoalMonthViewModel SelectedGoalMonthViewModel
         {

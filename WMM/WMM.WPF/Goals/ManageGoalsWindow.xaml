@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:WMM.WPF.Goals"
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
         Name="ThisManageGoalsWindow"
-        Title="ManageGoalsWindow" Height="450" Width="800"
+        Title="{x:Static resources:Captions.ManageGoals}" Height="450" Width="800"
         d:DataContext="{d:DesignInstance local:ManageGoalsViewModel}">
   <Grid Background="{StaticResource SCB5}">
     <Grid.RowDefinitions>
