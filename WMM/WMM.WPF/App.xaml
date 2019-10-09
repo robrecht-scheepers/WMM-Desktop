@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="Controls/ImageToggleButton.xaml"/>
                 <ResourceDictionary Source="Controls/TextButton.xaml"/>
                 <ResourceDictionary Source="Controls/MultiSelectCombo.xaml"/>
+                <ResourceDictionary Source="Controls/WatermarkTextbox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="C1">#ffffff</Color>
@@ -46,6 +47,7 @@
             <Style TargetType="TextBox">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
                 <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
             <Style TargetType="Button">
                 <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>

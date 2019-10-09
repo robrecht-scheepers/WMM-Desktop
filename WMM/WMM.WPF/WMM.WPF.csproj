@@ -84,6 +84,7 @@
       <DependentUpon>PeriodSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SelectAllOnFocusBehavior.cs" />
+    <Compile Include="Controls\WatermarkTextBox.cs" />
     <Compile Include="Forecast\ForecastLineGroup.cs" />
     <Compile Include="Forecast\ForecastCalculator.cs" />
     <Compile Include="Forecast\ForecastTypeExtensions.cs" />
@@ -176,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PeriodSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\WatermarkTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

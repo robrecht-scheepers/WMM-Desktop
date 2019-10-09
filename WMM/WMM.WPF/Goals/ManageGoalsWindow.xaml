@@ -24,7 +24,7 @@
       <ColumnDefinition Width="Auto"/>
     </Grid.ColumnDefinitions>
 
-    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding NewGoalName}" />
+    <controls:WatermarkTextBox Grid.Row="0" Grid.Column="0" Text="{Binding NewGoalName}" Watermark="{x:Static resources:Captions.Name}" />
     <controls:MultiSelectCombo Grid.Row="0" Grid.Column="1" Items="{Binding Criteria}" Margin="{StaticResource CommonMargin}"
                                DefaultText="{x:Static resources:Captions.SelectCriteria}"/>
     <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding NewGoalLimit, StringFormat=C, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
@@ -32,7 +32,8 @@
         <controls:SelectAllOnFocusBehavior />
       </i:Interaction.Behaviors>
     </TextBox>
-    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding NewGoalDescription}" Height="32"/>
+    <controls:WatermarkTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding NewGoalDescription}" Height="32"
+                               Watermark="{x:Static resources:Captions.Description}"/>
     <controls:ImageButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" ImageSource="/Resources/ic_add.png"
                           Command="{Binding AddNewGoalCommand}" />
     <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding GoalViewModels}"
@@ -98,7 +99,6 @@
             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding EditedDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <controls:ImageButton Grid.Row="1" Grid.Column="3" ImageSource="/Resources/ic_cancel.png"
                                   Command="{Binding ResetCommand}" />
-
           </Grid>
         </DataTemplate>
       </DataGrid.RowDetailsTemplate>
