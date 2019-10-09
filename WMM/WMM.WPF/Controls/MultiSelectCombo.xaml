@@ -22,7 +22,7 @@
         <Popup IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" StaysOpen="False"
                PlacementTarget="{Binding ElementName=ToggleButton}" Placement="Bottom"
                HorizontalOffset="0">
-          <ListView ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" MaxHeight="200" Width="{Binding ElementName=ToggleButton, Path=ActualWidth}">
+          <ListView ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" MaxHeight="300" Width="{Binding ElementName=ToggleButton, Path=ActualWidth}">
             <ListView.ItemTemplate>
               <DataTemplate DataType="{x:Type local:ISelectableItem}">
                 <Grid>
