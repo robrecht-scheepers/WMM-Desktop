@@ -38,7 +38,7 @@
                           Command="{Binding AddNewGoalCommand}" />
     <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding GoalViewModels}"
               AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="True" RowDetailsVisibilityMode="VisibleWhenSelected"
-              SelectionMode="Single">
+              SelectionMode="Single" >
       <DataGrid.Columns>
 
         <DataGridTextColumn Binding="{Binding Name}"/>

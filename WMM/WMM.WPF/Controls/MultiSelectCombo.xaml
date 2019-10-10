@@ -15,7 +15,8 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <TextBlock Grid.Column="0" x:Name="ButtonText" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisplayText}" Opacity="0.7" />
+          <TextBlock Grid.Column="0" x:Name="ButtonText" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisplayText}" 
+                                      TextTrimming="CharacterEllipsis" Opacity="0.7" />
           <Image Grid.Column="1" Source="/Resources/ic_dropdown.png" Stretch="Uniform" Height="10" Width="10" HorizontalAlignment="Center"/>
         </Grid>
 
