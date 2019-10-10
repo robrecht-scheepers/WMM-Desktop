@@ -26,9 +26,9 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" BorderThickness="2" BorderBrush="{StaticResource SCB5}" Margin="0,0,0,1" CornerRadius="1" />
@@ -45,8 +45,8 @@
             <TextBlock Text="{x:Static resources:Captions.Overview}" Style="{StaticResource TitleStyle}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <controls:ImageButton Command="{Binding ShowForecastCommand}" ImageSource="/Resources/ic_forecast.png" ToolTip="{x:Static resources:Captions.Forecasts}"/>
-                <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png" ToolTip="{x:Static resources:Captions.RecurringTitle}"/>
                 <controls:ImageButton Command="{Binding ShowManageGoalsWindowCommand}" ImageSource="/Resources/ic_goal.png" ToolTip="{x:Static resources:Captions.ManageGoals}"/>
+                <controls:ImageButton Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png" ToolTip="{x:Static resources:Captions.RecurringTitle}"/>
                 <controls:ImageButton Command="{Binding ShowManageCategoriesCommand}" ImageSource="/Resources/ic_categories.png" ToolTip="{x:Static resources:Captions.TooltipCategories}"/>
             </StackPanel>
         </Grid>

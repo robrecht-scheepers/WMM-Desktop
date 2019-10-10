@@ -24,15 +24,15 @@
       <ColumnDefinition Width="2*"/>
       <ColumnDefinition Width="2*"/>
     </Grid.ColumnDefinitions>
-    <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
 
+    <controls:ImageToggleButton Grid.Row="0" Grid.Column="0" CheckedImage="/Resources/ic_collapse.png" UncheckedImage="/Resources/ic_expand.png" IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                />
     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TitleStyle}"/>
     <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal"  Visibility="{Binding IsExpanded, Converter={StaticResource CollapseWhenFalseConverter}}">
       <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowGoalMonthDetailsCommand}" ImageSource="/Resources/ic_goal.png"
                             ToolTip="{x:Static resources:Captions.TooltipGoalMonth}" Visibility="{Binding ShowGoalsButton, Converter={StaticResource CollapseWhenFalseConverter}}" Margin="0,5" />
       <controls:ImageButton HorizontalAlignment="Center" Command="{Binding ShowRecurringTransactionsCommand}" ImageSource="/Resources/ic_recurring.png"
                               ToolTip="{x:Static resources:Captions.TooltipRecurringMonth}" Margin="0,5" />
-
     </StackPanel>
 
     <TextBlock Grid.Row="0" Grid.Column="3" DataContext="{Binding TotalBalance.Income}" Style="{StaticResource AmountStyle}" Foreground="White" />
