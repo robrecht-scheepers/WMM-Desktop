@@ -64,16 +64,22 @@ namespace WMM.WPF.Controls
             DrawPoints();
         }
 
+        private void DrawWeekends()
+        {
+            
+        }
+
         private void DrawDateAxis()
         {
             _dateMin = Series.SelectMany(x => x.Points).Select(x => x.Date).Min();
             _dateMax = Series.SelectMany(x => x.Points).Select(x => x.Date).Max();
 
-            var weekendStart = 0d;
             DateLabelCanvas.Children.Clear();
             _amountOfDays = _dateMax.Subtract(_dateMin).Days + 1;
             _dateSectionWidth = _canvasWidth / _amountOfDays;
 
+            // draw the weekend rectangles first, so that the date lines will come on top of them
+            var weekendStart = 0d;
             for (int i = 0; i <= _amountOfDays; i++)
             {
                 var x = i * _dateSectionWidth;
@@ -96,10 +102,17 @@ namespace WMM.WPF.Controls
                     Canvas.SetTop(weekend, 0);
                     Canvas.SetLeft(weekend, weekendStart);
                 }
+            }
+
+            for (int i = 0; i <= _amountOfDays; i++)
+            {
+                var x = i * _dateSectionWidth;
+                var date = _dateMin.AddDays(i).Date;
+                
 
                 Canvas.Children.Add(new Line
                 {
-                    Stroke = weekday == DayOfWeek.Sunday ? Brushes.Black : Brushes.LightGray,
+                    Stroke = Brushes.DarkGray,
                     StrokeThickness = 1,
                     X1 = x,
                     X2 = x,
@@ -107,12 +120,14 @@ namespace WMM.WPF.Controls
                     Y2 = _canvasHeight
                 });
 
-                if (i == _amountOfDays)
+                if (i == _amountOfDays) // this day is later than day max, so don't show a label
                     break;
 
                 var label = new TextBlock
                 {
                     FontSize = 12,
+                    Foreground = Brushes.Black,
+                    Margin = new Thickness(0),
                     Width = _dateSectionWidth,
                     TextAlignment = TextAlignment.Center,
                     Text = date.Day.ToString()
