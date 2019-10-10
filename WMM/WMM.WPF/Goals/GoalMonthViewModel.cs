@@ -67,7 +67,7 @@ namespace WMM.WPF.Goals
         {
             var transactions =
                 (await _repository.GetTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth(), _goal)).OrderBy(x => x.Date).ToList();
-            Transactions = new TransactionListViewModelBase(_repository, _windowService, true)
+            Transactions = new TransactionListViewModelBase(_repository, _windowService, true, false)
             {
                 Transactions = new ObservableCollection<Transaction>(transactions) 
             }; 

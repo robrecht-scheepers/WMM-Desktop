@@ -18,11 +18,12 @@ namespace WMM.WPF.Transactions
         protected readonly IWindowService WindowService;
         private RelayCommand<Transaction> _useAsTemplateCommand;
 
-        public TransactionListViewModelBase(IRepository repository, IWindowService windowService, bool showDate)
+        public TransactionListViewModelBase(IRepository repository, IWindowService windowService, bool showDate, bool showUseAsTemplateButton = true)
         {
             Repository = repository;
             WindowService = windowService;
             ShowDate = showDate;
+            ShowUseAsTemplateButton = showUseAsTemplateButton;
             Transactions = new ObservableCollection<Transaction>();
 
             Repository.TransactionDeleted += RepositoryOnTransactionDeleted;
@@ -31,6 +32,8 @@ namespace WMM.WPF.Transactions
         }
 
         public bool ShowDate { get; }
+
+        public bool ShowUseAsTemplateButton { get; }
 
         public ObservableCollection<Transaction> Transactions
         {
