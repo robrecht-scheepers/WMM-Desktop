@@ -25,7 +25,6 @@ namespace WMM.WPF.Controls
         private double _canvasWidth;
         private double _canvasHeight;
 
-
         public DateAmountChart()
         {
             InitializeComponent();
@@ -179,12 +178,21 @@ namespace WMM.WPF.Controls
                 foreach (var point in series.Points)
                 {
                     var drawPoint = CalculateDrawPoint(point);
+                    var tooltipPanel =  new StackPanel
+                    {
+                        Background = brush,
+                        Margin = new Thickness(-5)
+                    };
+                    tooltipPanel.Children.Add(new TextBlock
+                    {
+                        Text = point.Amount.ToString("C")
+                    });
                     var pointShape = new Ellipse
                     {
                         Fill = brush,
                         Width = 5,
                         Height = 5,
-                        ToolTip = $"{point.Date:d}\r\n{point.Amount:C}"
+                        ToolTip = tooltipPanel
                     };
                     Canvas.Children.Add(pointShape);
                     Canvas.SetLeft(pointShape, drawPoint.X - pointShape.Width / 2);
