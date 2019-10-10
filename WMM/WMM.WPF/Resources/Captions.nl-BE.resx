@@ -124,7 +124,7 @@
     <value>Ontwerp uitvoeren</value>
   </data>
   <data name="AppTitle" xml:space="preserve">
-    <value>Huishoudsboekje</value>
+    <value>Huishoudboekje</value>
   </data>
   <data name="Area" xml:space="preserve">
     <value>Rubriek</value>
@@ -272,5 +272,35 @@
   </data>
   <data name="CategoryType" xml:space="preserve">
     <value>Categorie type</value>
+  </data>
+  <data name="ConfirmDeleteGoal" xml:space="preserve">
+    <value>Bent u zeker dat u dit doel wilt verwijderen? Dit kan niet ongedaan gemaakt worden.</value>
+  </data>
+  <data name="Criteria" xml:space="preserve">
+    <value>Criteria</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschrijving</value>
+  </data>
+  <data name="Limit" xml:space="preserve">
+    <value>Limiet</value>
+  </data>
+  <data name="ManageGoals" xml:space="preserve">
+    <value>Doelen beheren</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="SelectCriteria" xml:space="preserve">
+    <value>Criteria kiezen</value>
+  </data>
+  <data name="TitleMonthGoals" xml:space="preserve">
+    <value>Doelen voor  {0}</value>
+  </data>
+  <data name="TooltipGoalMonth" xml:space="preserve">
+    <value>Doelen voor deze maand bekijken</value>
+  </data>
+  <data name="CurrentValue" xml:space="preserve">
+    <value>Huidige stand</value>
   </data>
 </root>

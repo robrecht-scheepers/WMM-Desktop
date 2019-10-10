@@ -273,4 +273,34 @@
   <data name="CategoryType" xml:space="preserve">
     <value>Kategorietyp</value>
   </data>
+  <data name="ConfirmDeleteGoal" xml:space="preserve">
+    <value>Möchten sie das ausgewählte Ziel löschen? Diese Aktion kann nicht Rückgängig gemacht werden.</value>
+  </data>
+  <data name="Criteria" xml:space="preserve">
+    <value>Kriterien</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="Limit" xml:space="preserve">
+    <value>Limit</value>
+  </data>
+  <data name="ManageGoals" xml:space="preserve">
+    <value>Ziele verwalten</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="SelectCriteria" xml:space="preserve">
+    <value>Kriterienauswahl</value>
+  </data>
+  <data name="TitleMonthGoals" xml:space="preserve">
+    <value>Ziele für {0}</value>
+  </data>
+  <data name="TooltipGoalMonth" xml:space="preserve">
+    <value>Ziele für desen Monat prüfen</value>
+  </data>
+  <data name="CurrentValue" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
 </root>

@@ -6,13 +6,15 @@ namespace WMM.Data
 {
     public class Category
     {
-        public Category(string area, string name, CategoryType categoryType)
+        public Category(Guid id, string area, string name, CategoryType categoryType)
         {
+            Id = id;
             Area = area;
             Name = name;
             CategoryType = categoryType;
         }
 
+        public Guid Id { get; }
         public string Area { get; }
         public string Name { get; }
         public CategoryType CategoryType { get; }

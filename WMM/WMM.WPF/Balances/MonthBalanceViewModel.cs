@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using WMM.Data;
+using WMM.WPF.Goals;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
@@ -18,6 +19,8 @@ namespace WMM.WPF.Balances
         private RelayCommand _showRecurringTransactionsCommand;
         private RelayCommand<string> _showDetailTransactionsCommand;
         private bool _isExpanded;
+        private AsyncRelayCommand _showGoalMonthDetailsCommand;
+        private bool _showGoalsButton;
 
         public DateTime Month { get; }
 
@@ -30,7 +33,7 @@ namespace WMM.WPF.Balances
         public string Name => Month.ToString("Y");
 
         public ObservableCollection<AreaBalanceViewModel> AreaBalances { get; }
-
+        
         public RecurringTransactionsViewModel RecurringTransactionsViewModel { get; }
 
         public bool IsExpanded
@@ -153,7 +156,21 @@ namespace WMM.WPF.Balances
             DetailTransactionsRequested?.Invoke(this, new DetailTransactionsRequestEventArgs(dateFrom, dateTo, category));
         }
 
+        public AsyncRelayCommand ShowGoalMonthDetailsCommand =>
+            _showGoalMonthDetailsCommand ??
+            (_showGoalMonthDetailsCommand = new AsyncRelayCommand(ShowGoalMonthDetails));
 
+        private async Task ShowGoalMonthDetails()
+        {
+            var vm = new MonthGoalDetailsViewModel(Month, _repository, _windowService);
+            await vm.Initialize();
+            _windowService.OpenDialogWindow(vm);
+        }
 
+        public bool ShowGoalsButton
+        {
+            get => _showGoalsButton;
+            set => SetValue(ref _showGoalsButton, value);
+        }
     }
 }

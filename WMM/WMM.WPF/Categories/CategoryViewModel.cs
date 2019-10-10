@@ -24,16 +24,7 @@ namespace WMM.WPF.Categories
         private RelayCommand _resetCommand;
         private CategoryType _editedCategoryType;
         private string _categoryTypeCaption;
-
-        public CategoryViewModel(ObservableCollection<string> areas, IRepository repository, string area, string name, IWindowService windowService)
-        {
-            Areas = areas;
-            Area = area;
-            Name = name;
-            EditedArea = area;
-            EditedName = name;
-        }
-
+        
         public CategoryViewModel(Category category, ObservableCollection<string> areas,
             ObservableCollection<CategoryTypeSelectionItem> categoryTypes, IRepository repository,
             IWindowService windowService)

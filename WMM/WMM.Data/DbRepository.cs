@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WMM.Data.Helpers;
 
 namespace WMM.Data
@@ -44,36 +45,48 @@ namespace WMM.Data
             _dbConnectionString = string.Format(ConnectionStringBase, _dbPath);
 
             if (!File.Exists(_dbPath))
+            {
                 CreateNewDatabase(_dbPath);
+            }
+            else
+            {
+                MigrateDatabase();
+            }
         }
 
         private SQLiteConnection GetConnection() => new SQLiteConnection(_dbConnectionString);
 
-        private void CreateNewDatabase(string dbPath)
+        private void RunSqlScript(string scriptFileName)
         {
-            // no need to make this method async as it is executed in the constructor before the window is visible
-            string createDbSql;
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WMM.Data.Sql.CreateDB.sql"))
+            // this method assumes tha script lies in the Sql folder
+            string sql;
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"WMM.Data.Sql.{scriptFileName}"))
             {
                 if (stream == null)
-                    throw new Exception("Embedded resource for create DB script not found");
+                    throw new Exception($"Embedded resource for script {scriptFileName} not found");
                 using (var reader = new StreamReader(stream))
                 {
-                    createDbSql = reader.ReadToEnd();
+                    sql = reader.ReadToEnd();
                 }
             }
-            if(string.IsNullOrEmpty(createDbSql))
-                throw new Exception("Created DB script is empty");
-
-            SQLiteConnection.CreateFile(dbPath);
             using (var dbConnection = GetConnection())
             {
-                var command = new SQLiteCommand(dbConnection) { CommandText = createDbSql };
+                var command = new SQLiteCommand(dbConnection) { CommandText = sql };
                 dbConnection.Open();
                 command.ExecuteNonQuery(CommandBehavior.CloseConnection);
             }
+        }
 
+        private void CreateNewDatabase(string dbPath)
+        {
+            SQLiteConnection.CreateFile(dbPath);
+            RunSqlScript("CreateDB.sql");
             SeedCategories(InitialCategories);
+        }
+
+        private void MigrateDatabase()
+        {
+            RunSqlScript("MigrateDB.sql");
         }
 
         public async Task Initialize()
@@ -305,6 +318,18 @@ namespace WMM.Data
             config.CategoryName = category.Name;
             
             return await GetTransactions(config);
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Goal goal)
+        {
+            var allTransactions = await GetTransactions(dateFrom, dateTo);
+
+            var categories = new List<Category>();
+            categories.AddRange(goal.CategoryCriteria);
+            categories.AddRange(_categories.Where(x => goal.AreaCriteria.Contains(x.Area)));
+            categories.AddRange(_categories.Where(x => goal.CategoryTypeCriteria.Contains(x.CategoryType)));
+
+            return allTransactions.Where(x => categories.Contains(x.Category));
         }
 
         public async Task<IEnumerable<Transaction>> GetTransactions()
@@ -674,7 +699,7 @@ namespace WMM.Data
             var areas = new List<string>();
 
             const string commandText =
-                "SELECT a.Name AS Area, c.Name AS Category, c.ForecastType as ForecastType FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
+                "SELECT c.Id as Id, a.Name AS Area, c.Name AS Category, c.ForecastType as ForecastType FROM Areas a LEFT JOIN Categories c on c.Area = a.Id ORDER BY a.Name, c.Name";
             var command = new SQLiteCommand() { CommandText = commandText };
             using (var dbConnection = GetConnection())
             {
@@ -686,12 +711,13 @@ namespace WMM.Data
                         return;
                     while (reader.Read())
                     {
-                        var area = reader.GetString(0);
-                        var category = reader.GetStringNullSafe(1);
-                        var categoryType = (CategoryType)reader.GetInt32NullSafe(2);
+                        var id = reader.GetGuid(0);
+                        var area = reader.GetString(1);
+                        var category = reader.GetStringNullSafe(2);
+                        var categoryType = (CategoryType)reader.GetInt32NullSafe(3);
 
                         if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && categoryType >= 0)
-                            categories.Add(new Category(area,category,categoryType));
+                            categories.Add(new Category(id, area,category,categoryType));
 
                         if (!string.IsNullOrEmpty(area))
                         {
@@ -805,6 +831,8 @@ namespace WMM.Data
 
         public event EventHandler CategoriesUpdated;
 
+        
+
         private void OnCategoresUpdated()
         {
             CategoriesUpdated?.Invoke(this, EventArgs.Empty);
@@ -845,6 +873,138 @@ namespace WMM.Data
                 }
             }
         }
+        #endregion
+
+        #region Goals
+
+        public event EventHandler GoalsUpdated;
+
+        public async Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria, List<Category> categoryCriteria,
+            double limit)
+        {
+            var id = Guid.NewGuid();
+            const string commandText =
+                "INSERT INTO Goals (Id, Name, Description, \"Limit\", CategoryTypeCriteria, AreaCriteria, CategoryCriteria) " +
+                "VALUES (@id, @name, @description, @limit, @categoryTypeCriteria, @areaCriteria, @categoryCriteria)";
+            using(var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) {CommandText = commandText})
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@description", description);
+                command.Parameters.AddWithValue("@limit", limit);
+                command.Parameters.AddWithValue("@categoryTypeCriteria", JsonConvert.SerializeObject(categoryTypeCriteria));
+                command.Parameters.AddWithValue("@areaCriteria", JsonConvert.SerializeObject(areaCriteria));
+                command.Parameters.AddWithValue("@categoryCriteria", JsonConvert.SerializeObject(categoryCriteria.Select(x => x.Id).ToList()));
+
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            GoalsUpdated?.Invoke(this, EventArgs.Empty);
+
+            return await GetGoal(id);
+        }
+
+        public async Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria, List<string> areaCriteria,
+            List<Category> categoryCriteria, double limit)
+        {
+            const string commandText =
+                "UPDATE Goals SET Name = @name, Description = @description, \"Limit\" = @limit, " +
+                "CategoryTypeCriteria = @categoryTypeCriteria, AreaCriteria = @areaCriteria, CategoryCriteria = @categoryCriteria " +
+                "WHERE Id = @id";
+            using (var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) { CommandText = commandText })
+            {
+                command.Parameters.AddWithValue("@id", goal.Id);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@description", description);
+                command.Parameters.AddWithValue("@limit", limit);
+                command.Parameters.AddWithValue("@categoryTypeCriteria", JsonConvert.SerializeObject(categoryTypeCriteria));
+                command.Parameters.AddWithValue("@areaCriteria", JsonConvert.SerializeObject(areaCriteria));
+                command.Parameters.AddWithValue("@categoryCriteria", JsonConvert.SerializeObject(categoryCriteria.Select(x => x.Id).ToList()));
+
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            GoalsUpdated?.Invoke(this, EventArgs.Empty);
+
+            return await GetGoal(goal.Id);
+        }
+
+        public async Task DeleteGoal(Goal goal)
+        {
+            const string commandText = "DELETE FROM Goals WHERE Id = @id";
+            using (var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) { CommandText = commandText })
+            {
+                command.Parameters.AddWithValue("@id", goal.Id);
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+            GoalsUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public async Task<Goal> GetGoal(Guid id)
+        {
+            const string commandText =
+                "SELECT Id, Name, Description, \"Limit\", CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
+                "FROM Goals WHERE Id = @id";
+            using (var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn) {CommandText = commandText})
+            {
+                command.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    return (await ReadGoals(reader)).SingleOrDefault();
+                }
+            }
+        }
+
+        public async Task<List<Goal>> GetGoals()
+        {
+            List<Goal> goals;
+            const string commandText =
+                "SELECT Id, Name, Description, \"Limit\", CategoryTypeCriteria, AreaCriteria, CategoryCriteria " +
+                "FROM Goals";
+            using(var conn = GetConnection())
+            using (var command = new SQLiteCommand(conn){CommandText = commandText})
+            {
+                conn.Open();
+                var reader = await command.ExecuteReaderAsync();
+                goals = await ReadGoals(reader);
+            }
+
+            return goals;
+        }
+
+        private async Task<List<Goal>> ReadGoals(DbDataReader reader)
+        {
+            var goals = new List<Goal>();
+            if (!reader.HasRows)
+                return goals;
+            while (await reader.ReadAsync())
+            {
+                var id = reader.GetGuid(0);
+                var name = reader.GetString(1);
+                var description = reader.GetStringNullSafe(2);
+                var limit = reader.GetDouble(3);
+                var categoryTypeCriteria = JsonConvert.DeserializeObject<List<CategoryType>>(reader.GetString(4));
+                var areaCriteria = JsonConvert.DeserializeObject<List<string>>(reader.GetString(5));
+                var categoryCriteria = JsonConvert.DeserializeObject<List<Guid>>(reader.GetString(6))
+                    .Select(x => _categories.FirstOrDefault(y => y.Id == x))
+                    .Where(x => x != null).ToList();
+
+                goals.Add(new Goal(id, name, description, limit, categoryTypeCriteria, areaCriteria, categoryCriteria));
+            }
+
+            return goals;
+        }
+
+        
+
         #endregion
 
         //private void Log(string message)

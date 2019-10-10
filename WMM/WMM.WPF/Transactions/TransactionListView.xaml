@@ -43,7 +43,7 @@
                                     Command="{Binding ElementName=TransactionListControlRoot, Path=DataContext.UseAsTemplateCommand}" 
                                     CommandParameter="{Binding}"
                                     ImageSource="/Resources/ic_template.png" Style="{StaticResource DataGridButtonStyle}"
-                                    Visibility="{Binding ElementName=TransactionListControlRoot,  Path=DataContext.ShowDate, Converter={StaticResource CollapseWhenFalseConverter}}"/> 
+                                    Visibility="{Binding ElementName=TransactionListControlRoot,  Path=DataContext.ShowUseAsTemplateButton, Converter={StaticResource CollapseWhenFalseConverter}}"/> 
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

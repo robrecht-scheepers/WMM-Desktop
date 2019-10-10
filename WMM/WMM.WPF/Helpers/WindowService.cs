@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using WMM.WPF.Categories;
 using WMM.WPF.Forecast;
+using WMM.WPF.Goals;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
 using WMM.WPF.Resources;
@@ -63,6 +64,26 @@ namespace WMM.WPF.Helpers
             else if (dataContext is SelectDeleteCategoryFallbackViewModel)
             {
                 var window = new SelectDeleteCategoryFallbackWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
+            }
+            else if (dataContext is ManageGoalsViewModel)
+            {
+                var window = new ManageGoalsWindow
+                {
+                    DataContext = dataContext,
+                    Owner = _ownerWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                window.ShowDialog();
+            }
+            else if (dataContext is MonthGoalDetailsViewModel)
+            {
+                var window = new MonthGoalDetailsWindow
                 {
                     DataContext = dataContext,
                     Owner = _ownerWindow,

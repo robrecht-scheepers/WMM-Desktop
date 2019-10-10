@@ -8,6 +8,7 @@ using WMM.Data;
 using WMM.WPF.Balances;
 using WMM.WPF.Categories;
 using WMM.WPF.Forecast;
+using WMM.WPF.Goals;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
 using WMM.WPF.Recurring;
@@ -23,6 +24,7 @@ namespace WMM.WPF
         private AsyncRelayCommand _showRecurringTransactionsCommand;
         private RelayCommand _showManageCategoriesCommand;
         private AsyncRelayCommand _showForecastCommand;
+        private AsyncRelayCommand _showManageGoalsWindowCommand;
 
         public MainViewModel(IRepository repository, IWindowService windowService)
         {
@@ -35,6 +37,7 @@ namespace WMM.WPF
             _repository.TransactionDeleted += async (s, a) => { await OnTransactionAddedDeleted(a.Transaction); };
             _repository.TransactionUpdated += async (s, a) => { await OnTransactionModified(a.OldTransaction, a.NewTransaction); };
             _repository.TransactionBulkUpdated += async (s, a) => { await OnTransactionBulkModified(); };
+            _repository.GoalsUpdated += async (s, a) =>  await CheckGoalsButtons();
 
             AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
             AddTransactionsViewModel.UseAsTemplateRequested +=
@@ -43,6 +46,8 @@ namespace WMM.WPF
             SearchTransactions = new SearchTransactionListViewModel(_repository, _windowService);
             SearchTransactions.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
+
+
         }
         
         public async Task Initialize()
@@ -71,7 +76,9 @@ namespace WMM.WPF
                     break;
                 }
             }
-            
+
+            await CheckGoalsButtons();
+
         }
 
         public string AppVersion => $"v{Assembly.GetExecutingAssembly().GetName().Version}";
@@ -138,6 +145,24 @@ namespace WMM.WPF
             var forecastViewModel = new ForecastViewModel(_repository, _windowService);
             await forecastViewModel.Initialize();
             _windowService.OpenDialogWindow(forecastViewModel);
+        }
+
+        public AsyncRelayCommand ShowManageGoalsWindowCommand => _showManageGoalsWindowCommand ?? (_showManageGoalsWindowCommand = new AsyncRelayCommand(ShowManageGoalsWindow));
+
+        private async Task ShowManageGoalsWindow()
+        {
+            var manageGoalsViewModel = new ManageGoalsViewModel(_repository, _windowService);
+            await manageGoalsViewModel.Initialize();
+            _windowService.OpenDialogWindow(manageGoalsViewModel);
+        }
+
+        private async Task CheckGoalsButtons()
+        {
+            var hasGoals = (await _repository.GetGoals()).Any();
+            foreach (var monthBalanceViewModel in MonthBalanceViewModels)
+            {
+                monthBalanceViewModel.ShowGoalsButton = hasGoals;
+            }
         }
     }
 }

@@ -7,8 +7,8 @@ namespace WMM.Data
     public enum CategoryType
     {
         Exception = 0,  // exceptional expenses, not forcastable
-        Monthly = 1,    // to be forcasted by a monthly mean value
-        Daily = 2,      // to be forcasted by extrapolating a daily mean value 
+        Monthly = 1,    // to be forecasted by a monthly mean value
+        Daily = 2,      // to be forecasted by extrapolating a daily mean value 
         Recurring = 3   // forecast only based on recurring templates
     }
 }

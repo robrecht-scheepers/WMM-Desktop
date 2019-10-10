@@ -25,6 +25,8 @@ namespace WMM.Data
 
         Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Category category);
 
+        Task<IEnumerable<Transaction>> GetTransactions(DateTime dateFrom, DateTime dateTo, Goal goal);
+
         Task<IEnumerable<Transaction>> GetTransactions(SearchConfiguration searchConfiguration);
 
         Task<Transaction> AddRecurringTemplate(Category category, double amount, string comments);
@@ -64,5 +66,16 @@ namespace WMM.Data
         Task DeleteCategory(string category, string fallback = null);
 
         event EventHandler CategoriesUpdated;
+
+        Task<Goal> AddGoal(string name, string description, List<CategoryType> categoryTypeCriteria,
+            List<string> areaCriteria, List<Category> categoryCriteria, double limit);
+
+        Task<Goal> UpdateGoal(Goal goal, string name, string description, List<CategoryType> categoryTypeCriteria,
+            List<string> areaCriteria, List<Category> categoryCriteria, double limit);
+
+        Task DeleteGoal(Goal goal);
+        Task<List<Goal>> GetGoals();
+
+        event EventHandler GoalsUpdated;
     }
 }

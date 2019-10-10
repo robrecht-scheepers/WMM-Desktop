@@ -1,5 +1,4 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS `Transactions`;
 CREATE TABLE IF NOT EXISTS `Transactions` (
 	`Id`	BLOB NOT NULL,
 	`Date`	NUMERIC,
@@ -15,7 +14,16 @@ CREATE TABLE IF NOT EXISTS `Transactions` (
 	FOREIGN KEY(`Category`) REFERENCES `Categories`(`Id`),
 	PRIMARY KEY(`Id`)
 );
-DROP TABLE IF EXISTS `Categories`;
+CREATE TABLE IF NOT EXISTS `Goals` (
+	`Id`	BLOB NOT NULL,
+	`Name`	TEXT NOT NULL UNIQUE,
+	`Description`	TEXT,
+	`CategoryCriteria`	TEXT NOT NULL,
+	`AreaCriteria`	TEXT NOT NULL,
+	`CategoryTypeCriteria`	TEXT NOT NULL,
+	`Limit`	NUMERIC NOT NULL,
+	PRIMARY KEY(`Id`)
+);
 CREATE TABLE IF NOT EXISTS `Categories` (
 	`Id`	BLOB NOT NULL,
 	`Area`	BLOB NOT NULL,
@@ -24,21 +32,17 @@ CREATE TABLE IF NOT EXISTS `Categories` (
 	FOREIGN KEY(`Area`) REFERENCES `Areas`(`Id`),
 	PRIMARY KEY(`Id`)
 );
-DROP TABLE IF EXISTS `Areas`;
 CREATE TABLE IF NOT EXISTS `Areas` (
 	`Id`	BLOB NOT NULL,
 	`Name`	TEXT NOT NULL UNIQUE,
 	PRIMARY KEY(`Id`)
 );
-DROP INDEX IF EXISTS `TransactionsDeletedIndex`;
 CREATE INDEX IF NOT EXISTS `TransactionsDeletedIndex` ON `Transactions` (
 	`Deleted`
 );
-DROP INDEX IF EXISTS `TransactionDateIndex`;
 CREATE INDEX IF NOT EXISTS `TransactionDateIndex` ON `Transactions` (
 	`Date`	ASC
 );
-DROP INDEX IF EXISTS `TransactionCategoryIndex`;
 CREATE INDEX IF NOT EXISTS `TransactionCategoryIndex` ON `Transactions` (
 	`Category`
 );

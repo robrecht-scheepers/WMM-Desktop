@@ -19,7 +19,7 @@ namespace WMM.WPF.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Captions {
@@ -160,11 +160,29 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this goal? This action cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteGoal {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this transaction? This action cannot be undone..
         /// </summary>
         public static string ConfirmDeleteTransaction {
             get {
                 return ResourceManager.GetString("ConfirmDeleteTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Criteria.
+        /// </summary>
+        public static string Criteria {
+            get {
+                return ResourceManager.GetString("Criteria", resourceCulture);
             }
         }
         
@@ -187,11 +205,29 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string CurrentValue {
+            get {
+                return ResourceManager.GetString("CurrentValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
         public static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
             }
         }
         
@@ -349,6 +385,33 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limit.
+        /// </summary>
+        public static string Limit {
+            get {
+                return ResourceManager.GetString("Limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage goals.
+        /// </summary>
+        public static string ManageGoals {
+            get {
+                return ResourceManager.GetString("ManageGoals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New area.
         /// </summary>
         public static string NewArea {
@@ -439,6 +502,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select criteria.
+        /// </summary>
+        public static string SelectCriteria {
+            get {
+                return ResourceManager.GetString("SelectCriteria", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are transactions linked to the category you are deleting. Please select the category these transactions should be assigned to instead..
         /// </summary>
         public static string SelectFallbackCategory {
@@ -475,6 +547,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Goals for {0}.
+        /// </summary>
+        public static string TitleMonthGoals {
+            get {
+                return ResourceManager.GetString("TitleMonthGoals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage monthly transactons for  {0} .
         /// </summary>
         public static string TitleRecurringMonth {
@@ -498,6 +579,15 @@ namespace WMM.WPF.Resources {
         public static string TooltipCategories {
             get {
                 return ResourceManager.GetString("TooltipCategories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check goals for this month.
+        /// </summary>
+        public static string TooltipGoalMonth {
+            get {
+                return ResourceManager.GetString("TooltipGoalMonth", resourceCulture);
             }
         }
         
