@@ -11,5 +11,6 @@ namespace WMM.WPF.Controls
         bool IsSelected { get; set; }
         bool IsSelectable { get; }
         string Caption { get; }
+        event EventHandler SelectionChanged;
     }
 }

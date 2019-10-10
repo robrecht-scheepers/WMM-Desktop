@@ -12,8 +12,19 @@ namespace WMM.WPF.Categories
 {
     public class AreaCategoryMultiSelectionItem : ISelectableItem
     {
+        private bool _isSelected;
         public AreaCategorySelectionItem Item { get; set; }
-        public bool IsSelected { get; set; }
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
         public bool IsSelectable => Item.IsSelectable;
         public string Caption => Item.Name;
 
@@ -21,6 +32,8 @@ namespace WMM.WPF.Categories
         {
             Item = item;
         }
+
+        public event EventHandler SelectionChanged;
     }
 
     public class AreaCategorySelectionItem

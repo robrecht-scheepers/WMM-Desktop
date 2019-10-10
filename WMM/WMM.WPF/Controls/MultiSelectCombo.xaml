@@ -15,11 +15,11 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <TextBlock Grid.Column="0" x:Name="ButtonText" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DefaultText}" />
+          <TextBlock Grid.Column="0" x:Name="ButtonText" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DisplayText}" Opacity="0.7" />
           <Image Grid.Column="1" Source="/Resources/ic_dropdown.png" Stretch="Uniform" Height="10" Width="10" HorizontalAlignment="Center"/>
         </Grid>
 
-        <Popup IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" StaysOpen="False"
+        <Popup IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" StaysOpen="True"
                PlacementTarget="{Binding ElementName=ToggleButton}" Placement="Bottom"
                HorizontalOffset="0">
           <ListView ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" MaxHeight="300" Width="{Binding ElementName=ToggleButton, Path=ActualWidth}">
