@@ -99,7 +99,7 @@ namespace WMM.WPF.Categories
             }
             catch (Exception e)
             {
-                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                _windowService.ShowMessage(string.Format(Captions.ErrorMessage, e.Message), Captions.Error);
                 return;
             }
             
@@ -122,7 +122,7 @@ namespace WMM.WPF.Categories
             }
             catch (Exception e)
             {
-                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                _windowService.ShowMessage(string.Format(Captions.ErrorMessage, e.Message), Captions.Error);
                 return;
             }
 

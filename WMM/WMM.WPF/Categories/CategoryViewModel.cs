@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WMM.Data;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Categories
 {
@@ -113,7 +114,7 @@ namespace WMM.WPF.Categories
             }
             catch (Exception e)
             {
-                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                _windowService.ShowMessage(string.Format(Captions.ErrorMessage, e.Message), Captions.Error);
             }
             
             Name = EditedName;

@@ -303,4 +303,7 @@
   <data name="TooltipGoalMonth" xml:space="preserve">
     <value>Check goals for this month</value>
   </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>An error occurred: {0}</value>
+  </data>
 </root>

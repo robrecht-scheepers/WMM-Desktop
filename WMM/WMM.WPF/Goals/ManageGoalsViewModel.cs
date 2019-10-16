@@ -9,6 +9,7 @@ using WMM.WPF.Categories;
 using WMM.WPF.Controls;
 using WMM.WPF.Helpers;
 using WMM.WPF.MVVM;
+using WMM.WPF.Resources;
 
 namespace WMM.WPF.Goals
 {
@@ -106,7 +107,7 @@ namespace WMM.WPF.Goals
             }
             catch (Exception e)
             {
-                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                _windowService.ShowMessage(string.Format(Captions.ErrorMessage, e.Message), Captions.Error);
                 return;
             }
 
@@ -121,13 +122,13 @@ namespace WMM.WPF.Goals
         {
             try
             {
-                if (!_windowService.AskConfirmation("TODO: confirm message"))
+                if (!_windowService.AskConfirmation(Captions.ConfirmDeleteGoal))
                     return;
                 await _repository.DeleteGoal(goalViewModel.Goal);
             }
             catch (Exception e)
             {
-                _windowService.ShowMessage($"Fehler aufgetreten: {e.Message}", "Fehler");
+                _windowService.ShowMessage(string.Format(Captions.ErrorMessage, e.Message), Captions.Error);
             }
         }
     }
