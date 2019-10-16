@@ -86,7 +86,13 @@ namespace WMM.WPF.Goals
             }
         }
 
-        public AsyncRelayCommand AddNewGoalCommand => _addNewGoalCommand ?? (_addNewGoalCommand = new AsyncRelayCommand(AddNewGoal));
+        public AsyncRelayCommand AddNewGoalCommand => _addNewGoalCommand ?? (_addNewGoalCommand = new AsyncRelayCommand(AddNewGoal, CanExecuteAddNewGoal));
+
+        private bool CanExecuteAddNewGoal()
+        {
+            return !string.IsNullOrEmpty(NewGoalName) && !GoalViewModels.Any(x => x.Name == NewGoalName) &&
+                   Criteria.Any(x => x.IsSelected);
+        }
 
         private async Task AddNewGoal()
         {
