@@ -9,6 +9,7 @@ namespace WMM.WPF.Goals
 {
     public class GoalMonthInfo
     {
+        public double InitialAmount { get; set; }
         public double CurrentAmount { get; set; }
         public double CurrentIdealAmount { get; set; }
         public GoalStatus Status { get; set; }
