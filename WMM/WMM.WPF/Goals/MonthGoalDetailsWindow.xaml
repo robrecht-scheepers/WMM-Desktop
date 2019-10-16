@@ -53,7 +53,10 @@
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Captions.Limit}" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Limit, StringFormat=C}" />
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static resources:Captions.CurrentValue}" />
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CurrentAmount, StringFormat=C}" />
+                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding CurrentAmount, StringFormat=C}" />
+                            <TextBlock Text="{Binding CurrentIdealAmount, StringFormat={}({0:C})}" Visibility="{Binding CurrentMonth, Converter={StaticResource CollapseWhenFalseConverter}}" />
+                        </StackPanel>
 
                         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource SCB2}" Margin="{StaticResource CommonMargin}">
                             <controls:DateAmountChart Series="{Binding ChartSeries}" Margin="5" />

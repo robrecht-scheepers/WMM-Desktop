@@ -23,9 +23,12 @@ namespace WMM.WPF.Goals
         private List<DateAmountSeries> _chartSeries;
         private readonly IWindowService _windowService;
         private TransactionListViewModelBase _transactions;
+        private double _currentIdealAmount;
 
         public double Limit => _goal.Limit;
         public string Name => _goal.Name;
+
+        public bool CurrentMonth => DateTime.Now.FirstDayOfMonth() == _month.FirstDayOfMonth();
 
         public string Description => _goal.Description;
 
@@ -41,6 +44,12 @@ namespace WMM.WPF.Goals
         {
             get => _currentAmount;
             set => SetValue(ref _currentAmount, value);
+        }
+
+        public double CurrentIdealAmount
+        {
+            get => _currentIdealAmount;
+            set => SetValue(ref _currentIdealAmount, value);
         }
 
         public GoalStatus Status
@@ -74,6 +83,7 @@ namespace WMM.WPF.Goals
             var info = GoalCalculator.CalculateGoalMonthInfo(_goal, _month, transactions);
 
             CurrentAmount = info.CurrentAmount;
+            CurrentIdealAmount = info.CurrentIdealAmount;
             Status = info.Status;
             ChartSeries = new List<DateAmountSeries>
             {
