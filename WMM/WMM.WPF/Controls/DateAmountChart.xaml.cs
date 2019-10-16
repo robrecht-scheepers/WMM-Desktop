@@ -138,8 +138,16 @@ namespace WMM.WPF.Controls
             var amountMin = Series.SelectMany(x => x.Points).Select(x => x.Amount).Min();
             var amountMax = Series.SelectMany(x => x.Points).Select(x => x.Amount).Max();
 
-            var orderOfMagnitude = Math.Round(Math.Log10(amountMax - amountMin),MidpointRounding.AwayFromZero) - 1;
-            var factor = Math.Pow(10, orderOfMagnitude);
+            double factor;
+            if (amountMax - amountMin < 0.01)
+            {
+                factor = 10;
+            }
+            else
+            {
+                var orderOfMagnitude = Math.Round(Math.Log10(amountMax - amountMin), MidpointRounding.AwayFromZero) - 1;
+                factor = Math.Pow(10, orderOfMagnitude);
+            }
 
             _amountMin = Math.Floor(amountMin / factor) * factor;
             _amountMax = (Math.Floor(amountMax / factor) + 1) * factor;
