@@ -64,11 +64,6 @@ namespace WMM.WPF.Controls
             DrawPoints();
         }
 
-        private void DrawWeekends()
-        {
-            
-        }
-
         private void DrawDateAxis()
         {
             _dateMin = Series.SelectMany(x => x.Points).Select(x => x.Date).Min();
@@ -190,7 +185,7 @@ namespace WMM.WPF.Controls
                 Point previousDrawPoint = default(Point);
                 var firstPoint = true;
 
-                foreach (var point in series.Points)
+                foreach (var point in series.Points.OrderBy(x => x.Date))
                 {
                     var drawPoint = CalculateDrawPoint(point);
                     var tooltipPanel =  new StackPanel
