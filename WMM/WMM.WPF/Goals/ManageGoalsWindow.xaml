@@ -24,7 +24,7 @@
       <ColumnDefinition Width="Auto"/>
     </Grid.ColumnDefinitions>
 
-    <controls:WatermarkTextBox Grid.Row="0" Grid.Column="0" Text="{Binding NewGoalName}" Watermark="{x:Static resources:Captions.Name}" />
+    <controls:WatermarkTextBox Grid.Row="0" Grid.Column="0" Text="{Binding NewGoalName, UpdateSourceTrigger=PropertyChanged}" Watermark="{x:Static resources:Captions.Name}" />
     <controls:MultiSelectCombo Grid.Row="0" Grid.Column="1" Items="{Binding Criteria}" Margin="{StaticResource CommonMargin}"
                                DefaultText="{x:Static resources:Captions.SelectCriteria}"/>
     <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding NewGoalLimit, StringFormat=C, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">

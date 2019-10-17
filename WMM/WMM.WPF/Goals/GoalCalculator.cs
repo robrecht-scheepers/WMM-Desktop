@@ -24,24 +24,24 @@ namespace WMM.WPF.Goals
         
         private static void CalculateIdeal(List<Transaction> transactions, Goal goal, DateTime month, GoalMonthInfo info)
         {
-            var initialAmount = transactions.Where(x => x.Recurring || x.Category.CategoryType == CategoryType.Recurring).Select(x => x.Amount).Sum();
+            info.InitialAmount = transactions.Where(x => x.Recurring || x.Category.CategoryType == CategoryType.Recurring).Select(x => x.Amount).Sum();
             var endAmount = goal.Limit;
 
             var startDate = month.FirstDayOfMonth();
             var endDate = month.LastDayOfMonth();
-            var slope = (endAmount - initialAmount) / (endDate.Subtract(startDate).Days + 1); 
+            var slope = (endAmount - info.InitialAmount) / (endDate.Subtract(startDate).Days + 1); 
             // +1: initialAmount applies at start of day 1 (so actually at day 0)
 
             var points = new List<DateAmountPoint>
             {
-                new DateAmountPoint(startDate, initialAmount + slope),
+                new DateAmountPoint(startDate, info.InitialAmount + slope),
                 new DateAmountPoint(endDate, endAmount)
             };
 
             var currentDate = DateTime.Now.Date;
             if (currentDate < endDate && currentDate > startDate)
             {
-                var currentAmount = initialAmount + (currentDate.Subtract(startDate).Days + 1) * slope;
+                var currentAmount = info.InitialAmount + (currentDate.Subtract(startDate).Days + 1) * slope;
                 points.Add(new DateAmountPoint(currentDate, currentAmount));
                 info.CurrentIdealAmount = currentAmount;
             }
@@ -76,7 +76,9 @@ namespace WMM.WPF.Goals
         {
             if (DateTime.Now.Date > month.LastDayOfMonth()) // old month
             {
-                info.Status = info.CurrentAmount < goal.Limit ? GoalStatus.Failed : GoalStatus.Success;
+                var marginLimit = goal.Limit - (info.InitialAmount - goal.Limit) * 0.1; // failed by <10% --> off track instead of failed
+                
+                info.Status = info.CurrentAmount >= goal.Limit ? GoalStatus.Success: (info.CurrentAmount < marginLimit ? GoalStatus.Failed : GoalStatus.OffTrack);
             }
             else // current month
             {

@@ -303,4 +303,7 @@
   <data name="CurrentValue" xml:space="preserve">
     <value>Huidige stand</value>
   </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Er is een fout opgetreden: {0}</value>
+  </data>
 </root>

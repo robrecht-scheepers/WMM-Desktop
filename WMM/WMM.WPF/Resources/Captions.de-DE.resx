@@ -298,9 +298,12 @@
     <value>Ziele für {0}</value>
   </data>
   <data name="TooltipGoalMonth" xml:space="preserve">
-    <value>Ziele für desen Monat prüfen</value>
+    <value>Ziele für diesen Monat prüfen</value>
   </data>
   <data name="CurrentValue" xml:space="preserve">
     <value>Aktuell</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten: {0}</value>
   </data>
 </root>
