@@ -8,7 +8,7 @@
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="600" Width="800"
+        Title="{Binding Title}" Height="700" Width="800"
         d:DataContext="{d:DesignInstance local:MonthGoalDetailsViewModel}"
         >
     <Window.Resources>
@@ -16,7 +16,23 @@
     </Window.Resources>
     
     <Grid Background="{StaticResource SCB5}">
-        <TabControl ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <controls:ImageButton Grid.Column="0" ImageSource="/Resources/ic_previous.png" Command="{Binding PreviousMonthCommand}"/>
+            <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
+            <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
+
+        </Grid>
+        <TabControl Grid.Row="1" ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="local:GoalMonthViewModel">
                     <StackPanel Orientation="Horizontal">

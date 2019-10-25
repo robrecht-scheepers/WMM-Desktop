@@ -13,13 +13,21 @@ namespace WMM.WPF.Goals
 {
     public class MonthGoalDetailsViewModel : ObservableObject
     {
-        private readonly DateTime _month;
+        private DateTime _month;
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
         private GoalMonthViewModel _selectedGoalMonthViewModel;
-        
+        private AsyncRelayCommand _nextMonthCommand;
+        private AsyncRelayCommand _previousMonthCommand;
+        private string _title;
+
         public ObservableCollection<GoalMonthViewModel> Goals { get; }
-        public string Title => string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
+
+        public string Title
+        {
+            get => _title;
+            set => SetValue(ref _title, value);
+        }
 
         public GoalMonthViewModel SelectedGoalMonthViewModel
         {
@@ -29,7 +37,7 @@ namespace WMM.WPF.Goals
 
         public MonthGoalDetailsViewModel(DateTime month, IRepository repository, IWindowService windowService)
         {
-            _month = month;
+            Month = month;
             _repository = repository;
             _windowService = windowService;
             Goals = new ObservableCollection<GoalMonthViewModel>();
@@ -54,8 +62,30 @@ namespace WMM.WPF.Goals
 
             SelectedGoalMonthViewModel = Goals.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
                                          Goals.FirstOrDefault();
+
+            Title = string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
         }
-        
-        
+
+        public DateTime Month
+        {
+            get => _month;
+            set => SetValue(ref _month, value);
+        }
+
+        public AsyncRelayCommand NextMonthCommand => _nextMonthCommand ?? (_nextMonthCommand = new AsyncRelayCommand(NextMonth));
+
+        private async Task NextMonth()
+        {
+            Month = Month.NextMonth();
+            await Initialize();
+        }
+
+        public AsyncRelayCommand PreviousMonthCommand => _previousMonthCommand ?? (_previousMonthCommand = new AsyncRelayCommand(PreviousMonth));
+
+        private async Task PreviousMonth()
+        {
+            Month = Month.PreviousMonth();
+            await Initialize();
+        }
     }
 }
