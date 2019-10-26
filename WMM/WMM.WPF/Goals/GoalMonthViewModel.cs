@@ -24,6 +24,7 @@ namespace WMM.WPF.Goals
         private readonly IWindowService _windowService;
         private TransactionListViewModelBase _transactions;
         private double _currentIdealAmount;
+        private double _currentDifference;
 
         public double Limit => _goal.Limit;
         public string Name => _goal.Name;
@@ -50,6 +51,12 @@ namespace WMM.WPF.Goals
         {
             get => _currentIdealAmount;
             set => SetValue(ref _currentIdealAmount, value);
+        }
+
+        public double CurrentDifference
+        {
+            get => _currentDifference;
+            set => SetValue(ref _currentDifference, value);
         }
 
         public GoalStatus Status
@@ -84,6 +91,7 @@ namespace WMM.WPF.Goals
 
             CurrentAmount = info.CurrentAmount;
             CurrentIdealAmount = info.CurrentIdealAmount;
+            CurrentDifference = CurrentMonth ? (CurrentAmount - CurrentIdealAmount) : (CurrentAmount - Limit);
             Status = info.Status;
             ChartSeries = new List<DateAmountSeries>
             {
