@@ -85,7 +85,7 @@ namespace WMM.WPF.Goals
                 (await _repository.GetTransactions(_month.FirstDayOfMonth(), _month.LastDayOfMonth(), _goal)).OrderBy(x => x.Date).ToList();
             Transactions = new TransactionListViewModelBase(_repository, _windowService, true, false)
             {
-                Transactions = new ObservableCollection<Transaction>(transactions) 
+                Transactions = new ObservableCollection<Transaction>(transactions.Where(x => !x.Recurring)) 
             }; 
             var info = GoalCalculator.CalculateGoalMonthInfo(_goal, _month, transactions);
 
