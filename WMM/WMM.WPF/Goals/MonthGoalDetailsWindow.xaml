@@ -8,7 +8,7 @@
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="600" Width="800"
+        Title="{Binding Title}" Height="650" Width="800"
         d:DataContext="{d:DesignInstance local:MonthGoalDetailsViewModel}"
         >
     <Window.Resources>
@@ -16,10 +16,27 @@
     </Window.Resources>
     
     <Grid Background="{StaticResource SCB5}">
-        <TabControl ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,0,-32" ZIndex="99">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="150"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <controls:ImageButton Grid.Column="0" ImageSource="/Resources/ic_previous.png" Command="{Binding PreviousMonthCommand}"/>
+            <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
+            <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
+            <!--<Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="1,0,0,1" BorderBrush="{StaticResource SCB4}"/>-->
+        </Grid>
+        
+        <TabControl Grid.Row="1" ItemsSource="{Binding Goals}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" >
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="local:GoalMonthViewModel">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" ZIndex="80">
                         <Rectangle Height="12" Width="12" Fill="{Binding Status, Converter={StaticResource StatusColorConverter}}" />
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
@@ -55,7 +72,8 @@
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static resources:Captions.CurrentValue}" />
                         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
                             <TextBlock Text="{Binding CurrentAmount, StringFormat=C}" />
-                            <TextBlock Text="{Binding CurrentIdealAmount, StringFormat={}({0:C})}" Visibility="{Binding CurrentMonth, Converter={StaticResource CollapseWhenFalseConverter}}" />
+                            <TextBlock DataContext="{Binding CurrentDifference}" Style="{StaticResource ColoredAmountStyle}" 
+                                       Background="{StaticResource SCB3}" MinWidth="80" TextAlignment="Right" Padding="5,0" />
                         </StackPanel>
 
                         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource SCB2}" Margin="{StaticResource CommonMargin}">

@@ -53,5 +53,10 @@ namespace WMM.WPF.Helpers
 
             return tmpDate;
         }
+
+        public static DateTime NextMonth(this DateTime dt)
+        {
+            return dt.LastDayOfMonth().AddDays(1);
+        }
     }
 }

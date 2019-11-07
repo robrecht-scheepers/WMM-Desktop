@@ -378,5 +378,9 @@
   <ItemGroup>
     <Resource Include="Resources\ic_dropdown.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_next.png" />
+    <Resource Include="Resources\ic_previous.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
