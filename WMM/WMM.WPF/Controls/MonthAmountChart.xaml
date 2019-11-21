@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WMM.WPF.Controls.DateAmountChart"
+﻿<UserControl x:Class="WMM.WPF.Controls.MonthAmountChart"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -37,6 +37,6 @@
         <Canvas x:Name="Canvas" Grid.Row="1" Grid.Column="1"/>
 
         <Canvas x:Name="DateLabelCanvas" Grid.Row="2" Grid.Column="1"/>
-
+            
     </Grid>
 </UserControl>
