@@ -16,7 +16,11 @@ namespace WMM.WPF.Goals
             var info = new GoalYearInfo{Limit = goal.Limit};
             
             var sum = 0.0;
-            foreach (var month in transactions.Select(x => x.Date.FirstDayOfMonth()).Distinct().OrderBy(x => x))
+            var months = transactions.Select(x => x.Date.FirstDayOfMonth()).Distinct().ToList();
+            var minMonth = months.Min();
+            var maxMonth = months.Max();
+            var month = minMonth;
+            while(month <= maxMonth)
             {
                 var monthInfo = CalculateGoalMonthInfo(goal, month,
                     transactions.Where(x => x.Date.FirstDayOfMonth() == month).ToList());
@@ -27,6 +31,7 @@ namespace WMM.WPF.Goals
                     Status = monthInfo.Status
                 });
                 sum += monthInfo.CurrentAmount;
+                month = month.AddMonths(1);
             }
 
             info.Average = sum / info.MonthAmountPoints.Count;

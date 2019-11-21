@@ -11,6 +11,8 @@ using WMM.WPF.Resources;
 
 namespace WMM.WPF.Goals
 {
+    public enum GoalDetailViewMode { Month, Year}
+
     public class MonthGoalDetailsViewModel : ObservableObject
     {
         private DateTime _month;
@@ -20,13 +22,20 @@ namespace WMM.WPF.Goals
         private AsyncRelayCommand _nextMonthCommand;
         private AsyncRelayCommand _previousMonthCommand;
         private string _title;
+        private GoalDetailViewMode _viewMode;
 
-        public ObservableCollection<GoalMonthViewModel> Goals { get; }
+        public ObservableCollection<GoalMonthViewModel> GoalsMonthViewModels { get; }
 
         public string Title
         {
             get => _title;
             set => SetValue(ref _title, value);
+        }
+
+        public GoalDetailViewMode ViewMode
+        {
+            get => _viewMode;
+            set => SetValue(ref _viewMode, value);
         }
 
         public GoalMonthViewModel SelectedGoalMonthViewModel
@@ -40,7 +49,7 @@ namespace WMM.WPF.Goals
             Month = month;
             _repository = repository;
             _windowService = windowService;
-            Goals = new ObservableCollection<GoalMonthViewModel>();
+            GoalsMonthViewModels = new ObservableCollection<GoalMonthViewModel>();
             _repository.GoalsUpdated += async (s, a) => await Initialize();
             _repository.TransactionUpdated += async (s, a) => await Initialize();
             _repository.TransactionDeleted += async (s, a) => await Initialize();
@@ -50,18 +59,18 @@ namespace WMM.WPF.Goals
         {
             var selectedGoal = SelectedGoalMonthViewModel;
 
-            Goals.Clear();
+            GoalsMonthViewModels.Clear();
 
             var goals = await _repository.GetGoals();
             foreach (var goal in goals.OrderBy(x => x.Name))
             {
                 var vm = new GoalMonthViewModel(goal, _month, _repository, _windowService);
                 await vm.Initialize();
-                Goals.Add(vm);
+                GoalsMonthViewModels.Add(vm);
             }
 
-            SelectedGoalMonthViewModel = Goals.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
-                                         Goals.FirstOrDefault();
+            SelectedGoalMonthViewModel = GoalsMonthViewModels.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
+                                         GoalsMonthViewModels.FirstOrDefault();
 
             Title = string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
         }

@@ -98,6 +98,7 @@
     <Compile Include="Goals\DateAmountPoint.cs" />
     <Compile Include="Goals\DateAmountSeries.cs" />
     <Compile Include="Goals\GoalCalculator.cs" />
+    <Compile Include="Goals\GoalDetailViewModeVisibilityConverter.cs" />
     <Compile Include="Goals\GoalMonthInfo.cs" />
     <Compile Include="Goals\MonthAmountPoint.cs" />
     <Compile Include="Goals\GoalMonthViewModel.cs" />
