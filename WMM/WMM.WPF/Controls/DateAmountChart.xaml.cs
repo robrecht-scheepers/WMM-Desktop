@@ -182,6 +182,19 @@ namespace WMM.WPF.Controls
                     Y1 = i * (_canvasHeight / NumberOfYSegments),
                     Y2 = i * (_canvasHeight / NumberOfYSegments)
                 });
+
+                if (i > 0)
+                {
+                    Canvas.Children.Add(new Line
+                    {
+                        Stroke = Brushes.Gray,
+                        StrokeThickness = 0.2,
+                        X1 = 0,
+                        X2 = _canvasWidth,
+                        Y1 = (i - 0.5) * (_canvasHeight / NumberOfYSegments),
+                        Y2 = (i - 0.5) * (_canvasHeight / NumberOfYSegments)
+                    });
+                }
             }
         }
         

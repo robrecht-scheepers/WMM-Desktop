@@ -82,7 +82,12 @@ namespace WMM.WPF.Goals
             }
             else // current month
             {
-                info.Status = info.CurrentAmount < info.CurrentIdealAmount ? GoalStatus.OffTrack : GoalStatus.OnTrack;
+                info.Status = 
+                    info.CurrentAmount < goal.Limit 
+                        ? GoalStatus.Failed 
+                        : info.CurrentAmount < info.CurrentIdealAmount 
+                            ? GoalStatus.OffTrack 
+                            : GoalStatus.OnTrack;
             }
         }
     }
