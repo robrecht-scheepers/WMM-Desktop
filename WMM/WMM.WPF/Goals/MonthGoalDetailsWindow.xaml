@@ -33,13 +33,11 @@
             <controls:ImageButton Grid.Column="0" ImageSource="/Resources/ic_previous.png" Command="{Binding PreviousMonthCommand}"/>
             <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
             <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
-            <controls:ImageToggleButton Grid.Column="3" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_bar_chart.png" UncheckedImage="/Resources/ic_line_chart.png" />
+            <controls:ImageToggleButton Grid.Column="3" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png" />
         </Grid>
-        
-
 
         <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" 
-                    Visibility="{Binding ViewMode, Converter={StaticResource ShowWhenViewModeIsMonth}}">
+                    Visibility="{Binding ElementName=ViewModeToggle, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="local:GoalMonthViewModel">
                     <StackPanel Orientation="Horizontal" ZIndex="80">
@@ -103,14 +101,14 @@
         </TabControl>
 
       <TabControl Grid.Row="1" ItemsSource="{Binding GoalYearViewModels}" SelectedItem="{Binding SelectedGoalYearViewModel, Mode=TwoWay}"
-          Visibility="{Binding ViewMode, Converter={StaticResource ShowWhenViewModeIsYear}}">
+                  Visibility="{Binding ElementName=ViewModeToggle, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}">
         <TabControl.ItemTemplate>
           <DataTemplate DataType="local:GoalYearViewModel">
             <TextBlock Text="{Binding Name}" />
           </DataTemplate>
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>
-          <DataTemplate DataType="local:GoalMonthViewModel">
+          <DataTemplate DataType="local:GoalYearViewModel">
             <DataTemplate.Resources>
               <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                 <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
@@ -122,7 +120,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="300"/>
                 <RowDefinition Height="*"/>
               </Grid.RowDefinitions>
               <Grid.ColumnDefinitions>
@@ -136,18 +133,10 @@
               <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CriteriaString}" />
               <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Captions.Limit}" />
               <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Limit, StringFormat=C}" />
-              <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static resources:Captions.CurrentValue}" />
-              <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Text="{Binding CurrentAmount, StringFormat=C}" />
-                <TextBlock DataContext="{Binding CurrentDifference}" Style="{StaticResource ColoredAmountStyle}"
-                           Background="{StaticResource SCB3}" MinWidth="80" TextAlignment="Right" Padding="5,0" />
-              </StackPanel>
 
               <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource SCB2}" Margin="{StaticResource CommonMargin}">
-                <controls:DateAmountChart Series="{Binding ChartSeries}" Margin="5" />
+                <controls:MonthAmountChart GoalYearInfo="{Binding GoalYearInfo}" Margin="5" />
               </Grid>
-
-              <transactions:TransactionListView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"  DataContext="{Binding Transactions}" />
             </Grid>
             <DataTemplate.Triggers>
               <DataTrigger Binding="{Binding Description}" Value="{x:Null}">

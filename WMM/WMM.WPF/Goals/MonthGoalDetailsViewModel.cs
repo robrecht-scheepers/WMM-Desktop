@@ -60,6 +60,8 @@ namespace WMM.WPF.Goals
             ViewMode = GoalDetailViewMode.Month;
             Month = month;
             GoalMonthViewModels = new ObservableCollection<GoalMonthViewModel>();
+            GoalYearViewModels = new ObservableCollection<GoalYearViewModel>();
+
             _repository.GoalsUpdated += async (s, a) => await Initialize();
             _repository.TransactionUpdated += async (s, a) => await Initialize();
             _repository.TransactionDeleted += async (s, a) => await Initialize();

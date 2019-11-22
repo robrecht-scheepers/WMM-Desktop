@@ -55,7 +55,7 @@ namespace WMM.WPF.Controls
 
         private void Draw()
         {
-            if(Canvas == null)
+            if(Canvas == null || Canvas.ActualHeight <1 || Canvas.ActualWidth < 1)
                 return;
 
             Canvas.Children.Clear();
@@ -104,7 +104,7 @@ namespace WMM.WPF.Controls
                     Margin = new Thickness(0),
                     Width = _monthSectionWidth,
                     TextAlignment = TextAlignment.Center,
-                    Text = date.ToString("M")
+                    Text = date.ToString("MMM yy")
                 };
                 DateLabelCanvas.Children.Add(label);
                 Canvas.SetTop(label, 6);
@@ -196,11 +196,11 @@ namespace WMM.WPF.Controls
                 {
                     Fill = Brushes.CornflowerBlue,
                     Width = _monthSectionWidth/3,
-                    Height = monthAmountPoint.Amount * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
+                    Height = Math.Abs(monthAmountPoint.Amount) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
                 };
                 Canvas.Children.Add(bar);
                 Canvas.SetBottom(bar,1);
-                Canvas.SetLeft(bar, (i * 1/3d)* _monthSectionWidth);
+                Canvas.SetLeft(bar, (i + 1/3d)* _monthSectionWidth);
                 i++;
             }
         }
