@@ -196,7 +196,7 @@ namespace WMM.WPF.Controls
                 {
                     Fill = Brushes.CornflowerBlue,
                     Width = _monthSectionWidth/3,
-                    Height = Math.Abs(monthAmountPoint.Amount) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
+                    Height = (monthAmountPoint.Amount - _amountMin) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
                 };
                 Canvas.Children.Add(bar);
                 Canvas.SetBottom(bar,1);

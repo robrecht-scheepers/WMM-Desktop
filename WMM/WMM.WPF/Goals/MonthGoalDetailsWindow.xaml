@@ -25,15 +25,22 @@
 
         <Grid Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,0,-32" ZIndex="99">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition MinWidth="150"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <controls:ImageButton Grid.Column="0" ImageSource="/Resources/ic_previous.png" Command="{Binding PreviousMonthCommand}"/>
-            <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
-            <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
-            <controls:ImageToggleButton Grid.Column="3" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png" />
+
+            <Grid Grid.Column="0" Visibility="{Binding ElementName=ViewModeToggle, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition MinWidth="150"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <controls:ImageButton Grid.Column="0" ImageSource="/Resources/ic_previous.png" Command="{Binding PreviousMonthCommand}"/>
+                <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
+                <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
+            </Grid>
+            <controls:ImageToggleButton Grid.Column="1" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png" />
         </Grid>
 
         <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" 
@@ -121,6 +128,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
               </Grid.RowDefinitions>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
