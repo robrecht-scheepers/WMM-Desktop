@@ -28,16 +28,17 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition MinWidth="150"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <controls:ImageButton Grid.Column="0" ImageSource="/Resources/ic_previous.png" Command="{Binding PreviousMonthCommand}"/>
             <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
             <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
-            <!--<Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="1,0,0,1" BorderBrush="{StaticResource SCB4}"/>-->
+            <controls:ImageToggleButton Grid.Column="3" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_bar_chart.png" UncheckedImage="/Resources/ic_line_chart.png" />
         </Grid>
         
 
 
-        <TabControl Grid.Row="1" ItemsSource="{Binding GoalsMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" 
+        <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" 
                     Visibility="{Binding ViewMode, Converter={StaticResource ShowWhenViewModeIsMonth}}">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="local:GoalMonthViewModel">
@@ -101,7 +102,7 @@
             </TabControl.ContentTemplate>
         </TabControl>
 
-      <TabControl Grid.Row="1" ItemsSource="{Binding GoalsMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}"
+      <TabControl Grid.Row="1" ItemsSource="{Binding GoalYearViewModels}" SelectedItem="{Binding SelectedGoalYearViewModel, Mode=TwoWay}"
           Visibility="{Binding ViewMode, Converter={StaticResource ShowWhenViewModeIsYear}}">
         <TabControl.ItemTemplate>
           <DataTemplate DataType="local:GoalYearViewModel">

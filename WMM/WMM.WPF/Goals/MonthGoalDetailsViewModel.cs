@@ -23,8 +23,10 @@ namespace WMM.WPF.Goals
         private AsyncRelayCommand _previousMonthCommand;
         private string _title;
         private GoalDetailViewMode _viewMode;
+        private GoalYearViewModel _selectedGoalYearViewModel;
 
-        public ObservableCollection<GoalMonthViewModel> GoalsMonthViewModels { get; }
+        public ObservableCollection<GoalMonthViewModel> GoalMonthViewModels { get; }
+        public ObservableCollection<GoalYearViewModel> GoalYearViewModels { get; }
 
         public string Title
         {
@@ -44,12 +46,20 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _selectedGoalMonthViewModel, value);
         }
 
+        public GoalYearViewModel SelectedGoalYearViewModel
+        {
+            get => _selectedGoalYearViewModel;
+            set => SetValue(ref _selectedGoalYearViewModel, value);
+        }
+
         public MonthGoalDetailsViewModel(DateTime month, IRepository repository, IWindowService windowService)
         {
-            Month = month;
             _repository = repository;
             _windowService = windowService;
-            GoalsMonthViewModels = new ObservableCollection<GoalMonthViewModel>();
+
+            ViewMode = GoalDetailViewMode.Month;
+            Month = month;
+            GoalMonthViewModels = new ObservableCollection<GoalMonthViewModel>();
             _repository.GoalsUpdated += async (s, a) => await Initialize();
             _repository.TransactionUpdated += async (s, a) => await Initialize();
             _repository.TransactionDeleted += async (s, a) => await Initialize();
@@ -57,22 +67,40 @@ namespace WMM.WPF.Goals
 
         public async Task Initialize()
         {
+            Title = string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
+            await InitializeMonthViewModels();
+            await InitializeYearViewModels();
+        }
+
+        public async Task InitializeMonthViewModels()
+        {
             var selectedGoal = SelectedGoalMonthViewModel;
 
-            GoalsMonthViewModels.Clear();
+            GoalMonthViewModels.Clear();
 
             var goals = await _repository.GetGoals();
             foreach (var goal in goals.OrderBy(x => x.Name))
             {
-                var vm = new GoalMonthViewModel(goal, _month, _repository, _windowService);
-                await vm.Initialize();
-                GoalsMonthViewModels.Add(vm);
+                var monthViewModel = new GoalMonthViewModel(goal, _month, _repository, _windowService);
+                await monthViewModel.Initialize();
+                GoalMonthViewModels.Add(monthViewModel);
             }
 
-            SelectedGoalMonthViewModel = GoalsMonthViewModels.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
-                                         GoalsMonthViewModels.FirstOrDefault();
+            SelectedGoalMonthViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
+                                         GoalMonthViewModels.FirstOrDefault();
+        }
 
-            Title = string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
+        public async Task InitializeYearViewModels()
+        {
+            GoalYearViewModels.Clear();
+
+            var goals = await _repository.GetGoals();
+            foreach (var goal in goals.OrderBy(x => x.Name))
+            {
+                var yearViewModel = new GoalYearViewModel(goal, _repository);
+                await yearViewModel.Initialize();
+                GoalYearViewModels.Add(yearViewModel);
+            }
         }
 
         public DateTime Month
@@ -86,7 +114,7 @@ namespace WMM.WPF.Goals
         private async Task NextMonth()
         {
             Month = Month.NextMonth();
-            await Initialize();
+            await InitializeMonthViewModels();
         }
 
         public AsyncRelayCommand PreviousMonthCommand => _previousMonthCommand ?? (_previousMonthCommand = new AsyncRelayCommand(PreviousMonth));
@@ -94,7 +122,7 @@ namespace WMM.WPF.Goals
         private async Task PreviousMonth()
         {
             Month = Month.PreviousMonth();
-            await Initialize();
+            await InitializeMonthViewModels();
         }
     }
 }

@@ -393,5 +393,9 @@
     <Resource Include="Resources\ic_next.png" />
     <Resource Include="Resources\ic_previous.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_bar_chart.png" />
+    <Resource Include="Resources\ic_line_chart.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
