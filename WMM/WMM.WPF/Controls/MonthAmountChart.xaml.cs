@@ -192,14 +192,21 @@ namespace WMM.WPF.Controls
             int i = 0;
             foreach (var monthAmountPoint in GoalYearInfo.MonthAmountPoints.OrderBy(x => x.Month))
             {
+                var diff = monthAmountPoint.Amount - GoalYearInfo.Limit;
+                var limitY = (_amountMax - GoalYearInfo.Limit) * _canvasHeight / (_amountMax - _amountMin);
+
                 var bar = new Rectangle
                 {
                     Fill = Brushes.CornflowerBlue,
                     Width = _monthSectionWidth/3,
-                    Height = (monthAmountPoint.Amount - _amountMin) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
+                    Height = Math.Abs(diff) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
                 };
                 Canvas.Children.Add(bar);
-                Canvas.SetBottom(bar,1);
+                if (diff > 0)
+                    Canvas.SetTop(bar, limitY - diff*_canvasHeight/(_amountMax - _amountMin));
+                else
+                    Canvas.SetTop(bar, limitY);
+
                 Canvas.SetLeft(bar, (i + 1/3d)* _monthSectionWidth);
                 i++;
             }
