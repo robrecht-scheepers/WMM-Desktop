@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,10 +32,13 @@ namespace WMM.WPF.Controls
         private double _amountMax;
         private double _canvasWidth;
         private double _canvasHeight;
+
+        private readonly GoalStatusColorConverter _colorConverter;
         
         public MonthAmountChart()
         {
             InitializeComponent();
+            _colorConverter = new GoalStatusColorConverter();
             Canvas.Loaded += (s, a) => Draw();
             Canvas.SizeChanged += (s, a) => Draw();
         }
@@ -87,14 +91,14 @@ namespace WMM.WPF.Controls
                 var x = i * _monthSectionWidth;
                 var date = _monthMin.AddMonths(i).Date;
 
-                DateLabelCanvas.Children.Add(new Line
+                Canvas.Children.Add(new Line
                 {
                     Stroke = Brushes.DarkGray,
-                    StrokeThickness = 1,
+                    StrokeThickness = 0.5,
                     X1 = x,
                     X2 = x,
-                    Y1 = 0,
-                    Y2 = 5
+                    Y1 = _canvasHeight + 15,
+                    Y2 = 0
                 });
 
                 var label = new TextBlock
@@ -195,9 +199,13 @@ namespace WMM.WPF.Controls
                 var diff = monthAmountPoint.Amount - GoalYearInfo.Limit;
                 var limitY = (_amountMax - GoalYearInfo.Limit) * _canvasHeight / (_amountMax - _amountMin);
 
+                var converterBrush = (SolidColorBrush) _colorConverter.Convert(monthAmountPoint.Status, typeof(SolidColorBrush),
+                    null, CultureInfo.CurrentCulture) ?? Brushes.CornflowerBlue;
+                var fill = new SolidColorBrush(converterBrush.Color) {Opacity = 0.5};
+
                 var bar = new Rectangle
                 {
-                    Fill = Brushes.CornflowerBlue,
+                    Fill = fill,
                     Width = _monthSectionWidth/3,
                     Height = Math.Abs(diff) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
                 };
