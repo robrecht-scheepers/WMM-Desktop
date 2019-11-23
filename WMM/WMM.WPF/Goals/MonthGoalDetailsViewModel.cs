@@ -28,12 +28,6 @@ namespace WMM.WPF.Goals
         public ObservableCollection<GoalMonthViewModel> GoalMonthViewModels { get; }
         public ObservableCollection<GoalYearViewModel> GoalYearViewModels { get; }
 
-        public string Title
-        {
-            get => _title;
-            set => SetValue(ref _title, value);
-        }
-
         public GoalDetailViewMode ViewMode
         {
             get => _viewMode;
@@ -48,7 +42,7 @@ namespace WMM.WPF.Goals
 
         private void SelectedGoalMonthChanged()
         {
-            SelectedGoalYearViewModel = GoalYearViewModels.FirstOrDefault(x => x.Name == SelectedGoalMonthViewModel.Name) ?? SelectedGoalYearViewModel;
+            SelectedGoalYearViewModel = GoalYearViewModels.FirstOrDefault(x => x.Name == SelectedGoalMonthViewModel?.Name) ?? SelectedGoalYearViewModel;
         }
 
         public GoalYearViewModel SelectedGoalYearViewModel
@@ -59,7 +53,7 @@ namespace WMM.WPF.Goals
 
         private void SelectedGoalYearChanged()
         {
-            SelectedGoalMonthViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == SelectedGoalYearViewModel.Name) ?? SelectedGoalMonthViewModel;
+            SelectedGoalMonthViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == SelectedGoalYearViewModel?.Name) ?? SelectedGoalMonthViewModel;
         }
 
         public MonthGoalDetailsViewModel(DateTime month, IRepository repository, IWindowService windowService)
@@ -79,7 +73,6 @@ namespace WMM.WPF.Goals
 
         public async Task Initialize()
         {
-            Title = string.Format(Captions.TitleMonthGoals, _month.ToString("Y"));
             await InitializeMonthViewModels();
             await InitializeYearViewModels();
         }

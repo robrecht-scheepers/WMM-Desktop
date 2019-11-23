@@ -115,6 +115,24 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Average.
+        /// </summary>
+        public static string Average {
+            get {
+                return ResourceManager.GetString("Average", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back to month view.
+        /// </summary>
+        public static string BackToGoalMonths {
+            get {
+                return ResourceManager.GetString("BackToGoalMonths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -367,6 +385,15 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Year overview.
+        /// </summary>
+        public static string GoalYears {
+            get {
+                return ResourceManager.GetString("GoalYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last month.
         /// </summary>
         public static string LastMonth {
@@ -556,7 +583,7 @@ namespace WMM.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Goals for {0}.
+        ///   Looks up a localized string similar to Goals.
         /// </summary>
         public static string TitleMonthGoals {
             get {

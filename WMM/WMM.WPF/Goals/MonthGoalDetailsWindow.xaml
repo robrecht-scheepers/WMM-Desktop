@@ -8,7 +8,7 @@
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="650" Width="800"
+        Title="{x:Static resources:Captions.TitleMonthGoals}" Height="650" Width="800"
         d:DataContext="{d:DesignInstance local:MonthGoalDetailsViewModel}"
         >
     <Window.Resources>
@@ -40,7 +40,8 @@
                 <TextBlock Grid.Column="1" Text="{Binding Month, StringFormat=Y}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
                 <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
             </Grid>
-            <controls:ImageToggleButton Grid.Column="1" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png" />
+            <controls:ImageToggleButton Grid.Column="1" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png"
+                                        CheckedToolTip="{x:Static resources:Captions.BackToGoalMonths}" UncheckedToolTip="{x:Static resources:Captions.GoalYears}" />
         </Grid>
 
         <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" 
@@ -141,6 +142,12 @@
               <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CriteriaString}" />
               <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Captions.Limit}" />
               <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Limit, StringFormat=C}" />
+              <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static resources:Captions.Average}" />
+              <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                  <TextBlock Text="{Binding Average, StringFormat=C}" />
+                  <TextBlock DataContext="{Binding AverageDiff}" Style="{StaticResource ColoredAmountStyle}"
+                             Background="{StaticResource SCB3}" MinWidth="80" TextAlignment="Right" Padding="5,0" />
+              </StackPanel>
 
               <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource SCB2}" Margin="{StaticResource CommonMargin}">
                 <controls:MonthAmountChart GoalYearInfo="{Binding GoalYearInfo}" Margin="5" />

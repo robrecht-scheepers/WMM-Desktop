@@ -15,6 +15,8 @@ namespace WMM.WPF.Goals
         private readonly Goal _goal;
         private readonly IRepository _repository;
         private GoalYearInfo _goalYearInfo;
+        private double _average;
+        private double _averageDiff;
 
         public double Limit => _goal.Limit;
         public string Name => _goal.Name;
@@ -34,11 +36,25 @@ namespace WMM.WPF.Goals
             _repository = repository;
         }
 
+        public double Average
+        {
+            get => _average;
+            set => SetValue(ref _average,value);
+        }
+
+        public double AverageDiff
+        {
+            get => _averageDiff;
+            set => SetValue(ref _averageDiff, value);
+        }
+
         public async Task Initialize()
         {
             var transactions = 
                 (await _repository.GetTransactions(DateTime.Today.FirstDayOfMonth().AddMonths(-12), DateTime.Today.FirstDayOfMonth().AddDays(-1), _goal)).OrderBy(x => x.Date).ToList();
             GoalYearInfo = GoalCalculator.CalculateGoalYearInfo(_goal, transactions);
+            Average = GoalYearInfo.Average;
+            AverageDiff = GoalYearInfo.Average - GoalYearInfo.Limit;
         }
 
         private string CreateCriteriaString(Goal goal)
