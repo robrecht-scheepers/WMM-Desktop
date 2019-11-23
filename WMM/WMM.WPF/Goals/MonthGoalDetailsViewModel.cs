@@ -43,13 +43,23 @@ namespace WMM.WPF.Goals
         public GoalMonthViewModel SelectedGoalMonthViewModel
         {
             get => _selectedGoalMonthViewModel;
-            set => SetValue(ref _selectedGoalMonthViewModel, value);
+            set => SetValue(ref _selectedGoalMonthViewModel, value, SelectedGoalMonthChanged);
+        }
+
+        private void SelectedGoalMonthChanged()
+        {
+            SelectedGoalYearViewModel = GoalYearViewModels.FirstOrDefault(x => x.Name == SelectedGoalMonthViewModel.Name) ?? SelectedGoalYearViewModel;
         }
 
         public GoalYearViewModel SelectedGoalYearViewModel
         {
             get => _selectedGoalYearViewModel;
-            set => SetValue(ref _selectedGoalYearViewModel, value);
+            set => SetValue(ref _selectedGoalYearViewModel, value, SelectedGoalYearChanged);
+        }
+
+        private void SelectedGoalYearChanged()
+        {
+            SelectedGoalMonthViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == SelectedGoalYearViewModel.Name) ?? SelectedGoalMonthViewModel;
         }
 
         public MonthGoalDetailsViewModel(DateTime month, IRepository repository, IWindowService windowService)
