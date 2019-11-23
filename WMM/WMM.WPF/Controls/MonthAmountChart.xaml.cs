@@ -86,7 +86,7 @@ namespace WMM.WPF.Controls
             _amountOfMonths = (_monthMax.Year - _monthMin.Year)*12 + _monthMax.Month - _monthMin.Month + 1;
             _monthSectionWidth = _canvasWidth / _amountOfMonths;
             
-            for (int i = 0; i < _amountOfMonths; i++)
+            for (int i = 0; i <= _amountOfMonths; i++)
             {
                 var x = i * _monthSectionWidth;
                 var date = _monthMin.AddMonths(i).Date;
@@ -94,10 +94,10 @@ namespace WMM.WPF.Controls
                 Canvas.Children.Add(new Line
                 {
                     Stroke = Brushes.DarkGray,
-                    StrokeThickness = 0.5,
+                    StrokeThickness = (i == 0 || i == _amountOfMonths ? 1 : 0.5),
                     X1 = x,
                     X2 = x,
-                    Y1 = _canvasHeight + 15,
+                    Y1 = _canvasHeight + (i == 0 || i == _amountOfMonths ? 0 : 10),
                     Y2 = 0
                 });
 
