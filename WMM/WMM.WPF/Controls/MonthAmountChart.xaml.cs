@@ -121,8 +121,7 @@ namespace WMM.WPF.Controls
             var amounts = GoalYearInfo.MonthAmountPoints.Select(x => x.Amount).ToList();
             amounts.Add(GoalYearInfo.Limit);
             amounts.Add(GoalYearInfo.Average);
-            amounts.Add(0.0);
-
+            
             var amountMin = amounts.Min();
             var amountMax = amounts.Max();
 
@@ -157,6 +156,8 @@ namespace WMM.WPF.Controls
                 alternator = !alternator;
             }
 
+            var numberOfFactorsPerSegment = (int)((_amountMax - _amountMin) / 4) / factor;
+
             var step = (_amountMax - _amountMin) / NumberOfYSegments;
             MarkerY0.Text = _amountMin.ToString("C");
             MarkerY1.Text = (_amountMin + step).ToString("C");
@@ -178,15 +179,20 @@ namespace WMM.WPF.Controls
 
                 if (i > 0)
                 {
-                    Canvas.Children.Add(new Line
+                    for (int j = 1; j < numberOfFactorsPerSegment; j++)
                     {
-                        Stroke = Brushes.Gray,
-                        StrokeThickness = 0.2,
-                        X1 = 0,
-                        X2 = _canvasWidth,
-                        Y1 = (i - 0.5) * (_canvasHeight / NumberOfYSegments),
-                        Y2 = (i - 0.5) * (_canvasHeight / NumberOfYSegments)
-                    });
+                        Canvas.Children.Add(new Line
+                        {
+                            Stroke = Brushes.Gray,
+                            StrokeThickness = 0.2,
+                            X1 = 0,
+                            X2 = _canvasWidth,
+                            Y1 = (i - (j/numberOfFactorsPerSegment)) * (_canvasHeight / NumberOfYSegments),
+                            Y2 = (i - (j / numberOfFactorsPerSegment)) * (_canvasHeight / NumberOfYSegments)
+                        });
+                    }
+
+                    
                 }
             }
         }
