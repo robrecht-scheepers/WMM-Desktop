@@ -10,7 +10,7 @@ using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Goals
 {
-    public class  GoalYearViewModel : ObservableObject
+    public class  GoalYearDetailsViewModel : ObservableObject
     {
         private readonly Goal _goal;
         private readonly IRepository _repository;
@@ -30,7 +30,7 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _goalYearInfo, value);
         }
 
-        public GoalYearViewModel(Goal goal, IRepository repository)
+        public GoalYearDetailsViewModel(Goal goal, IRepository repository)
         {
             _goal = goal;
             _repository = repository;

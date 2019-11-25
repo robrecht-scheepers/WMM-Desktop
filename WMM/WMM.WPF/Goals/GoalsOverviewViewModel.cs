@@ -13,20 +13,19 @@ namespace WMM.WPF.Goals
 {
     public enum GoalDetailViewMode { Month, Year}
 
-    public class MonthGoalDetailsViewModel : ObservableObject
+    public class GoalsOverviewViewModel : ObservableObject
     {
         private DateTime _month;
         private readonly IRepository _repository;
         private readonly IWindowService _windowService;
-        private GoalMonthViewModel _selectedGoalMonthViewModel;
+        private GoalMonthDetailsViewModel _selectedGoalMonthDetailsViewModel;
         private AsyncRelayCommand _nextMonthCommand;
         private AsyncRelayCommand _previousMonthCommand;
-        private string _title;
         private GoalDetailViewMode _viewMode;
-        private GoalYearViewModel _selectedGoalYearViewModel;
+        private GoalYearDetailsViewModel _selectedGoalYearDetailsViewModel;
 
-        public ObservableCollection<GoalMonthViewModel> GoalMonthViewModels { get; }
-        public ObservableCollection<GoalYearViewModel> GoalYearViewModels { get; }
+        public ObservableCollection<GoalMonthDetailsViewModel> GoalMonthViewModels { get; }
+        public ObservableCollection<GoalYearDetailsViewModel> GoalYearViewModels { get; }
 
         public GoalDetailViewMode ViewMode
         {
@@ -34,37 +33,37 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _viewMode, value);
         }
 
-        public GoalMonthViewModel SelectedGoalMonthViewModel
+        public GoalMonthDetailsViewModel SelectedGoalMonthDetailsViewModel
         {
-            get => _selectedGoalMonthViewModel;
-            set => SetValue(ref _selectedGoalMonthViewModel, value, SelectedGoalMonthChanged);
+            get => _selectedGoalMonthDetailsViewModel;
+            set => SetValue(ref _selectedGoalMonthDetailsViewModel, value, SelectedGoalMonthChanged);
         }
 
         private void SelectedGoalMonthChanged()
         {
-            SelectedGoalYearViewModel = GoalYearViewModels.FirstOrDefault(x => x.Name == SelectedGoalMonthViewModel?.Name) ?? SelectedGoalYearViewModel;
+            SelectedGoalYearDetailsViewModel = GoalYearViewModels.FirstOrDefault(x => x.Name == SelectedGoalMonthDetailsViewModel?.Name) ?? SelectedGoalYearDetailsViewModel;
         }
 
-        public GoalYearViewModel SelectedGoalYearViewModel
+        public GoalYearDetailsViewModel SelectedGoalYearDetailsViewModel
         {
-            get => _selectedGoalYearViewModel;
-            set => SetValue(ref _selectedGoalYearViewModel, value, SelectedGoalYearChanged);
+            get => _selectedGoalYearDetailsViewModel;
+            set => SetValue(ref _selectedGoalYearDetailsViewModel, value, SelectedGoalYearChanged);
         }
 
         private void SelectedGoalYearChanged()
         {
-            SelectedGoalMonthViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == SelectedGoalYearViewModel?.Name) ?? SelectedGoalMonthViewModel;
+            SelectedGoalMonthDetailsViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == SelectedGoalYearDetailsViewModel?.Name) ?? SelectedGoalMonthDetailsViewModel;
         }
 
-        public MonthGoalDetailsViewModel(DateTime month, IRepository repository, IWindowService windowService)
+        public GoalsOverviewViewModel(DateTime month, IRepository repository, IWindowService windowService)
         {
             _repository = repository;
             _windowService = windowService;
 
             ViewMode = GoalDetailViewMode.Month;
             Month = month;
-            GoalMonthViewModels = new ObservableCollection<GoalMonthViewModel>();
-            GoalYearViewModels = new ObservableCollection<GoalYearViewModel>();
+            GoalMonthViewModels = new ObservableCollection<GoalMonthDetailsViewModel>();
+            GoalYearViewModels = new ObservableCollection<GoalYearDetailsViewModel>();
 
             _repository.GoalsUpdated += async (s, a) => await Initialize();
             _repository.TransactionUpdated += async (s, a) => await Initialize();
@@ -79,19 +78,19 @@ namespace WMM.WPF.Goals
 
         public async Task InitializeMonthViewModels()
         {
-            var selectedGoal = SelectedGoalMonthViewModel;
+            var selectedGoal = SelectedGoalMonthDetailsViewModel;
 
             GoalMonthViewModels.Clear();
 
             var goals = await _repository.GetGoals();
             foreach (var goal in goals.OrderBy(x => x.Name))
             {
-                var monthViewModel = new GoalMonthViewModel(goal, _month, _repository, _windowService);
+                var monthViewModel = new GoalMonthDetailsViewModel(goal, _month, _repository, _windowService);
                 await monthViewModel.Initialize();
                 GoalMonthViewModels.Add(monthViewModel);
             }
 
-            SelectedGoalMonthViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
+            SelectedGoalMonthDetailsViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
                                          GoalMonthViewModels.FirstOrDefault();
         }
 
@@ -102,7 +101,7 @@ namespace WMM.WPF.Goals
             var goals = await _repository.GetGoals();
             foreach (var goal in goals.OrderBy(x => x.Name))
             {
-                var yearViewModel = new GoalYearViewModel(goal, _repository);
+                var yearViewModel = new GoalYearDetailsViewModel(goal, _repository);
                 await yearViewModel.Initialize();
                 GoalYearViewModels.Add(yearViewModel);
             }

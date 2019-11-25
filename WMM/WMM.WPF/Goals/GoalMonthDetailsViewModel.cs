@@ -13,7 +13,7 @@ using WMM.WPF.Transactions;
 
 namespace WMM.WPF.Goals
 {
-    public class GoalMonthViewModel : ObservableObject
+    public class GoalMonthDetailsViewModel : ObservableObject
     {
         private readonly DateTime _month;
         private readonly IRepository _repository;
@@ -71,7 +71,7 @@ namespace WMM.WPF.Goals
             set => SetValue(ref _chartSeries, value);
         }
 
-        public GoalMonthViewModel(Goal goal, DateTime month, IRepository repository, IWindowService windowService)
+        public GoalMonthDetailsViewModel(Goal goal, DateTime month, IRepository repository, IWindowService windowService)
         {
             _month = month;
             _repository = repository;

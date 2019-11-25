@@ -1,4 +1,4 @@
-﻿<Window x:Class="WMM.WPF.Goals.MonthGoalDetailsWindow"
+﻿<Window x:Class="WMM.WPF.Goals.GoalsOverviewWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,14 +9,11 @@
         xmlns:resources="clr-namespace:WMM.WPF.Resources"
         mc:Ignorable="d"
         Title="{x:Static resources:Captions.TitleMonthGoals}" Height="650" Width="800"
-        d:DataContext="{d:DesignInstance local:MonthGoalDetailsViewModel}"
+        d:DataContext="{d:DesignInstance local:GoalsOverviewViewModel}"
         >
     <Window.Resources>
         <local:GoalStatusColorConverter x:Key="StatusColorConverter" />
-        <local:GoalDetailViewModeVisibilityConverter x:Key="ShowWhenViewModeIsYear" VisibleMode="Year"/>
-        <local:GoalDetailViewModeVisibilityConverter x:Key="ShowWhenViewModeIsMonth" VisibleMode="Month"/>
     </Window.Resources>
-    
     <Grid Background="{StaticResource SCB5}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -44,10 +41,10 @@
                                         CheckedToolTip="{x:Static resources:Captions.BackToGoalMonths}" UncheckedToolTip="{x:Static resources:Captions.GoalYears}" />
         </Grid>
 
-        <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthViewModel, Mode=TwoWay}" 
+        <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthDetailsViewModel, Mode=TwoWay}" 
                     Visibility="{Binding ElementName=ViewModeToggle, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}">
             <TabControl.ItemTemplate>
-                <DataTemplate DataType="local:GoalMonthViewModel">
+                <DataTemplate DataType="local:GoalMonthDetailsViewModel">
                     <StackPanel Orientation="Horizontal" ZIndex="80">
                         <Rectangle Height="12" Width="12" Fill="{Binding Status, Converter={StaticResource StatusColorConverter}}" />
                         <TextBlock Text="{Binding Name}" />
@@ -55,7 +52,7 @@
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
-                <DataTemplate DataType="local:GoalMonthViewModel">
+                <DataTemplate DataType="local:GoalMonthDetailsViewModel">
                   <DataTemplate.Resources>
                       <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                           <Setter Property="Foreground" Value="{StaticResource SCB1}"/>
@@ -108,7 +105,7 @@
             </TabControl.ContentTemplate>
         </TabControl>
 
-      <TabControl Grid.Row="1" ItemsSource="{Binding GoalYearViewModels}" SelectedItem="{Binding SelectedGoalYearViewModel, Mode=TwoWay}"
+      <TabControl Grid.Row="1" ItemsSource="{Binding GoalYearViewModels}" SelectedItem="{Binding SelectedGoalYearDetailsViewModel, Mode=TwoWay}"
                   Visibility="{Binding ElementName=ViewModeToggle, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}">
         <TabControl.ItemTemplate>
           <DataTemplate DataType="local:GoalYearViewModel">

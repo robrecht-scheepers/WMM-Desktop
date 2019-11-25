@@ -162,7 +162,7 @@ namespace WMM.WPF.Balances
 
         private async Task ShowGoalMonthDetails()
         {
-            var vm = new MonthGoalDetailsViewModel(Month, _repository, _windowService);
+            var vm = new GoalsOverviewViewModel(Month, _repository, _windowService);
             await vm.Initialize();
             _windowService.OpenDialogWindow(vm);
         }
