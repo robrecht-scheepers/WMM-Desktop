@@ -156,7 +156,7 @@ namespace WMM.WPF.Controls
                 alternator = !alternator;
             }
 
-            var numberOfFactorsPerSegment = (int)((_amountMax - _amountMin) / 4) / factor;
+            var numberOfFactorsPerSegment = (int)((_amountMax - _amountMin) / (4*factor));
 
             var step = (_amountMax - _amountMin) / NumberOfYSegments;
             MarkerY0.Text = _amountMin.ToString("C");
@@ -179,7 +179,11 @@ namespace WMM.WPF.Controls
 
                 if (i > 0)
                 {
-                    for (int j = 1; j < numberOfFactorsPerSegment; j++)
+                    var amountOfSubSegments = numberOfFactorsPerSegment == 1 || numberOfFactorsPerSegment == 2
+                        ? 4
+                        : numberOfFactorsPerSegment;
+
+                    for (int j = 1; j < amountOfSubSegments; j++)
                     {
                         Canvas.Children.Add(new Line
                         {
@@ -187,12 +191,10 @@ namespace WMM.WPF.Controls
                             StrokeThickness = 0.2,
                             X1 = 0,
                             X2 = _canvasWidth,
-                            Y1 = (i - (j/numberOfFactorsPerSegment)) * (_canvasHeight / NumberOfYSegments),
-                            Y2 = (i - (j / numberOfFactorsPerSegment)) * (_canvasHeight / NumberOfYSegments)
+                            Y1 = (i - (j/(double)amountOfSubSegments)) * (_canvasHeight / NumberOfYSegments),
+                            Y2 = (i - (j/(double)amountOfSubSegments)) * (_canvasHeight / NumberOfYSegments)
                         });
                     }
-
-                    
                 }
             }
         }
