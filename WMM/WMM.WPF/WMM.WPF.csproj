@@ -114,6 +114,7 @@
       <DependentUpon>GoalsOverviewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Goals\GoalsOverviewViewModel.cs" />
+    <Compile Include="Goals\ViewModeBoolConverter.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">

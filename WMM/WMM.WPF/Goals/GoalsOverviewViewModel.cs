@@ -23,6 +23,7 @@ namespace WMM.WPF.Goals
         private AsyncRelayCommand _previousMonthCommand;
         private GoalDetailViewMode _viewMode;
         private GoalYearDetailsViewModel _selectedGoalYearDetailsViewModel;
+        private AsyncRelayCommand<DateTime> _goToMonthCommand;
 
         public ObservableCollection<GoalMonthDetailsViewModel> GoalMonthViewModels { get; }
         public ObservableCollection<GoalYearDetailsViewModel> GoalYearViewModels { get; }
@@ -127,6 +128,15 @@ namespace WMM.WPF.Goals
         {
             Month = Month.PreviousMonth();
             await InitializeMonthViewModels();
+        }
+
+        public AsyncRelayCommand<DateTime> GoToMonthCommand => _goToMonthCommand ?? (_goToMonthCommand = new AsyncRelayCommand<DateTime>(GoToMonth));
+
+        private async Task GoToMonth(DateTime month)
+        {
+            Month = month;
+            await InitializeMonthViewModels();
+            ViewMode = GoalDetailViewMode.Month;
         }
     }
 }

@@ -13,6 +13,7 @@
         >
     <Window.Resources>
         <local:GoalStatusColorConverter x:Key="StatusColorConverter" />
+        <local:ViewModeBoolConverter x:Key="TrueWhenViewModeYear" TrueViewMode="Year"/>
     </Window.Resources>
     <Grid Background="{StaticResource SCB5}">
         <Grid.RowDefinitions>
@@ -23,7 +24,7 @@
         <Grid Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,0,-32" ZIndex="99">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Visibility="{Binding ElementName=ViewModeToggle, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}">
@@ -38,7 +39,8 @@
                 <controls:ImageButton Grid.Column="2" ImageSource="/Resources/ic_next.png" Command="{Binding NextMonthCommand}"/>
             </Grid>
             <controls:ImageToggleButton Grid.Column="1" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png"
-                                        CheckedToolTip="{x:Static resources:Captions.BackToGoalMonths}" UncheckedToolTip="{x:Static resources:Captions.GoalYears}" />
+                                        CheckedToolTip="{x:Static resources:Captions.BackToGoalMonths}" UncheckedToolTip="{x:Static resources:Captions.GoalYears}"
+                                        IsChecked="{Binding ViewMode, Converter={StaticResource TrueWhenViewModeYear}, Mode=TwoWay}"/>
         </Grid>
 
         <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthDetailsViewModel, Mode=TwoWay}" 
@@ -147,7 +149,7 @@
               </StackPanel>
 
               <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource SCB2}" Margin="{StaticResource CommonMargin}">
-                <controls:MonthAmountChart GoalYearInfo="{Binding GoalYearInfo}" Margin="5" />
+                <controls:MonthAmountChart GoalYearInfo="{Binding GoalYearInfo}" MonthLinkCommand="{Binding RelativeSource={RelativeSource AncestorType=local:GoalsOverviewWindow}, Path=DataContext.GoToMonthCommand}" Margin="5" />
               </Grid>
             </Grid>
             <DataTemplate.Triggers>

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WMM.WPF.Goals;
+using WMM.WPF.MVVM;
 
 namespace WMM.WPF.Controls
 {
@@ -55,6 +56,15 @@ namespace WMM.WPF.Controls
         private static void GoalYearInfoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((MonthAmountChart)d).Draw();
+        }
+
+        public static readonly DependencyProperty MonthLinkCommandProperty = DependencyProperty.Register(
+            "MonthLinkCommand", typeof(AsyncRelayCommand<DateTime>), typeof(MonthAmountChart), new PropertyMetadata(default(AsyncRelayCommand<DateTime>)));
+
+        public AsyncRelayCommand<DateTime> MonthLinkCommand
+        {
+            get { return (AsyncRelayCommand<DateTime>) GetValue(MonthLinkCommandProperty); }
+            set { SetValue(MonthLinkCommandProperty, value); }
         }
 
         private void Draw()
@@ -140,7 +150,7 @@ namespace WMM.WPF.Controls
             _amountMax = (Math.Floor(amountMax / factor) + 1) * factor;
             // increase the axis range, alternating on top and bottom, until it is dividable by
             // the number of segments, so that we have round numbers for each marker.
-            // If one of the ends is 0, do not expand it
+            // If one of the ends is 0, do not expand to that side
             bool alternator = false;
             while ((_amountMax - _amountMin) / 4 % factor > 0)
             {
@@ -167,6 +177,7 @@ namespace WMM.WPF.Controls
 
             for (int i = 0; i <= NumberOfYSegments; i++)
             {
+                // main grid line
                 Canvas.Children.Add(new Line
                 {
                     Stroke = Brushes.Black,
@@ -177,6 +188,7 @@ namespace WMM.WPF.Controls
                     Y2 = i * (_canvasHeight / NumberOfYSegments)
                 });
 
+                // secondary grid lines
                 if (i > 0)
                 {
                     var amountOfSubSegments = numberOfFactorsPerSegment == 1 || numberOfFactorsPerSegment == 2
@@ -215,7 +227,7 @@ namespace WMM.WPF.Controls
                 {
                     Fill = fill,
                     Width = _monthSectionWidth/3,
-                    Height = Math.Abs(diff) * _canvasHeight / (_amountMax - _amountMin) - 1 //-1 because we will move it 1 pixel up so it does not draw over the X axis
+                    Height = Math.Abs(diff) * _canvasHeight / (_amountMax - _amountMin) 
                 };
                 Canvas.Children.Add(bar);
                 if (diff > 0)
@@ -224,6 +236,15 @@ namespace WMM.WPF.Controls
                     Canvas.SetTop(bar, limitY);
 
                 Canvas.SetLeft(bar, (i + 1/3d)* _monthSectionWidth);
+
+                bar.InputBindings.Add(new MouseBinding
+                    {
+                        MouseAction = MouseAction.LeftClick,
+                        Command = MonthLinkCommand,
+                        CommandParameter = monthAmountPoint.Month
+                    });
+                bar.Cursor = Cursors.Hand;
+
                 i++;
             }
         }
