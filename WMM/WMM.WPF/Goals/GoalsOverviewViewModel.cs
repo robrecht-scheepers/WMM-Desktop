@@ -73,13 +73,14 @@ namespace WMM.WPF.Goals
 
         public async Task Initialize()
         {
+
             await InitializeMonthViewModels();
             await InitializeYearViewModels();
         }
 
         public async Task InitializeMonthViewModels()
         {
-            var selectedGoal = SelectedGoalMonthDetailsViewModel;
+            var selectedGoalName = SelectedGoalMonthDetailsViewModel?.Name;
 
             GoalMonthViewModels.Clear();
 
@@ -91,12 +92,14 @@ namespace WMM.WPF.Goals
                 GoalMonthViewModels.Add(monthViewModel);
             }
 
-            SelectedGoalMonthDetailsViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == selectedGoal?.Name) ??
+            SelectedGoalMonthDetailsViewModel = GoalMonthViewModels.FirstOrDefault(x => x.Name == selectedGoalName) ??
                                          GoalMonthViewModels.FirstOrDefault();
         }
 
         public async Task InitializeYearViewModels()
         {
+            var selectedGoalName = SelectedGoalYearDetailsViewModel?.Name;
+
             GoalYearViewModels.Clear();
 
             var goals = await _repository.GetGoals();
@@ -106,6 +109,9 @@ namespace WMM.WPF.Goals
                 await yearViewModel.Initialize();
                 GoalYearViewModels.Add(yearViewModel);
             }
+
+            SelectedGoalYearDetailsViewModel = GoalYearViewModels.FirstOrDefault(x => x.Name == selectedGoalName) ??
+                                               GoalYearViewModels.FirstOrDefault();
         }
 
         public DateTime Month
