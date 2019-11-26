@@ -234,7 +234,6 @@ namespace WMM.WPF.Controls
                     Canvas.SetTop(bar, limitY - diff*_canvasHeight/(_amountMax - _amountMin));
                 else
                     Canvas.SetTop(bar, limitY);
-
                 Canvas.SetLeft(bar, (i + 1/3d)* _monthSectionWidth);
 
                 bar.InputBindings.Add(new MouseBinding
@@ -244,6 +243,9 @@ namespace WMM.WPF.Controls
                         CommandParameter = monthAmountPoint.Month
                     });
                 bar.Cursor = Cursors.Hand;
+                bar.ToolTip =
+                    $"{monthAmountPoint.Amount:+###,##0.00€;-###,##0.00€;0.00€} \r\n" +
+                    $"({monthAmountPoint.Amount - GoalYearInfo.Limit:+###,##0.00€;-###,##0.00€;0.00€})";
 
                 i++;
             }
