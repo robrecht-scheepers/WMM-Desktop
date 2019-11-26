@@ -7,6 +7,7 @@
         xmlns:controls="clr-namespace:WMM.WPF.Controls"
         xmlns:transactions="clr-namespace:WMM.WPF.Transactions"
         xmlns:resources="clr-namespace:WMM.WPF.Resources"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="{x:Static resources:Captions.TitleMonthGoals}" Height="650" Width="800"
         d:DataContext="{d:DesignInstance local:GoalsOverviewViewModel}"
@@ -88,10 +89,14 @@
                         </StackPanel>
 
                         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource SCB2}" Margin="{StaticResource CommonMargin}">
-                            <controls:DateAmountChart Series="{Binding ChartSeries}" Margin="5" />
+                          <controls:DateAmountChart x:Name="DateAmountChart" Series="{Binding ChartSeries}" Margin="5"/>
                         </Grid>
 
-                        <transactions:TransactionListView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"  DataContext="{Binding Transactions}" />
+                      <transactions:TransactionListView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"  DataContext="{Binding Transactions}">
+                        <i:Interaction.Behaviors>
+                            <transactions:ScrollTransactionListToDate Date="{Binding ElementName=DateAmountChart, Path=SelectedDate}"/>
+                        </i:Interaction.Behaviors>
+                      </transactions:TransactionListView>
                     </Grid>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding Description}" Value="{x:Null}">

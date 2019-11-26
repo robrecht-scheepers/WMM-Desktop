@@ -159,6 +159,7 @@
     <Compile Include="Recurring\RecurringTransactionsWindow.xaml.cs">
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Transactions\ScrollTransactionListToDate.cs" />
     <Compile Include="Transactions\SearchTransactionListViewModel.cs" />
     <Compile Include="Transactions\SearchTransactionsListView.xaml.cs">
       <DependentUpon>SearchTransactionsListView.xaml</DependentUpon>
