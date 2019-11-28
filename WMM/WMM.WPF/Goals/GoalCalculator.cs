@@ -11,6 +11,34 @@ namespace WMM.WPF.Goals
 {
     public static class GoalCalculator
     {
+        public static GoalYearInfo CalculateGoalYearInfo(Goal goal, List<Transaction> transactions)
+        {
+            var info = new GoalYearInfo{Limit = goal.Limit};
+            
+            var sum = 0.0;
+            var months = transactions.Select(x => x.Date.FirstDayOfMonth()).Distinct().ToList();
+            var minMonth = months.Min();
+            var maxMonth = months.Max();
+            var month = minMonth;
+            while(month <= maxMonth)
+            {
+                var monthInfo = CalculateGoalMonthInfo(goal, month,
+                    transactions.Where(x => x.Date.FirstDayOfMonth() == month).ToList());
+                info.MonthAmountPoints.Add(new MonthAmountPoint
+                {
+                    Month = month,
+                    Amount = monthInfo.CurrentAmount,
+                    Status = monthInfo.Status
+                });
+                sum += monthInfo.CurrentAmount;
+                month = month.AddMonths(1);
+            }
+
+            info.Average = sum / info.MonthAmountPoints.Count;
+
+            return info;
+        }
+
         public static GoalMonthInfo CalculateGoalMonthInfo(Goal goal, DateTime month, List<Transaction> transactions)
         {
             var info = new GoalMonthInfo();

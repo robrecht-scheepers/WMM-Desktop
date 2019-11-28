@@ -119,6 +119,12 @@
             <DataGridLength x:Key="AmountColumnWidth">100</DataGridLength>
             <system:Double x:Key="AmountWidth">100</system:Double>
 
+            <Style x:Key="YMarkerStyle" TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="Margin" Value="5,0,6,-5"/>
+            </Style>
+
 </ResourceDictionary>
     </Application.Resources>
 </Application>

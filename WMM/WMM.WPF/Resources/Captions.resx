@@ -298,12 +298,21 @@
     <value>Select criteria</value>
   </data>
   <data name="TitleMonthGoals" xml:space="preserve">
-    <value>Goals for {0}</value>
+    <value>Goals</value>
   </data>
   <data name="TooltipGoalMonth" xml:space="preserve">
     <value>Check goals for this month</value>
   </data>
   <data name="ErrorMessage" xml:space="preserve">
     <value>An error occurred: {0}</value>
+  </data>
+  <data name="Average" xml:space="preserve">
+    <value>Average</value>
+  </data>
+  <data name="BackToGoalMonths" xml:space="preserve">
+    <value>Back to month view</value>
+  </data>
+  <data name="GoalYears" xml:space="preserve">
+    <value>Year overview</value>
   </data>
 </root>

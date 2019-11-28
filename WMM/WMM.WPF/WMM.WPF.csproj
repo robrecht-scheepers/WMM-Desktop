@@ -79,6 +79,9 @@
       <DependentUpon>SelectDeleteCategoryFallbackWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ISelectableItem.cs" />
+    <Compile Include="Controls\MonthAmountChart.xaml.cs">
+      <DependentUpon>MonthAmountChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MultiSelectCombo.cs" />
     <Compile Include="Controls\PeriodSelector.xaml.cs">
       <DependentUpon>PeriodSelector.xaml</DependentUpon>
@@ -96,18 +99,22 @@
     <Compile Include="Goals\DateAmountSeries.cs" />
     <Compile Include="Goals\GoalCalculator.cs" />
     <Compile Include="Goals\GoalMonthInfo.cs" />
-    <Compile Include="Goals\GoalMonthViewModel.cs" />
+    <Compile Include="Goals\MonthAmountPoint.cs" />
+    <Compile Include="Goals\GoalMonthDetailsViewModel.cs" />
     <Compile Include="Goals\GoalStatus.cs" />
     <Compile Include="Goals\GoalStatusColorConverter.cs" />
     <Compile Include="Goals\GoalViewModel.cs" />
+    <Compile Include="Goals\GoalYearInfo.cs" />
+    <Compile Include="Goals\GoalYearDetailsViewModel.cs" />
     <Compile Include="Goals\ManageGoalsViewModel.cs" />
     <Compile Include="Goals\ManageGoalsWindow.xaml.cs">
       <DependentUpon>ManageGoalsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Goals\MonthGoalDetailsWindow.xaml.cs">
-      <DependentUpon>MonthGoalDetailsWindow.xaml</DependentUpon>
+    <Compile Include="Goals\GoalsOverviewWindow.xaml.cs">
+      <DependentUpon>GoalsOverviewWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Goals\MonthGoalDetailsViewModel.cs" />
+    <Compile Include="Goals\GoalsOverviewViewModel.cs" />
+    <Compile Include="Goals\ViewModeBoolConverter.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">
@@ -152,6 +159,7 @@
     <Compile Include="Recurring\RecurringTransactionsWindow.xaml.cs">
       <DependentUpon>RecurringTransactionsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Transactions\ScrollTransactionListToDate.cs" />
     <Compile Include="Transactions\SearchTransactionListViewModel.cs" />
     <Compile Include="Transactions\SearchTransactionsListView.xaml.cs">
       <DependentUpon>SearchTransactionsListView.xaml</DependentUpon>
@@ -169,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Categories\SelectDeleteCategoryFallbackWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MonthAmountChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -192,7 +204,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Goals\MonthGoalDetailsWindow.xaml">
+    <Page Include="Goals\GoalsOverviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -381,6 +393,10 @@
   <ItemGroup>
     <Resource Include="Resources\ic_next.png" />
     <Resource Include="Resources\ic_previous.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_bar_chart.png" />
+    <Resource Include="Resources\ic_line_chart.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace WMM.WPF.Goals
 {
     /// <summary>
-    /// Interaction logic for MonthGoalDetailsWindow.xaml
+    /// Interaction logic for GoalsOverviewWindow.xaml
     /// </summary>
-    public partial class MonthGoalDetailsWindow : Window
+    public partial class GoalsOverviewWindow : Window
     {
-        public MonthGoalDetailsWindow()
+        public GoalsOverviewWindow()
         {
             InitializeComponent();
         }

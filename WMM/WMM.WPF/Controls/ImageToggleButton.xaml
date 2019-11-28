@@ -16,9 +16,11 @@
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter TargetName="ButtonImage" Property="Source" Value="{Binding CheckedImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+                <Setter TargetName="ButtonImage" Property="ToolTip" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CheckedToolTip}"/>
             </Trigger>
             <Trigger Property="IsChecked" Value="False">
                 <Setter TargetName="ButtonImage" Property="Source" Value="{Binding UncheckedImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+                <Setter TargetName="ButtonImage" Property="ToolTip" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=UncheckedToolTip}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="ButtonImage" Property="Margin" Value="4"/>

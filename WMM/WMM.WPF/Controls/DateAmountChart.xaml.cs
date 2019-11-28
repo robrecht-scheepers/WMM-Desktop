@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using WMM.WPF.Goals;
@@ -44,6 +45,15 @@ namespace WMM.WPF.Controls
         {
             get => (List<DateAmountSeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
+        }
+
+        public static readonly DependencyProperty SelectedDateProperty = DependencyProperty.Register(
+            "SelectedDate", typeof(DateTime), typeof(DateAmountChart), new PropertyMetadata(default(DateTime)));
+
+        public DateTime SelectedDate
+        {
+            get { return (DateTime) GetValue(SelectedDateProperty); }
+            set { SetValue(SelectedDateProperty, value); }
         }
 
         private void Draw()
@@ -206,28 +216,12 @@ namespace WMM.WPF.Controls
                 Point previousDrawPoint = default(Point);
                 var firstPoint = true;
 
+                // first draw all the lines and then all the points, so that the lines don't block the tooltips for the points
+
                 foreach (var point in series.Points.OrderBy(x => x.Date))
                 {
                     var drawPoint = CalculateDrawPoint(point);
-                    var tooltipPanel =  new StackPanel
-                    {
-                        Background = brush,
-                        Margin = new Thickness(-5)
-                    };
-                    tooltipPanel.Children.Add(new TextBlock
-                    {
-                        Text = point.Amount.ToString("C")
-                    });
-                    var pointShape = new Ellipse
-                    {
-                        Fill = brush,
-                        Width = 5,
-                        Height = 5,
-                        ToolTip = tooltipPanel
-                    };
-                    Canvas.Children.Add(pointShape);
-                    Canvas.SetLeft(pointShape, drawPoint.X - pointShape.Width / 2);
-                    Canvas.SetTop(pointShape, drawPoint.Y - pointShape.Height / 2);
+
                     if (!firstPoint)
                     {
                         Canvas.Children.Add(new Line
@@ -241,8 +235,36 @@ namespace WMM.WPF.Controls
                         });
                     }
 
-                    previousDrawPoint = drawPoint;
                     firstPoint = false;
+                    previousDrawPoint = drawPoint;
+                }
+
+                foreach (var point in series.Points.OrderBy(x => x.Date))
+                {
+                    var drawPoint = CalculateDrawPoint(point);
+
+                    var tooltipPanel =  new StackPanel
+                    {
+                        Background = brush,
+                        Margin = new Thickness(-5)
+                    };
+                    tooltipPanel.Children.Add(new TextBlock
+                    {
+                        Text = point.Amount.ToString("C")
+                    });
+                    var pointShape = new Ellipse
+                    {
+                        Fill = brush,
+                        Width = 6,
+                        Height = 6,
+                        ToolTip = tooltipPanel
+                    };
+                    Canvas.Children.Add(pointShape);
+                    Canvas.SetLeft(pointShape, drawPoint.X - pointShape.Width / 2);
+                    Canvas.SetTop(pointShape, drawPoint.Y - pointShape.Height / 2);
+
+                    pointShape.Cursor = Cursors.Hand;
+                    pointShape.MouseLeftButtonDown += (s, a) => SelectedDate = point.Date;
                 }
             }
         }

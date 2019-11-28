@@ -295,7 +295,7 @@
     <value>Kriterienauswahl</value>
   </data>
   <data name="TitleMonthGoals" xml:space="preserve">
-    <value>Ziele für {0}</value>
+    <value>Ziele</value>
   </data>
   <data name="TooltipGoalMonth" xml:space="preserve">
     <value>Ziele für diesen Monat prüfen</value>
@@ -305,5 +305,14 @@
   </data>
   <data name="ErrorMessage" xml:space="preserve">
     <value>Ein Fehler ist aufgetreten: {0}</value>
+  </data>
+  <data name="Average" xml:space="preserve">
+    <value>Durchschnitt</value>
+  </data>
+  <data name="BackToGoalMonths" xml:space="preserve">
+    <value>Zurück zur Monatsübersicht</value>
+  </data>
+  <data name="GoalYears" xml:space="preserve">
+    <value>Jahresübersicht</value>
   </data>
 </root>

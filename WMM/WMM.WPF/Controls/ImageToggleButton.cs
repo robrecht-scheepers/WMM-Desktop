@@ -58,5 +58,23 @@ namespace WMM.WPF.Controls
         {
             Application.GetResourceStream(new Uri("pack://application:,,," + (string)e.NewValue));
         }
+
+        public static readonly DependencyProperty CheckedToolTipProperty = DependencyProperty.Register(
+            "CheckedToolTip", typeof(string), typeof(ImageToggleButton), new PropertyMetadata(default(string)));
+
+        public string CheckedToolTip
+        {
+            get { return (string) GetValue(CheckedToolTipProperty); }
+            set { SetValue(CheckedToolTipProperty, value); }
+        }
+
+        public static readonly DependencyProperty UncheckedToolTipProperty = DependencyProperty.Register(
+            "UncheckedToolTip", typeof(string), typeof(ImageToggleButton), new PropertyMetadata(default(string)));
+
+        public string UncheckedToolTip
+        {
+            get { return (string) GetValue(UncheckedToolTipProperty); }
+            set { SetValue(UncheckedToolTipProperty, value); }
+        }
     }
 }
