@@ -102,20 +102,19 @@ namespace WMM.WPF.Goals
 
         private static void CalculateStatus(Goal goal, DateTime month, GoalMonthInfo info)
         {
+            var marginLimit = goal.Limit - (info.InitialAmount - goal.Limit) * 0.1; // 10% fail margin 10% 
+
             if (DateTime.Now.Date > month.LastDayOfMonth()) // old month
             {
-                var marginLimit = goal.Limit - (info.InitialAmount - goal.Limit) * 0.1; // failed by <10% --> off track instead of failed
-                
                 info.Status = info.CurrentAmount >= goal.Limit ? GoalStatus.Success: (info.CurrentAmount < marginLimit ? GoalStatus.Failed : GoalStatus.OffTrack);
             }
             else // current month
             {
                 info.Status = 
-                    info.CurrentAmount < goal.Limit 
-                        ? GoalStatus.Failed 
-                        : info.CurrentAmount < info.CurrentIdealAmount 
-                            ? GoalStatus.OffTrack 
-                            : GoalStatus.OnTrack;
+                    info.CurrentAmount < marginLimit ? GoalStatus.Failed :
+                    info.CurrentAmount < goal.Limit ? GoalStatus.OffTrack : 
+                    info.CurrentAmount < info.CurrentIdealAmount ? GoalStatus.OffTrack
+                    : GoalStatus.OnTrack;
             }
         }
     }
