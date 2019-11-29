@@ -42,6 +42,7 @@
             <controls:ImageToggleButton Grid.Column="1" x:Name="ViewModeToggle" CheckedImage="/Resources/ic_line_chart.png" UncheckedImage="/Resources/ic_bar_chart.png"
                                         CheckedToolTip="{x:Static resources:Captions.BackToGoalMonths}" UncheckedToolTip="{x:Static resources:Captions.GoalYears}"
                                         IsChecked="{Binding ViewMode, Converter={StaticResource TrueWhenViewModeYear}, Mode=TwoWay}"/>
+            <Border Grid.Column="1" BorderThickness="1,0,0,0" Margin="0,5" BorderBrush="{StaticResource SCB4}" />
         </Grid>
 
         <TabControl Grid.Row="1" ItemsSource="{Binding GoalMonthViewModels}" SelectedItem="{Binding SelectedGoalMonthDetailsViewModel, Mode=TwoWay}" 
