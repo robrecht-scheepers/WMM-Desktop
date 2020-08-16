@@ -685,7 +685,7 @@ namespace WMM.Data
 
         public IEnumerable<string> GetAreas()
         {
-            return _areas.Distinct().OrderBy(x => x);
+            return _areas.OrderBy(x => x);
         }
 
         public List<Category> GetCategories()
@@ -711,13 +711,13 @@ namespace WMM.Data
                         return;
                     while (reader.Read())
                     {
-                        var id = reader.GetGuid(0);
                         var area = reader.GetString(1);
-                        var category = reader.GetStringNullSafe(2);
+                        var categoryId = reader.GetGuidNullSafe(0);
+                        var categoryName = reader.GetStringNullSafe(2);
                         var categoryType = (CategoryType)reader.GetInt32NullSafe(3);
 
-                        if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(area) && categoryType >= 0)
-                            categories.Add(new Category(id, area,category,categoryType));
+                        if (!categoryId.Equals(Guid.Empty) && !string.IsNullOrEmpty(categoryName) && !string.IsNullOrEmpty(area) && categoryType >= 0)
+                            categories.Add(new Category(categoryId, area,categoryName,categoryType));
 
                         if (!string.IsNullOrEmpty(area))
                         {
@@ -727,7 +727,7 @@ namespace WMM.Data
                 }
             }
 
-            _areas = areas;
+            _areas = areas.Distinct().ToList();
             _categories = categories;
         }
 
@@ -747,7 +747,7 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
-            OnCategoresUpdated();
+            OnCategoriesUpdated();
         }
 
         public async Task AddCategory(string area, string category, CategoryType categoryType)
@@ -769,7 +769,7 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
-            OnCategoresUpdated();
+            OnCategoriesUpdated();
         }
 
         public async Task EditCategory(string oldCategory, string newArea, string newCategory,
@@ -793,7 +793,7 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
-            OnCategoresUpdated();
+            OnCategoriesUpdated();
         }
 
         public async Task DeleteCategory(string category, string fallback = null)
@@ -824,7 +824,7 @@ namespace WMM.Data
             }
 
             await LoadAreasAndCategories();
-            OnCategoresUpdated();
+            OnCategoriesUpdated();
             if(transactionsUpdated)
                 TransactionBulkUpdated?.Invoke(this, EventArgs.Empty);
         }
@@ -833,7 +833,7 @@ namespace WMM.Data
 
         
 
-        private void OnCategoresUpdated()
+        private void OnCategoriesUpdated()
         {
             CategoriesUpdated?.Invoke(this, EventArgs.Empty);
         }
