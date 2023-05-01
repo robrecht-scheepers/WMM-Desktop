@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="Goals\GoalsOverviewViewModel.cs" />
     <Compile Include="Goals\ViewModeBoolConverter.cs" />
+    <Compile Include="Helpers\CurrencyService.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Resources\Captions.nl-BE.Designer.cs">
@@ -348,7 +349,7 @@
       <VersionMajor>2</VersionMajor>
       <VersionMinor>5</VersionMinor>
       <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
+      <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>

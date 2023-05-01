@@ -17,13 +17,17 @@ namespace WMM.WPF.Transactions
         private AsyncRelayCommand _addTransactionCommand;
         private ObservableCollection<Category> _categories;
         private string _selectedSign;
+        private string _selectedCurrency;
         private string _newTransactionComment;
+        private readonly CurrencyService _currencyService;
 
-        public AddTransactionsViewModel(IRepository repository, IWindowService windowService)
+        public AddTransactionsViewModel(IRepository repository, IWindowService windowService, CurrencyService currencyService)
             :base(repository,windowService, true)
         {
             Categories = new ObservableCollection<Category>();
             Repository.CategoriesUpdated += (s, a) => InitCategories();
+            
+            _currencyService = currencyService;
         }
 
         public Task Initialize()
@@ -33,6 +37,16 @@ namespace WMM.WPF.Transactions
             NewTransactionDate = DateTime.Today;
             NewTransactionAmount = 0.0; 
             SelectedSign = "-";
+
+            var selectedCurrency = SettingsHelper.GetSelectedCurrency();
+            if (Currencies.Contains(selectedCurrency))
+            {
+                SelectedCurrency = selectedCurrency;
+            } 
+            else
+            {
+                SelectedCurrency = _currencyService.Default;
+            }
 
             // currently this method runs synchronously as categories are loaded synchronously,
             // but I don't want to mix up the async initialize pattern
@@ -82,10 +96,19 @@ namespace WMM.WPF.Transactions
             set => SetValue(ref _selectedSign, value);
         }
 
+        public List<string> Currencies => _currencyService.Currencies;
+
+        public string SelectedCurrency
+        {
+            get => _selectedCurrency;
+            set => SetValue(ref _selectedCurrency, value, () => SettingsHelper.SaveSelectedCurrency(value));
+        }
+
         public AsyncRelayCommand AddTransactionCommand => _addTransactionCommand ?? (_addTransactionCommand = new AsyncRelayCommand(AddTransaction));
         private async Task AddTransaction()
         {
-            var amount = SelectedSign == "-" ? NewTransactionAmount * -1.0 : NewTransactionAmount;
+            var convertedAmount = _currencyService.Convert(SelectedCurrency, NewTransactionAmount);
+            var amount = SelectedSign == "-" ? convertedAmount * -1.0 : convertedAmount;
 
             var transaction = await Repository.AddTransaction(NewTransactionDate, NewTransactionCategory, amount, NewTransactionComment);
 

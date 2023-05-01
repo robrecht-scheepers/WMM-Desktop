@@ -11,5 +11,11 @@
     <Setting Name="ExpandedMonthBalances" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Currencies" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">THB:0.027</Value>
+    </Setting>
+    <Setting Name="SelectedCurrency" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

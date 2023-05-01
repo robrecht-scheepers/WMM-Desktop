@@ -26,7 +26,7 @@ namespace WMM.WPF
         private AsyncRelayCommand _showForecastCommand;
         private AsyncRelayCommand _showManageGoalsWindowCommand;
 
-        public MainViewModel(IRepository repository, IWindowService windowService)
+        public MainViewModel(IRepository repository, IWindowService windowService, CurrencyService currencyService)
         {
             _repository = repository;
             _windowService = windowService;
@@ -39,7 +39,7 @@ namespace WMM.WPF
             _repository.TransactionBulkUpdated += async (s, a) => { await OnTransactionBulkModified(); };
             _repository.GoalsUpdated += async (s, a) =>  await CheckGoalsButtons();
 
-            AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService);
+            AddTransactionsViewModel = new AddTransactionsViewModel(_repository,_windowService, currencyService);
             AddTransactionsViewModel.UseAsTemplateRequested +=
                 (s, a) => AddTransactionsViewModel.UseTransactionAsTemplate(a.Transaction);
 

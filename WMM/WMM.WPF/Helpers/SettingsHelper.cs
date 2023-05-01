@@ -12,6 +12,17 @@ namespace WMM.WPF.Helpers
     {
         private const string Separator = ";";
 
+        public static string GetSelectedCurrency()
+        {
+            return Settings.Default.SelectedCurrency;
+        }
+
+        public static void SaveSelectedCurrency(string value)
+        {
+            Settings.Default.SelectedCurrency = value;
+            Settings.Default.Save();
+        }
+
         public static bool IsMonthExpanded(DateTime month)
         {
             return GetExpandedMonths().Contains(month.FirstDayOfMonth());
